@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Options Page :: Popup Blocker</title>
+  <style>
+    body: { padding: 10px; }
+    input[type=number] { width: 50px; }
+  </style>
+</head>
+
+<body>
+  <p>
+    <label>Maximum number of popup requests for a single page: <input type="number" id="numbers" min=1> </label>
+  </p>
+  <p>
+    <label>Timeout for displaying each popup (in seconds): <input type="number" id="timeout" min=5></label>
+  </p>
+
+  <div id="status"></div>
+  <button id="save">Save</button>
+
+  <script src="index.js"></script>
+</body>
+</html>

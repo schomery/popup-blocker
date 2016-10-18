@@ -1,0 +1,41 @@
+{
+  "name": "Popup Blocker (ultimate)",
+  "short_name": "ipblocker",
+  "description": "Strictly block all popup requests from any website.",
+  "author": "Jeremy Schomery",
+  "version": "0.1.0",
+  "manifest_version": 2,
+  "permissions": [
+    "storage",
+    "tabs",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": [
+      "common.js"
+    ]
+  },
+  "content_scripts": [{
+    "match_about_blank": true,
+    "matches": ["<all_urls>"],
+    "js": ["data/detect.js"],
+    "run_at": "document_start",
+    "all_frames": true
+  },
+  {
+    "matches": ["<all_urls>"],
+    "js": ["data/ui.js"],
+    "run_at": "document_start",
+    "all_frames": false
+  }],
+  "homepage_url": "http://add0n.com/popup-blocker.html",
+  "icons": {
+    "16": "data/icons/16.png",
+    "48": "data/icons/48.png",
+    "128": "data/icons/128.png"
+  },
+  "options_ui": {
+    "page": "data/options/index.html",
+    "chrome_style": true
+  }
+}
