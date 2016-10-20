@@ -5,11 +5,17 @@ var urls = {};
 
 function remove (div) {
   delete urls[div.dataset.url];
-  container.removeChild(div);
+  try {
+    container.removeChild(div);
+  }
+  catch (e) {}
 }
 
 window.addEventListener('message', e => {
   if (e.data && e.data.cmd === 'popup-request') {
+    chrome.runtime.sendMessage({
+      cmd: 'update-badge'
+    });
     if (!container) {
       container = document.createElement('div');
       container.style = `
@@ -51,8 +57,9 @@ window.addEventListener('message', e => {
       `;
       document.body.appendChild(style);
     }
-    if (urls[e.data.url]) {
-      let obj = urls[e.data.url];
+    let tag  = e.data.url && e.data.url !== 'about:blank' ? e.data.url : e.data.tag;
+    if (urls[tag]) {
+      let obj = urls[tag];
       let div = obj.div;
       div.dataset.badge = +div.dataset.badge + 1;
       window.clearTimeout(obj.id);
@@ -77,6 +84,8 @@ window.addEventListener('message', e => {
           display: flex;
           flex-direction: column;
           margin-bottom: 5px;
+          border-radius: 2px;
+          box-shadow: 1px 1px 5px rgb(206,188,125)
         `;
         let buttons = document.createElement('div');
         buttons.style = `
@@ -111,6 +120,7 @@ window.addEventListener('message', e => {
           font-size: 12px;
           font-family: arial,sans-serif;
           padding: 2px 4px;
+          outline: none;
         `;
         let p1 = document.createElement('p');
         p1.style = `
@@ -120,7 +130,8 @@ window.addEventListener('message', e => {
         `;
         p1.textContent = 'Popup is requested for';
         let p2 = document.createElement('p');
-        div.dataset.url = p2.title = p2.textContent = e.data.url;
+        div.dataset.url = tag;
+        p2.title = p2.textContent = '↝ ' + (e.data.url || 'about:blank');
 
         p2.style = `
           white-space: nowrap;
@@ -138,10 +149,9 @@ window.addEventListener('message', e => {
         div.appendChild(buttons);
         container.appendChild(div);
         // timeout
-        let id = window.setTimeout(remove, prefs.timeout * 1000, div);
-        urls[e.data.url] = {
+        urls[tag] = {
           div,
-          id,
+          id: window.setTimeout(remove, prefs.timeout * 1000, div),
           prefs,
           timestamp: (new Date()).getTime()
         };

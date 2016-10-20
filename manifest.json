@@ -3,17 +3,24 @@
   "short_name": "ipblocker",
   "description": "Strictly block all popup requests from any website.",
   "author": "Jeremy Schomery",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "manifest_version": 2,
   "permissions": [
     "storage",
     "tabs",
-    "<all_urls>"
+    "<all_urls>",
+    "contextMenus"
   ],
   "background": {
     "scripts": [
       "common.js"
     ]
+  },
+  "browser_action": {
+    "default_icon": {
+      "16": "data/icons/16.png",
+      "32": "data/icons/32.png"
+    }
   },
   "content_scripts": [{
     "match_about_blank": true,

@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Popup blocking test suite :: tools.add0n.com</title>
+  </head>
+  <body>
+    <style>
+      body {
+        font-size: 13px;
+        font-family: arial,sans-serif;
+      }
+      li {
+        margin: 5px 0;
+      }
+      input,
+      a {
+        border: none;
+        background-color: #ddd;
+        text-decoration: none;
+        color: #000;
+        display: inline-block;
+        text-align: center;
+        font-size: 90%;
+        cursor: pointer;
+        padding: 5px 0;
+        outline: none;
+      }
+      input:active,
+      a:hover {
+        opacity: 0.5;
+      }
+      li a,
+      li input {
+        min-width: 100px;
+      }
+    </style>
+    <script>
+      function method1 () {
+        var newwindow = window.open("", "result", "status=1,width=700,height=500,menubar=yes");
+        newwindow.document.open("text/html", "replace");
+        newwindow.document.write("<html><body>test page / 1 ...<body/><html/>");
+        newwindow.document.write("<script> document.onreadystatechange = function(){   if(document.readyState=='loaded' || document.readyState=='complete') window.print(); } <" + "/script>");
+        newwindow.document.close();
+      }
+      function method2 () {
+        var newwindow = window.open("", "result", "status=1,width=700,height=500,menubar=yes");
+        newwindow.document.open("text/html", "replace");
+        newwindow.document.write("<html><body>test page / 2...<body/><html/>");
+        newwindow.document.close();
+      }
+    </script>
+    <h1>Test the effectiveness of your popup blocker add-on</h1>
+    <ul>
+      <li><input type="button" onclick="method1()" value="Method 1/1"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 1</li>
+      <li><input type="button" onclick="method2()" value="Method 1/2"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 2 (test your popup blocker to see if it can differentiate different sources with the "about:blank" origin)</li>
+      <li><input type="button" onclick="window.open('http://add0n.com/popup-blocker.html?from=tester&action=window.open');" value="Method 3"> opening a new popup window using window.open method</li>
+      <li><a href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank" target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
+    </ul>
+    <p>It is recommended to use <b>Popup Blocker (Ultimate)</b> add-on for the best experience; <a href="https://chrome.google.com/webstore/detail/aefkmifgmaafnojlojpnekbpbmjiiogg">Chrome</a>, <a href="https://addons.mozilla.org/firefox/addon/popup-blocker/">Firefox</a>, and <a href="https://addons.opera.com/extensions/">Opera</a>.
+    </p>
+  </body>
+</html>
