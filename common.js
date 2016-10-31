@@ -1,6 +1,6 @@
 'use strict';
 
-// bounce
+// bounce && badge
 chrome.runtime.onMessage.addListener((request, sender) => {
   if (request.cmd === 'update-badge') {
     let tabId = sender.tab.id;
@@ -14,6 +14,13 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     });
   }
   chrome.tabs.sendMessage(sender.tab.id, request);
+});
+// refresh
+chrome.tabs.onUpdated.addListener((tabId) => {
+  chrome.browserAction.setBadgeText({
+    tabId,
+    text: ''
+  });
 });
 // context menu
 chrome.contextMenus.create({

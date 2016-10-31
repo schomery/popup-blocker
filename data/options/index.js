@@ -16,7 +16,7 @@ function save_options() {
 
 function restore_options() {
   chrome.storage.local.get({
-    numbers: 3,
+    numbers: 5,
     timeout: 30
   }, (obj) => {
     document.getElementById('numbers').value = obj.numbers;

@@ -5,17 +5,17 @@ chrome.storage.local.get({
 }, prefs => {
   let script = document.createElement('script');
   script.textContent = `
-    if (typeof ipblocker === 'undefined') {
-      var ipblocker = window.open;
-      var ipcallbacks = {};
-      var ipenabled = ${prefs.enabled};
-      // window open
-      window.open = function (url, name, specs, replace) {
-        if (ipenabled) {
-          let id = Math.random();
+  (function (ipblocker, ipcallbacks, ipenabled, ipactive) {
+    window.open = function (url, name, specs, replace) {
+      if (ipenabled) {
+        let id = Math.random();
+
+        window.setTimeout(() => {
           // handling about:blank cases
+          // firefox sometimes reutens document.body for document.activeElement
+          let activeElement = document.activeElement === document.body && ipactive ? ipactive : document.activeElement;
           if (!url || url.startsWith('about:')) {
-            document.activeElement.dataset.popupblocker = document.activeElement.dataset.popupblocker || id;
+            activeElement.dataset.popupblocker = activeElement.dataset.popupblocker || id;
           }
           //
           window.top.postMessage({
@@ -26,81 +26,86 @@ chrome.storage.local.get({
             specs,
             replace,
             id,
-            tag: document.activeElement.dataset.popupblocker
+            tag: activeElement.dataset.popupblocker
           }, '*');
-          ipcallbacks[id] = {
-            arguments: Array.from(arguments),
-            cmds: []
-          };
+        }, 100);
 
-          return {
-            document: {
-              open: function () {
-                ipcallbacks[id].cmds.push({
-                  cmd: 'open',
-                  arguments: Array.from(arguments)
-                });
-              },
-              write: function () {
-                ipcallbacks[id].cmds.push({
-                  cmd: 'write',
-                  arguments: Array.from(arguments)
-                });
-              },
-              close: function () {
-                ipcallbacks[id].cmds.push({
-                  cmd: 'close',
-                  arguments: Array.from(arguments)
-                });
-              }
+        ipcallbacks[id] = {
+          arguments,
+          cmds: []
+        };
+
+        return {
+          document: {
+            open: function () {
+              ipcallbacks[id].cmds.push({
+                cmd: 'open',
+                arguments
+              });
+            },
+            write: function () {
+              ipcallbacks[id].cmds.push({
+                cmd: 'write',
+                arguments
+              });
+            },
+            close: function () {
+              ipcallbacks[id].cmds.push({
+                cmd: 'close',
+                arguments
+              });
             }
           }
-        }
-        else {
-          return ipblocker.apply(window, arguments);
         }
       }
-      // link[target=_blank]
-      window.addEventListener('click', e => {
-        if (ipenabled) {
-          let a = e.target.closest('a');
-          if (a && a.target === '_blank' && e.button === 0) {
-            let id = Math.random();
-            window.top.postMessage({
-              cmd: 'popup-request',
-              type: 'target._blank',
-              url: a.href,
-              id
-            }, '*');
-            ipcallbacks[id] = {
-              arguments: [a.href],
-              cmds: []
-            };
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        }
-      });
-
-      window.addEventListener('message', e => {
-        if (e.data && e.data.cmd === 'popup-accepted' && ipcallbacks[e.data.id]) {
-          let win = ipblocker.apply(window, ipcallbacks[e.data.id].arguments);
-          ipcallbacks[e.data.id].cmds.forEach(obj => {
-            try {
-              win.document[obj.cmd].apply(win.document, obj.arguments);
-            }
-            catch (e) {}
-          });
-        }
-        else if (e.data && e.data.cmd === 'popup-status') {
-          ipenabled = e.data.value;
-        }
-      });
+      else {
+        return ipblocker.apply(window, arguments);
+      }
     }
+    // link[target=_blank]
+    window.addEventListener('click', function (e) {
+      ipactive = e.target;
+      if (ipenabled) {
+        let a = e.target.closest('a');
+        if (a && a.target === '_blank' && (e.button === 0 && !e.metaKey)) {
+          let id = Math.random();
+          window.top.postMessage({
+            cmd: 'popup-request',
+            type: 'target._blank',
+            url: a.href,
+            id
+          }, '*');
+          ipcallbacks[id] = {
+            arguments: [a.href],
+            cmds: []
+          };
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+    });
+
+    window.addEventListener('message', e => {
+      let id = e.data.id;
+      if (e.data && e.data.cmd === 'popup-accepted' && ipcallbacks[id]) {
+        let win = ipblocker.apply(window, ipcallbacks[id].arguments);
+        ipcallbacks[id].cmds.forEach(obj => {
+          try {
+            win.document[obj.cmd].apply(win.document, obj.arguments);
+          }
+          catch (e) {}
+        });
+      }
+      else if (e.data && e.data.cmd === 'popup-redirect' && ipcallbacks[id]) {
+        window.top.location = ipcallbacks[id].arguments[0];
+      }
+      else if (e.data && e.data.cmd === 'popup-status') {
+        ipenabled = e.data.value;
+      }
+    });
+  })(window.open, {}, ${prefs.enabled})
   `;
   document.documentElement.appendChild(script);
 });
 
-chrome.runtime.onMessage.addListener((request) => {
-  window.postMessage(request, '*');
-});
+chrome.runtime.onMessage.addListener((request) => window.postMessage(request, '*'));

@@ -68,7 +68,7 @@ window.addEventListener('message', e => {
     }
     else {
       chrome.storage.local.get({
-        numbers: 3,
+        numbers: 5,
         timeout: 30
       }, (prefs) => {
         let div = document.createElement('div');
@@ -95,24 +95,45 @@ window.addEventListener('message', e => {
         let ok = document.createElement('input');
         ok.type = 'button';
         ok.value = 'allow';
+        ok.title = 'Allow the page to open this popup';
         ok.addEventListener('click', (evt) => {
           evt.preventDefault();
           evt.stopPropagation();
-          chrome.runtime.sendMessage({
-            cmd: 'popup-accepted',
-            id: e.data.id
-          });
-          remove(div);
+          if (evt.isTrusted) {
+            chrome.runtime.sendMessage({
+              cmd: 'popup-accepted',
+              id: e.data.id
+            });
+            remove(div);
+          }
+        }, true);
+        let redirect = document.createElement('input');
+        redirect.type = 'button';
+        redirect.value = 'redirect';
+        redirect.title = 'Redirect current page to the new destination instead of opening it in a new tab/popup';
+        redirect.addEventListener('click', (evt) => {
+          evt.preventDefault();
+          evt.stopPropagation();
+          if (evt.isTrusted) {
+            chrome.runtime.sendMessage({
+              cmd: 'popup-redirect',
+              id: e.data.id
+            });
+            remove(div);
+          }
         }, true);
         let cancel = document.createElement('input');
         cancel.type = 'button';
         cancel.value = 'deny';
+        cancel.title = 'Decline the popup/tab opening';
         cancel.addEventListener('click', (evt) => {
           evt.preventDefault();
           evt.stopPropagation();
-          remove(div);
+          if (evt.isTrusted) {
+            remove(div);
+          }
         }, true);
-        cancel.style = ok.style = `
+        redirect.style = cancel.style = ok.style = `
           border: solid 1px #999;
           background-color: #fff;
           margin: 0 3px;
@@ -146,6 +167,9 @@ window.addEventListener('message', e => {
         div.appendChild(p2);
         buttons.appendChild(cancel);
         buttons.appendChild(ok);
+        if (e.data.url.indexOf('://') !== -1) {
+          buttons.appendChild(redirect);
+        }
         div.appendChild(buttons);
         container.appendChild(div);
         // timeout
