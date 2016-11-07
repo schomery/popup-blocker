@@ -23,8 +23,13 @@
         text-align: center;
         font-size: 90%;
         cursor: pointer;
-        padding: 5px 0;
         outline: none;
+      }
+      a {
+        padding: 5px 0;
+      }
+      input {
+        padding: 5px;
       }
       input:active,
       a:hover {
@@ -36,27 +41,47 @@
       }
     </style>
     <script>
+      'use strict';
+      var pointer = window.open;
+
       function method1 () {
-        var newwindow = window.open("", "result", "status=1,width=700,height=500,menubar=yes");
+        var newwindow = pointer("", "result", "status=1,width=700,height=500,menubar=yes");
         newwindow.document.open("text/html", "replace");
         newwindow.document.write("<html><body>test page / 1 ...<body/><html/>");
         newwindow.document.write("<script> document.onreadystatechange = function(){   if(document.readyState=='loaded' || document.readyState=='complete') window.print(); } <" + "/script>");
         newwindow.document.close();
       }
       function method2 () {
-        var newwindow = window.open("", "result", "status=1,width=700,height=500,menubar=yes");
+        var newwindow = pointer("", "result", "status=1,width=700,height=500,menubar=yes");
         newwindow.document.open("text/html", "replace");
         newwindow.document.write("<html><body>test page / 2...<body/><html/>");
         newwindow.document.close();
+      }
+      function overwrite () {
+        try {
+          Object.defineProperty(window, 'open', {
+            writable: false,
+            value: function () {
+              alert('window.open is bypassed');
+            }
+          });
+        }
+        catch (e) {
+          alert(e.message);
+        }
       }
     </script>
     <h1>Test the effectiveness of your popup blocker add-on</h1>
     <ul>
       <li><input type="button" onclick="method1()" value="Method 1/1"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 1</li>
       <li><input type="button" onclick="method2()" value="Method 1/2"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 2 (test your popup blocker to see if it can differentiate different sources with the "about:blank" origin)</li>
-      <li><input type="button" onclick="window.open('http://add0n.com/popup-blocker.html?from=tester&action=window.open');" value="Method 3"> opening a new popup window using window.open method</li>
-      <li><a href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank" target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
+      <li><input type="button" onclick="window.open('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=3');" value="Method 2/1"> opening a new popup window using window.open method</li>
+      <li><input type="button" onclick="pointer('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=4');" value="Method 2/2"> opening a new popup window using a predefined pointer to window.open method</li>
+      <li><a href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank" target="_blank">Method 3</a> opening new popup window using target="_blank" method over links</li>
     </ul>
+
+    Click <input type="button" onclick="overwrite();" value="here"> to overwrite "window.open" and try tests one more time.
+
     <p>It is recommended to use <b>Popup Blocker (Ultimate)</b> add-on for the best experience; <a href="https://chrome.google.com/webstore/detail/aefkmifgmaafnojlojpnekbpbmjiiogg">Chrome</a>, <a href="https://addons.mozilla.org/firefox/addon/popup-blocker/">Firefox</a>, and <a href="https://addons.opera.com/extensions/">Opera</a>.
     </p>
   </body>

@@ -2,7 +2,7 @@
 
 // bounce && badge
 chrome.runtime.onMessage.addListener((request, sender) => {
-  if (request.cmd === 'update-badge') {
+  if (request.cmd === 'popup-request') {
     let tabId = sender.tab.id;
     chrome.browserAction.getBadgeText({tabId}, text => {
       text = text ? parseInt(text) : 0;
@@ -13,14 +13,32 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       });
     });
   }
+  else if (request.cmd === 'open-tab') {
+    chrome.tabs.create({
+      url: request.url,
+      active: false,
+      index: sender.tab.index + 1
+    });
+  }
+  else if (request.cmd === 'popup-redirect') {
+    chrome.tabs.query({
+      active: true,
+      currentWindow: true
+    }, tabs => chrome.tabs.update(tabs[0].id, {
+      url: request.url
+    }));
+  }
+  // bouncing
   chrome.tabs.sendMessage(sender.tab.id, request);
 });
 // refresh
-chrome.tabs.onUpdated.addListener((tabId) => {
-  chrome.browserAction.setBadgeText({
-    tabId,
-    text: ''
-  });
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (changeInfo.url) {
+    chrome.browserAction.setBadgeText({
+      tabId,
+      text: ''
+    });
+  }
 });
 // context menu
 chrome.contextMenus.create({

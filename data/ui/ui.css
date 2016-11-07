@@ -1,0 +1,67 @@
+body {
+  margin: 0;
+  font-size: 13px;
+  font-family: arial,sans-serif;
+  overflow: hidden;
+}
+
+input[type=button] {
+  border: solid 1px #999;
+  background-color: #fff;
+  margin: 0 3px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 0;
+  line-height: 20px;
+  outline: none;
+}
+
+.ppblocker-div {
+  position: relative;
+  text-shadow: none;
+  box-sizing: content-box;
+  border: solid 1px #cebc7d;
+  background-color: #f4e1a7;
+  padding: 5px;
+  margin:  8px 8px 5px 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 2px;
+  box-shadow: 1px 1px 5px rgb(206,188,125);
+}
+.ppblocker-div>div {
+  display: flex;
+  justify-content: flex-end;
+}
+.ppblocker-div>p:first-of-type {
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+.ppblocker-div>p:last-of-type {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  padding: 0;
+  line-height: 32px;
+}
+.ppblocker-div:before {
+  content: attr(data-badge);
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  border: solid 2px #fff;
+  border-radius: 50%;
+  background-color: #fc0d1b;
+  color: #fff;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80%;
+}
+.ppblocker-div[data-badge="1"]:before {
+  display: none;
+}

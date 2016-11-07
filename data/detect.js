@@ -1,24 +1,50 @@
 'use strict';
+// Firefox does not allow to define non-configurable property over the "window" object.
+var configurable = navigator.userAgent.indexOf('Firefox') !== -1;
+var port = {
+  key: Math.random(),
+  send: (obj) => {
+    let script = document.createElement('script');
+    script.textContent = `window.fTfgYeds('${obj.cmd}', '${obj.id}', ${obj.value}, ${port.key});`;
+    document.documentElement.appendChild(script);
+    // To prevent malicious scripts from reading the "key" value, the script tag is removed
+    document.documentElement.removeChild(script);
+  }
+};
 
-chrome.storage.local.get({
-  'enabled': true
-}, prefs => {
-  let script = document.createElement('script');
-  script.textContent = `
-  (function (ipblocker, ipcallbacks, ipenabled, ipactive) {
-    window.open = function (url, name, specs, replace) {
+window.addEventListener('message', e => {
+  if (e.data.cmd === 'popup-request') {
+    chrome.runtime.sendMessage(e.data);
+  }
+});
+chrome.runtime.onMessage.addListener(request => {
+  if (
+    request.cmd === 'popup-accepted' ||
+    request.cmd === 'popup-status'
+  ) {
+    port.send(request);
+  }
+});
+
+var script = document.createElement('script');
+script.textContent = `
+(function (ipblocker, ipcallbacks, ipenabled, key, activeElement) {
+  Object.defineProperty(window, 'open', {
+    writable: false,
+    configurable: ${configurable},
+    value: function (url, name, specs, replace) {
       if (ipenabled) {
         let id = Math.random();
 
+        // in Firefox sometimes returns document.activeElement is document.body
         window.setTimeout(() => {
           // handling about:blank cases
-          // firefox sometimes reutens document.body for document.activeElement
-          let activeElement = document.activeElement === document.body && ipactive ? ipactive : document.activeElement;
+          let selected = document.activeElement === document.body && activeElement ? activeElement : document.activeElement;
           if (!url || url.startsWith('about:')) {
-            activeElement.dataset.popupblocker = activeElement.dataset.popupblocker || id;
+            selected.dataset.popupblocker = selected.dataset.popupblocker || id;
           }
           //
-          window.top.postMessage({
+          window.postMessage({
             cmd: 'popup-request',
             type: 'window.open',
             url,
@@ -26,7 +52,7 @@ chrome.storage.local.get({
             specs,
             replace,
             id,
-            tag: activeElement.dataset.popupblocker
+            tag: selected.dataset.popupblocker
           }, '*');
         }, 100);
 
@@ -62,32 +88,39 @@ chrome.storage.local.get({
         return ipblocker.apply(window, arguments);
       }
     }
-    // link[target=_blank]
-    window.addEventListener('click', function (e) {
-      ipactive = e.target;
-      if (ipenabled) {
-        let a = e.target.closest('a');
-        if (a && a.target === '_blank' && (e.button === 0 && !e.metaKey)) {
-          let id = Math.random();
-          window.top.postMessage({
-            cmd: 'popup-request',
-            type: 'target._blank',
-            url: a.href,
-            id
-          }, '*');
-          ipcallbacks[id] = {
-            arguments: [a.href],
-            cmds: []
-          };
-          e.preventDefault();
-          e.stopPropagation();
-        }
+  });
+  // link[target=_blank]
+  window.addEventListener('click', function (e) {
+    activeElement = e.target;
+    if (ipenabled) {
+      let a = e.target.closest('a');
+      if (a && a.target === '_blank' && (e.button === 0 && !e.metaKey)) {
+        let id = Math.random();
+        window.postMessage({
+          cmd: 'popup-request',
+          type: 'target._blank',
+          url: a.href,
+          id,
+        }, '*');
+        ipcallbacks[id] = {
+          arguments: [a.href],
+          cmds: []
+        };
+        e.preventDefault();
+        e.stopPropagation();
       }
-    });
+    }
+  });
 
-    window.addEventListener('message', e => {
-      let id = e.data.id;
-      if (e.data && e.data.cmd === 'popup-accepted' && ipcallbacks[id]) {
+  Object.defineProperty(window, 'fTfgYeds', {
+    writable:false,
+    configurable: ${configurable},
+    value: function (cmd, id, value, ukey) {
+      if (ukey !== key) {
+        return;
+      }
+
+      if (cmd === 'popup-accepted' && ipcallbacks[id]) {
         let win = ipblocker.apply(window, ipcallbacks[id].arguments);
         ipcallbacks[id].cmds.forEach(obj => {
           try {
@@ -96,16 +129,21 @@ chrome.storage.local.get({
           catch (e) {}
         });
       }
-      else if (e.data && e.data.cmd === 'popup-redirect' && ipcallbacks[id]) {
-        window.top.location = ipcallbacks[id].arguments[0];
+      else if (cmd === 'popup-status') {
+        ipenabled = value;
       }
-      else if (e.data && e.data.cmd === 'popup-status') {
-        ipenabled = e.data.value;
-      }
-    });
-  })(window.open, {}, ${prefs.enabled})
-  `;
-  document.documentElement.appendChild(script);
-});
+    }
+  });
+  ipblocker.dd = function () {};
+})(window.open, {}, true, ${port.key});
+`;
+document.documentElement.appendChild(script);
+// To prevent malicious scripts from reading the "key" value, the script tag is removed
+document.documentElement.removeChild(script);
 
-chrome.runtime.onMessage.addListener((request) => window.postMessage(request, '*'));
+chrome.storage.local.get({
+  'enabled': true
+}, prefs => port.send({
+  cmd: 'popup-status',
+  value: prefs.enabled
+}));

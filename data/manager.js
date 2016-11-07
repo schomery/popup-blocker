@@ -1,0 +1,40 @@
+'use strict';
+
+var iframe;
+
+chrome.runtime.onMessage.addListener((request) => {
+  if (request.cmd === 'popup-request') {
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.src = chrome.runtime.getURL('data/ui/ui.html');
+      iframe.style = `
+        z-index: 1000000000;
+        position: fixed;
+        right: 10px;
+        top: 10px;
+        width: 350px;
+        max-width: 80vw;
+        height: 85px;
+        border: none;
+        background: trnasparent;
+        border-radius: 0;
+      `;
+      iframe.addEventListener('load', () => {
+        request.cmd = 'popup-request-bounced';
+        chrome.runtime.sendMessage(request);
+      });
+      document.body.appendChild(iframe);
+    }
+  }
+  else if (request.cmd === 'popup-number') {
+    if (iframe) {
+      if (request.number) {
+        iframe.style.height = (request.number * (85 + 8 + 5)) + 'px';
+      }
+      else {
+        document.body.removeChild(iframe);
+        iframe = null;
+      }
+    }
+  }
+});
