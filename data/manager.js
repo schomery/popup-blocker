@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener((request) => {
     if (!iframe) {
       iframe = document.createElement('iframe');
       iframe.src = chrome.runtime.getURL('data/ui/ui.html');
-      iframe.style = `
+      iframe.setAttribute('style', `
         z-index: 100000000000000000;
         position: fixed;
         right: 10px;
@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener((request) => {
         border: none;
         background: trnasparent;
         border-radius: 0;
-      `;
+      `);
       iframe.onload = () => {
         request.cmd = 'popup-request-bounced';
         chrome.runtime.sendMessage(request);

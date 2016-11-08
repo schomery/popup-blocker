@@ -185,7 +185,8 @@ chrome.storage.onChanged.addListener(obj => {
         key: oneTimeKeys.shift()
       }, '*');
     }
-    else {
+    // only display warning once
+    else if (window === window.top) {
       window.alert('Stack limit\n\nCannot change the popup-blocker status anymore. Please refresh this page.');
     }
   }

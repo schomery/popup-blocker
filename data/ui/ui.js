@@ -14,6 +14,20 @@ function remove (div) {
   });
 }
 
+document.addEventListener('click', e => {
+  let target = e.target;
+  let cmd = target.dataset.cmd;
+  if (cmd) {
+    let div = target.parentNode.parentNode;
+    if (div) {
+      let url = div.dataset.url;
+      let id = div.dataset.id;
+      remove(div);
+      chrome.runtime.sendMessage({cmd, id, url});
+    }
+  }
+});
+
 chrome.runtime.onMessage.addListener((request) => {
   if (request.cmd === 'popup-request' || request.cmd === 'popup-request-bounced') {
     let tag  = request.url && request.url !== 'about:blank' ? request.url : request.tag;
@@ -33,67 +47,29 @@ chrome.runtime.onMessage.addListener((request) => {
         let div = document.createElement('div');
         div.setAttribute('class', 'ppblocker-div');
         div.dataset.badge = 1;
+        div.dataset.id = request.id;
         let buttons = document.createElement('div');
 
         let ok = document.createElement('input');
         ok.type = 'button';
         ok.value = 'allow';
         ok.title = 'Allow the page to open this popup';
-        ok.addEventListener('click', (evt) => {
-          evt.preventDefault();
-          evt.stopPropagation();
-
-          chrome.runtime.sendMessage({
-            cmd: 'popup-accepted',
-            id: request.id
-          });
-          remove(div);
-        }, true);
+        ok.dataset.cmd = 'popup-accepted';
         let redirect = document.createElement('input');
         redirect.type = 'button';
         redirect.value = 'redirect';
         redirect.title = 'Redirect current page to the new destination instead of opening it in a new tab/popup';
-        redirect.addEventListener('click', (evt) => {
-          evt.preventDefault();
-          evt.stopPropagation();
-
-          chrome.runtime.sendMessage({
-            cmd: 'popup-redirect',
-            id: request.id,
-            url: evt.target.parentNode.parentNode.dataset.url
-          });
-          remove(div);
-        }, true);
+        redirect.dataset.cmd = 'popup-redirect';
         let background = document.createElement('input');
         background.type = 'button';
         background.value = 'background';
         background.title = 'Open link in a background tab';
-        background.addEventListener('click', (evt) => {
-          evt.preventDefault();
-          evt.stopPropagation();
-
-          chrome.runtime.sendMessage({
-            cmd: 'open-tab',
-            id: request.id,
-            url: evt.target.parentNode.parentNode.dataset.url
-          });
-
-          remove(div);
-        }, true);
+        background.dataset.cmd = 'open-tab';
         let cancel = document.createElement('input');
         cancel.type = 'button';
         cancel.value = 'deny';
         cancel.title = 'Decline the popup/tab opening';
-        cancel.addEventListener('click', (evt) => {
-          evt.preventDefault();
-          evt.stopPropagation();
-
-          chrome.runtime.sendMessage({
-            cmd: 'popup-denied',
-            id: request.id
-          });
-          remove(div);
-        }, true);
+        cancel.dataset.cmd = 'popup-denied';
 
         let p1 = document.createElement('p');
 
