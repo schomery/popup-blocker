@@ -45,18 +45,34 @@
       var pointer = window.open;
 
       function method1 () {
-        var newwindow = pointer("", "result", "status=1,width=700,height=500,menubar=yes");
-        newwindow.document.open("text/html", "replace");
-        newwindow.document.write("<html><body>test page / 1 ...<body/><html/>");
-        newwindow.document.write("<script> document.onreadystatechange = function(){   if(document.readyState=='loaded' || document.readyState=='complete') window.print(); } <" + "/script>");
+        var newwindow = pointer('', 'result', 'status=1,width=700,height=500,menubar=yes');
+        newwindow.document.open('text/html', 'replace');
+        newwindow.document.write('<html><body>test page / 1 ...<body/><html/>');
+        newwindow.document.write('<script> document.onreadystatechange = function(){   if(document.readyState=="loaded" || document.readyState=="complete") window.print(); } <' + '/script>');
         newwindow.document.close();
       }
       function method2 () {
-        var newwindow = pointer("", "result", "status=1,width=700,height=500,menubar=yes");
-        newwindow.document.open("text/html", "replace");
-        newwindow.document.write("<html><body>test page / 2...<body/><html/>");
+        var newwindow = pointer('', 'result', 'status=1,width=700,height=500,menubar=yes');
+        newwindow.document.open('text/html', 'replace');
+        newwindow.document.write('<html><body>test page / 2...<body/><html/>');
         newwindow.document.close();
       }
+      function method3 (url, title, w, h) {
+        var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
+        var dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
+        var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+        var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+        var top = ((height / 2) - (h / 2)) + dualScreenTop;
+        var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+        // Puts focus on the newWindow
+        if (window.focus) {
+          newWindow.focus();
+        }
+      }
+
       function overwrite () {
         try {
           Object.defineProperty(window, 'open', {
@@ -67,7 +83,7 @@
           });
         }
         catch (e) {
-          alert(e.message);
+          alert('Error: ' + e.message);
         }
       }
     </script>
@@ -75,9 +91,10 @@
     <ul>
       <li><input type="button" onclick="method1()" value="Method 1/1"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 1</li>
       <li><input type="button" onclick="method2()" value="Method 1/2"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 2 (test your popup blocker to see if it can differentiate different sources with the "about:blank" origin)</li>
-      <li><input type="button" onclick="window.open('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=3');" value="Method 2/1"> opening a new popup window using window.open method</li>
-      <li><input type="button" onclick="pointer('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=4');" value="Method 2/2"> opening a new popup window using a predefined pointer to window.open method</li>
-      <li><a href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank" target="_blank">Method 3</a> opening new popup window using target="_blank" method over links</li>
+      <li><input type="button" onclick="window.open('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=3');" value="Method 2/1"> opening a new popup tab using window.open method</li>
+      <li><input type="button" onclick="pointer('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=4');" value="Method 2/2"> opening a new popup tab using a predefined pointer to window.open method</li>
+      <li><input type="button" onclick="method3('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=5', 'new window', 600, 600)" value="Method 3"> opening a new popup window and passing arguments to it</li>
+      <li><a href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank" target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
     </ul>
 
     Click <input type="button" onclick="overwrite();" value="here"> to overwrite "window.open" and try tests one more time.

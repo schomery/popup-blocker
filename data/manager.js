@@ -19,10 +19,10 @@ chrome.runtime.onMessage.addListener((request) => {
         background: trnasparent;
         border-radius: 0;
       `;
-      iframe.addEventListener('load', () => {
+      iframe.onload = () => {
         request.cmd = 'popup-request-bounced';
         chrome.runtime.sendMessage(request);
-      });
+      };
       document.body.appendChild(iframe);
     }
   }

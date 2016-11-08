@@ -2,6 +2,7 @@
 
 // bounce && badge
 chrome.runtime.onMessage.addListener((request, sender) => {
+  // update badge counter
   if (request.cmd === 'popup-request') {
     let tabId = sender.tab.id;
     chrome.browserAction.getBadgeText({tabId}, text => {
@@ -13,6 +14,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       });
     });
   }
+  // open new tab
   else if (request.cmd === 'open-tab') {
     chrome.tabs.create({
       url: request.url,
@@ -20,6 +22,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       index: sender.tab.index + 1
     });
   }
+  // redirect current tab
   else if (request.cmd === 'popup-redirect') {
     chrome.tabs.query({
       active: true,
@@ -28,6 +31,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       url: request.url
     }));
   }
+
   // bouncing
   chrome.tabs.sendMessage(sender.tab.id, request);
 });
@@ -62,12 +66,6 @@ function update (toggle) {
         16: 'data/icons/' + (obj.enabled ? '' : 'disabled/') + '16.png',
         32: 'data/icons/' + (obj.enabled ? '' : 'disabled/') + '32.png'
       }
-    });
-    chrome.tabs.query({}, (tabs) => {
-      tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, {
-        cmd: 'popup-status',
-        value: obj.enabled
-      }));
     });
   });
 }

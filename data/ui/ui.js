@@ -59,13 +59,14 @@ chrome.runtime.onMessage.addListener((request) => {
 
           chrome.runtime.sendMessage({
             cmd: 'popup-redirect',
+            id: request.id,
             url: evt.target.parentNode.parentNode.dataset.url
           });
           remove(div);
         }, true);
         let background = document.createElement('input');
         background.type = 'button';
-        background.value = 'Background';
+        background.value = 'background';
         background.title = 'Open link in a background tab';
         background.addEventListener('click', (evt) => {
           evt.preventDefault();
@@ -73,6 +74,7 @@ chrome.runtime.onMessage.addListener((request) => {
 
           chrome.runtime.sendMessage({
             cmd: 'open-tab',
+            id: request.id,
             url: evt.target.parentNode.parentNode.dataset.url
           });
 
@@ -85,6 +87,11 @@ chrome.runtime.onMessage.addListener((request) => {
         cancel.addEventListener('click', (evt) => {
           evt.preventDefault();
           evt.stopPropagation();
+
+          chrome.runtime.sendMessage({
+            cmd: 'popup-denied',
+            id: request.id
+          });
           remove(div);
         }, true);
 
