@@ -112,7 +112,7 @@ script.textContent = `
           focus: function () {
             window.postMessage({
               cmd: 'popup-request-additional',
-              name: 'focus'
+              name: 'focus',
               id
             }, '*');
           }

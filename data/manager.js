@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener((request) => {
       iframe = document.createElement('iframe');
       iframe.src = chrome.runtime.getURL('data/ui/ui.html');
       iframe.style = `
-        z-index: 1000000000;
+        z-index: 100000000000000000;
         position: fixed;
         right: 10px;
         top: 10px;
