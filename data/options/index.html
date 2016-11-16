@@ -3,22 +3,50 @@
 <head>
   <title>Options Page :: Popup Blocker</title>
   <style>
-    body: { padding: 10px; }
-    input[type=number] { width: 50px; }
+    body: {
+      padding: 10px;
+      font-size: 13px;
+      font-family: arial,sans-serif;
+    }
+    input[type=number] {
+      width: 50px;
+    }
+    input[type=text] {
+      width: 100%;
+    }
   </style>
 </head>
 
 <body>
   <p>
-    <label>Maximum number of popup requests for a single page: <input type="number" id="numbers" min=1> </label>
+    <label><span data-i18n="options_item1"></span> <input type="number" id="numbers" min=1> </label>
   </p>
   <p>
-    <label>Timeout for displaying each popup (in seconds): <input type="number" id="timeout" min=5></label>
+    <label><span data-i18n="options_item2"></span><sup>1</sup> <input type="number" id="timeout" min=5></label>
   </p>
-
-  <div id="status"></div>
-  <button id="save">Save</button>
-
+  <p>
+    <label><input type="checkbox" id="domain"> <span data-i18n="options_item3"></span><sup>1</sup></label>
+    <br>
+    <label><input type="checkbox" id="target"> <span data-i18n="options_item4"></span><sup>1</sup></label>
+    <br>
+    <label><input type="checkbox" id="badge"> <span data-i18n="options_item5"></span><sup>1</sup></label>
+  </p>
+  <p>
+    <span data-i18n="options_item6"></span><sup>1</sup>
+    <br>
+    <input type="text" id="popup-hosts" rows="2">
+  </p>
+  <p>
+    <span data-i18n="options_item7"></span><sup>1</sup>
+    <br>
+    <input type="text" id="top-hosts" rows="2">
+  </p>
+  <p>
+    1: <span data-i18n="options_item8"></span>
+  </p>
+  <div>
+    <button id="save" data-i18n="options_save"></button> <span id="status"></span>
+  </div>
   <script src="index.js"></script>
 </body>
 </html>

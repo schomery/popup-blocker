@@ -1,10 +1,11 @@
 {
   "name": "Popup Blocker (ultimate)",
   "short_name": "ipblocker",
-  "description": "Strictly block all popup requests from any website.",
+  "description": "__MSG_appDesc__",
   "author": "Jeremy Schomery",
   "version": "0.1.6",
   "manifest_version": 2,
+  "default_locale": "en",
   "permissions": [
     "storage",
     "tabs",

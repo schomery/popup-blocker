@@ -5,9 +5,9 @@ var configurable = navigator.userAgent.indexOf('Firefox') !== -1;
 var requests = {};
 var commands = {};
 
-// Generating 20 onetime random numbers
+// Generating 40 onetime random numbers
 var oneTimeKeys = [];
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 40; i++) {
   oneTimeKeys.push(Math.random());
 }
 
@@ -56,12 +56,37 @@ chrome.runtime.onMessage.addListener((request) => {
 
 var script = document.createElement('script');
 script.textContent = `
-(function (pointer, isEnabled, keys, activeElement) {
+(function (pointer, isEnabled, isDomain, whitelist, keys, activeElement) {
+  function permit (url) {
+    // white-list section
+    try {
+      let h = (new URL(url)).hostname;
+      for (let i = 0; i < whitelist.length; i++) {
+        let hostname = whitelist[i];
+        if (h.endsWith(hostname) || hostname.endsWith(h)) {
+          return true;
+        }
+      }
+    }
+    catch (e) {}
+    // isDomain section
+    if (!isDomain) {
+      return false;
+    }
+    try {
+      let hostname = window.top.location.hostname;
+      let h = (new URL(url)).hostname;
+      return h.endsWith(hostname) || hostname.endsWith(h);
+    }
+    catch (e) {}
+    return false;
+  }
+
   Object.defineProperty(window, 'open', {
     writable: false,
     configurable: ${configurable},
     value: function (url, name, specs, replace) {
-      if (isEnabled) {
+      if (isEnabled && !permit(url)) {
         let id = Math.random();
 
         // in Firefox sometimes returns document.activeElement is document.body
@@ -124,38 +149,54 @@ script.textContent = `
     }
   });
   // link[target=_blank]
-  window.addEventListener('click', function (e) {
+  var onclick = function (e) {
     activeElement = e.target;
     if (isEnabled) {
       let a = e.target.closest('a');
       if (a && a.target === '_blank' && (e.button === 0 && !e.metaKey)) {
-        let id = Math.random();
-        window.postMessage({
-          cmd: 'popup-request',
-          type: 'target._blank',
-          url: a.href,
-          arguments: [a.href],
-          id
-        }, '*');
-        e.preventDefault();
-        e.stopPropagation();
+        if (!permit(a.href)) {
+          let id = Math.random();
+          window.postMessage({
+            cmd: 'popup-request',
+            type: 'target._blank',
+            url: a.href,
+            arguments: [a.href],
+            id
+          }, '*');
+          e.preventDefault();
+          e.stopPropagation();
+        }
       }
     }
-  });
+  };
+  window.addEventListener('click', onclick, false);
 
   window.addEventListener('message', e => {
-    if (e.data.cmd === 'change-status') {
+    if (e.data.cmd === 'change-status' || e.data.cmd === 'configure') {
       let key = e.data.key;
       let index = keys.indexOf(key);
       if (index !== -1) {
         // if key is valid remove it from the list of valid keys
         keys.splice(index, 1);
+      }
+      else {
+        return;
+      }
+    }
+    if (e.data.cmd === 'change-status') {
         isEnabled = e.data.value;
+    }
+    else if (e.data.cmd === 'configure') {
+      isEnabled = e.data.enabled;
+      isDomain = e.data.domain;
+      whitelist = e.data.whitelist;
+      if (!e.data.target) {
+        window.removeEventListener('click', onclick);
       }
     }
   });
 
-})(window.open, true, [${oneTimeKeys}]);
+})(window.open, true, false, [], [${oneTimeKeys}]);
 `;
 document.documentElement.appendChild(script);
 document.documentElement.removeChild(script);
@@ -164,20 +205,24 @@ document.documentElement.removeChild(script);
  * The extension uses insecure window.postMessage to enable/disable the popup blocker;
  * To protect against malicious scripts from disabling the blocker, we are passing onetime keys along with the command
 */
+var active = true;
 chrome.storage.local.get({
-  'enabled': true
+  'enabled': true,
+  'target': true,
+  'domain': false,
+  'popup-hosts': ['google.com', 'bing.com']
 }, prefs => {
-  // by default the popup-blocker is enabled; only send the "change-status" signal if it is disabled
-  if (!prefs.enabled) {
-    window.postMessage({
-      cmd: 'change-status',
-      value: false,
-      key: oneTimeKeys.shift()
-    }, '*');
-  }
+  window.postMessage({
+    cmd: 'configure',
+    enabled: prefs.enabled,
+    target: prefs.target,
+    domain: prefs.domain,
+    whitelist: prefs['popup-hosts'],
+    key: oneTimeKeys.shift()
+  }, '*');
 });
 chrome.storage.onChanged.addListener(obj => {
-  if (obj.enabled) {
+  if (obj.enabled && active) {
     if (oneTimeKeys.length) {
       window.postMessage({
         cmd: 'change-status',
@@ -189,5 +234,19 @@ chrome.storage.onChanged.addListener(obj => {
     else if (window === window.top) {
       window.alert('Stack limit\n\nCannot change the popup-blocker status anymore. Please refresh this page.');
     }
+  }
+});
+// is top domain white-listed
+chrome.runtime.sendMessage({
+  cmd: 'validate'
+}, (response) => {
+  if (response.valid) {
+    console.error('this page is white-listed');
+    active = false;
+    window.postMessage({
+      cmd: 'change-status',
+      value: false,
+      key: oneTimeKeys.shift()
+    }, '*');
   }
 });

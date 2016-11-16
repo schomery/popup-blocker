@@ -1,9 +1,38 @@
 'use strict';
 
+var badge = true;
+var whitelist = [];
+var _ = chrome.i18n.getMessage;
+
+// config
+chrome.storage.onChanged.addListener(prefs => {
+  if (prefs.badge) {
+    badge = prefs.badge.newValue;
+    if (!badge) {
+      chrome.tabs.query({}, tabs => tabs.forEach(tab => {
+        chrome.browserAction.setBadgeText({
+          tabId: tab.id,
+          text: ''
+        });
+      }));
+    }
+  }
+  else if (prefs['top-hosts']) {
+    whitelist = prefs['top-hosts'].newValue;
+  }
+});
+chrome.storage.local.get({
+  badge: true,
+  'top-hosts': []
+}, prefs => {
+  badge = prefs.badge;
+  whitelist = prefs['top-hosts'];
+});
+
 // bounce && badge
-chrome.runtime.onMessage.addListener((request, sender) => {
+chrome.runtime.onMessage.addListener((request, sender, response) => {
   // update badge counter
-  if (request.cmd === 'popup-request') {
+  if (request.cmd === 'popup-request' && badge) {
     let tabId = sender.tab.id;
     chrome.browserAction.getBadgeText({tabId}, text => {
       text = text ? parseInt(text) : 0;
@@ -31,6 +60,15 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       url: request.url
     }));
   }
+  // validate top level
+  else if (request.cmd === 'validate') {
+    try {
+      let hostname = (new URL(sender.tab.url)).hostname;
+      let valid = whitelist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
+      response({valid});
+    }
+    catch (e) {}
+  }
 
   // bouncing
   chrome.tabs.sendMessage(sender.tab.id, request);
@@ -46,7 +84,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 // context menu
 chrome.contextMenus.create({
-  title: 'Test your popup blocker',
+  title: _('context_item1'),
   contexts: ['browser_action'],
   onclick: () => chrome.tabs.create({
     url: 'http://tools.add0n.com/popup-blocker.html'
@@ -77,7 +115,8 @@ chrome.storage.local.get('version', (obj) => {
   if (obj.version !== version) {
     chrome.storage.local.set({version}, () => {
       chrome.tabs.create({
-        url: 'http://add0n.com/popup-blocker.html?version=' + version + '&type=' + (obj.version ? ('upgrade&p=' + obj.version) : 'install')
+        url: 'http://add0n.com/popup-blocker.html?version=' + version + '&type=' +
+          (obj.version ? ('upgrade&p=' + obj.version) : 'install')
       });
     });
   }
