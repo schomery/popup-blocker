@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener((request) => {
         max-width: 80vw;
         height: 85px;
         border: none;
-        background: trnasparent;
+        background: transparent;
         border-radius: 0;
       `);
       iframe.onload = () => {

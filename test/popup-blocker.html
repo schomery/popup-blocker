@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Popup blocking test suite :: tools.add0n.com</title>
+    <base target="_blank" />
   </head>
   <body>
     <style>
@@ -13,6 +14,7 @@
       li {
         margin: 5px 0;
       }
+      iframe,
       input,
       a {
         border: none;
@@ -31,6 +33,7 @@
       input {
         padding: 5px;
       }
+      iframe:active,
       input:active,
       a:hover {
         opacity: 0.5;
@@ -39,10 +42,17 @@
       li input {
         min-width: 100px;
       }
+      iframe {
+        border: none;
+        width: 100px;
+        height: 24px;
+        vertical-align: middle;
+      }
     </style>
     <script>
       'use strict';
       var pointer = window.open;
+      console.error(pointer)
 
       function method1 () {
         var newwindow = pointer('', 'result', 'status=1,width=700,height=500,menubar=yes');
@@ -72,6 +82,11 @@
           newWindow.focus();
         }
       }
+      function method7 () {
+        var c = document.createElement('a'),
+          d = document.createEvent('MouseEvents');
+          c.href = 'about:blank', d.initMouseEvent('click', !1, !0, window, 0, 0, 0, 0, 0, !0, !1, !1, !0, 0, null), c.dispatchEvent(d);
+      }
 
       function overwrite () {
         try {
@@ -94,7 +109,22 @@
       <li><input type="button" onclick="window.open('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=3');" value="Method 2/1"> opening a new popup tab using window.open method</li>
       <li><input type="button" onclick="pointer('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=4');" value="Method 2/2"> opening a new popup tab using a predefined pointer to window.open method</li>
       <li><input type="button" onclick="method3('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=5', 'new window', 600, 600)" value="Method 3"> opening a new popup window and passing arguments to it</li>
-      <li><a href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank" target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
+      <li><a href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank&test=4" target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
+      <li><iframe sandbox="allow-forms allow-popups allow-scripts allow-same-origin" src="./iframe1.html"></iframe> opening a new popup tab using iframe with "base" header set to target="_parent" method</li>
+      <li><a href="http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=6">Method 6</a> opening a new popup tab using link with "base" header set to target="_blank"</li>
+      <li><input type="button" onclick="method7()" value="Method 7"> opening a new about:blank popup window using createEvent method</li>
+      <li><a id="id1" href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank&test=8-1" target="_blank">Method 8/1</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
+      <script>
+        document.getElementById('id1').addEventListener('click', function (e) {
+          e.stopPropagation();
+        });
+      </script>
+      <li><a id="id2" href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank&test=8-2" target="_blank">Method 8/2</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
+      <script>
+        document.getElementById('id2').addEventListener('click', function (e) {
+          e.stopImmediatePropagation();
+        });
+      </script>
     </ul>
 
     Click <input type="button" onclick="overwrite();" value="here"> to overwrite "window.open" and try tests one more time.

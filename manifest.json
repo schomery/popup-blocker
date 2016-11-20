@@ -1,9 +1,11 @@
 {
+"update_url": "https://clients2.google.com/service/update2/crx",
+
   "name": "Popup Blocker (ultimate)",
   "short_name": "ipblocker",
   "description": "__MSG_appDesc__",
   "author": "Jeremy Schomery",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "manifest_version": 2,
   "default_locale": "en",
   "permissions": [

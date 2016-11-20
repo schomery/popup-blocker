@@ -1,62 +1,9 @@
 'use strict';
-// Firefox does not allow to define non-configurable property over the "window" object.
-var configurable = navigator.userAgent.indexOf('Firefox') !== -1;
+console.error(2)
+(function (wPointer, dPointer, isEnabled, isDomain, whitelist, activeElement) {
+  let keys = JSON.parse(document.currentScript.dataset.keys);
+  let configurable = document.currentScript.dataset.configurable === 'false' ? false : true;
 
-var requests = {};
-var commands = {};
-
-// Generating 40 onetime random numbers
-var oneTimeKeys = [];
-for (let i = 0; i < 40; i++) {
-  oneTimeKeys.push(Math.random());
-}
-
-window.addEventListener('message', e => {
-  let request = e.data;
-  if (request.cmd === 'popup-request') {
-    chrome.runtime.sendMessage(e.data);
-    requests[request.id] = e.data;
-    commands[request.id] = commands[request.id] || [];
-  }
-  else if (request.cmd === 'popup-request-additional') {
-    commands[request.id] = commands[request.id] || [];
-    commands[request.id].push(e.data);
-  }
-});
-
-chrome.runtime.onMessage.addListener((request) => {
-  let id = request.id;
-
-  // apply popup accept on the context where it is originally requested
-  if (request.cmd === 'popup-accepted' && requests[id]) {
-    let win = window.open.apply(window, requests[id].arguments);
-    commands[id].forEach(obj => {
-      try {
-        if (obj.name === 'focus') {
-          win.focus();
-        }
-        else {
-          win.document[obj.name].apply(win.document, obj.arguments);
-        }
-      }
-      catch (e) {}
-    });
-  }
-  // clean up
-  if (
-    request.cmd === 'popup.accepted' ||
-    request.cmd === 'open-tab' ||
-    request.cmd === 'popup-redirect' ||
-    request.cmd === 'popup-denied'
-  ) {
-    delete commands[id];
-    delete requests[id];
-  }
-});
-
-var script = document.createElement('script');
-script.textContent = `
-(function (wPointer, dPointer, isEnabled, isDomain, whitelist, keys, activeElement) {
   function permit (url) {
     // white-list section
     try {
@@ -84,8 +31,9 @@ script.textContent = `
 
   Object.defineProperty(window, 'open', {
     writable: false,
-    configurable: ${configurable},
+    configurable,
     value: function (url, name, specs, replace) {
+      console.error(isEnabled , !permit(url))
       if (isEnabled && !permit(url)) {
         let id = Math.random();
 
@@ -186,7 +134,7 @@ script.textContent = `
   // dynamic "a" elements
   Object.defineProperty(document, 'createElement', {
     writable: false,
-    configurable: ${configurable},
+    configurable,
     value: function (tagName) {
       let target = dPointer.apply(document, arguments);
       if (tagName.toLowerCase() === 'a') {
@@ -225,57 +173,4 @@ script.textContent = `
       }
     }
   });
-
-})(window.open, document.createElement, true, false, [], [${oneTimeKeys}]);
-`;
-document.documentElement.appendChild(script);
-document.documentElement.removeChild(script);
-
-/* Enabling and disabling the popup-blocker
- * The extension uses insecure window.postMessage to enable/disable the popup blocker;
- * To protect against malicious scripts from disabling the blocker, we are passing onetime keys along with the command
-*/
-var active = true;
-chrome.storage.local.get({
-  'enabled': true,
-  'target': true,
-  'domain': false,
-  'popup-hosts': ['google.com', 'bing.com']
-}, prefs => {
-  window.postMessage({
-    cmd: 'configure',
-    enabled: prefs.enabled,
-    target: prefs.target,
-    domain: prefs.domain,
-    whitelist: prefs['popup-hosts'],
-    key: oneTimeKeys.shift()
-  }, '*');
-});
-chrome.storage.onChanged.addListener(obj => {
-  if (obj.enabled && active) {
-    if (oneTimeKeys.length) {
-      window.postMessage({
-        cmd: 'change-status',
-        value: obj.enabled.newValue,
-        key: oneTimeKeys.shift()
-      }, '*');
-    }
-    // only display warning once
-    else if (window === window.top) {
-      window.alert('Stack limit\n\nCannot change the popup-blocker status anymore. Please refresh this page.');
-    }
-  }
-});
-// is top domain white-listed
-chrome.runtime.sendMessage({
-  cmd: 'validate'
-}, (response) => {
-  if (response.valid) {
-    active = false;
-    window.postMessage({
-      cmd: 'change-status',
-      value: false,
-      key: oneTimeKeys.shift()
-    }, '*');
-  }
-});
+})(window.open, document.createElement, true, false, []);

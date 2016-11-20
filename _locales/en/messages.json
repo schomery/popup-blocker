@@ -12,7 +12,7 @@
     "message": "Timeout for displaying each popup (in seconds):"
   },
   "options_item3": {
-    "message": "Do not block popup requests from same domain"
+    "message": "Do not block popup requests from same origin"
   },
   "options_item4": {
     "message": "Block link opening in new tabs"
@@ -24,7 +24,7 @@
     "message": "White-list (popup): Comma separated list of host name or domain name for popups that are not going to be blocked (these domains can issue popups on any web-page)"
   },
   "options_item7": {
-    "message": "White-list (webpage): Comma separated list of host name or domain name of web-pages that the popup blocker is disabled in them"
+    "message": "White-list (webpage): Comma separated list of host name or domain name of web-pages that the popup blocker is completely disabled"
   },
   "options_item8": {
     "message": "Tab refresh is required"
