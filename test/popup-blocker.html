@@ -13,6 +13,8 @@
       }
       li {
         margin: 5px 0;
+        display: flex;
+        align-items: center;
       }
       iframe,
       input,
@@ -26,6 +28,7 @@
         font-size: 90%;
         cursor: pointer;
         outline: none;
+        margin-right: 5px;
       }
       a {
         padding: 5px 0;
@@ -45,7 +48,7 @@
       iframe {
         border: none;
         width: 100px;
-        height: 24px;
+        height: 23px;
         vertical-align: middle;
       }
     </style>
@@ -88,7 +91,7 @@
           c.href = 'about:blank', d.initMouseEvent('click', !1, !0, window, 0, 0, 0, 0, 0, !0, !1, !1, !0, 0, null), c.dispatchEvent(d);
       }
 
-      function overwrite () {
+      function overwrite1 () {
         try {
           Object.defineProperty(window, 'open', {
             writable: false,
@@ -101,6 +104,17 @@
           alert('Error: ' + e.message);
         }
       }
+
+      function overwrite2 () {
+        try {
+          MouseEvent.prototype.preventDefault = function () {}
+        }
+        catch (e) {
+          alert('Error: ' + e.message);
+        }
+      };
+
+
     </script>
     <h1>Test the effectiveness of your popup blocker add-on</h1>
     <ul>
@@ -125,9 +139,22 @@
           e.stopImmediatePropagation();
         });
       </script>
+      <li><span id="id3"> click the button to create iframe, then click on the generated link</li>
+      <script>
+        var f = document.createElement('iframe');
+        var elem = document.getElementById('id3');
+        elem.parentNode.insertBefore(f, elem);
+        f.contentDocument.write('<html><head><style>body{display: flex; align-items: center; justify-content: center; margin: 0;}</style></head><body><a href="http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=9" target="_blank">Method 9</a></body></html>');
+        f.contentDocument.documentElement.appendChild(document.querySelector('style').cloneNode(true));
+        f.contentDocument.close();
+      </script>
     </ul>
-
-    Click <input type="button" onclick="overwrite();" value="here"> to overwrite "window.open" and try tests one more time.
+    <p>
+      Click <input type="button" onclick="overwrite1();" value="here"> to overwrite "window.open" and try tests one more time.
+    </p>
+    <p>
+      Click <input type="button" onclick="overwrite2();" value="here"> to overwrite "MouseEvent.prototype.preventDefault" and try tests one more time.
+    </p>
 
     <p>It is recommended to use <b>Popup Blocker (Ultimate)</b> add-on for the best experience; <a href="https://chrome.google.com/webstore/detail/aefkmifgmaafnojlojpnekbpbmjiiogg">Chrome</a>, <a href="https://addons.mozilla.org/firefox/addon/popup-blocker/">Firefox</a>, and <a href="https://addons.opera.com/extensions/">Opera</a>.
     </p>

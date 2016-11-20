@@ -1,4 +1,5 @@
 'use strict';
+
 // Firefox does not allow to define non-configurable property over the "window" object.
 var configurable = navigator.userAgent.indexOf('Firefox') !== -1;
 
@@ -56,7 +57,7 @@ chrome.runtime.onMessage.addListener((request) => {
 
 var script = document.createElement('script');
 script.textContent = `
-(function (wPointer, dPointer, isEnabled, isDomain, whitelist, keys, activeElement) {
+(function (wPointer, dPointer, preventDefault, stopPropagation, stopImmediatePropagation, write, isEnabled, isDomain, whitelist, keys, activeElement) {
   function permit (url) {
     // white-list section
     try {
@@ -157,32 +158,42 @@ script.textContent = `
     }
   });
   // link[target=_blank]
-  var onclick = function (e, dynamic) {
+  var onclick = function (e, dynamic, child) {
     activeElement = e.target;
     if (isEnabled) {
       let a = e.target.closest('a');
+      if (!a) {
+        return;
+      }
       let base = Array.from(document.querySelectorAll('base')).reduce((p, c) => p || c.target.toLowerCase() === '_blank' || c.target.toLowerCase() === '_parent', false);
 
-      if (a && (a.target.toLowerCase() === '_blank' || a.target.toLowerCase() === '_parent' || base || dynamic) && e.button === 0 && !e.metaKey) {
+      if ((a.target.toLowerCase() === '_blank' || a.target.toLowerCase() === '_parent' || base || dynamic) && e.button === 0 && !e.metaKey) {
         if (!permit(a.href)) {
           let id = Math.random();
-          window.postMessage({
+          window[child ? 'top' : 'self'].postMessage({
             cmd: 'popup-request',
             type: 'target._blank',
             url: a.href,
             arguments: [a.href],
             id
           }, '*');
-          if ('stopImmediatePropagation' in e) {
-            e.stopImmediatePropagation();
-          }
+
           e.preventDefault();
-          e.stopPropagation();
         }
       }
     }
   };
-  window.addEventListener('click', onclick, false);
+  /*
+  document.addEventListener('DOMContentLoaded', () => {
+    [...document.querySelectorAll('a')].forEach(a => {
+      a.dataset.inserted = true;
+      a.addEventListener('click', onclick);
+    });
+  });
+  */
+  document.addEventListener('click', onclick);
+  document.documentElement.dataset.installed = true;
+
   // dynamic "a" elements
   Object.defineProperty(document, 'createElement', {
     writable: false,
@@ -190,14 +201,50 @@ script.textContent = `
     value: function (tagName) {
       let target = dPointer.apply(document, arguments);
       if (tagName.toLowerCase() === 'a') {
+        target.dataset.inserted = true;
         target.addEventListener('click', (e) => onclick({
           target,
           button: e.button,
-          preventDefault: () => e.preventDefault(),
-          stopPropagation: () => e.stopPropagation()
+          preventDefault: () => e.preventDefault()
         }, true), false);
       }
       return target;
+    }
+  });
+  // stopPropagation
+  Object.defineProperty(MouseEvent.prototype, 'stopPropagation', {
+    writable: false,
+    configurable: ${configurable},
+    value: function () {
+      onclick(this);
+      return stopPropagation.apply(this, arguments);
+    }
+  });
+  // stopImmediatePropagation
+  Object.defineProperty(MouseEvent.prototype, 'stopImmediatePropagation', {
+    writable: false,
+    configurable: ${configurable},
+    value: function () {
+      onclick(this);
+      return stopImmediatePropagation.apply(this, arguments);
+    }
+  });
+  // preventDefault
+  Object.defineProperty(MouseEvent.prototype, 'preventDefault', {
+    writable: false,
+    configurable: ${configurable},
+    value: function () {
+      return preventDefault.apply(this, arguments);
+    }
+  });
+  //document.write
+  Object.defineProperty(document, 'write', {
+    writable: false,
+    configurable: ${configurable},
+    value: function () {
+      let rtn = write.apply(this, arguments);
+      document.addEventListener('click', (e) => onclick(e, false, true));
+      return rtn;
     }
   });
 
@@ -226,8 +273,18 @@ script.textContent = `
     }
   });
 
-})(window.open, document.createElement, true, false, [], [${oneTimeKeys}]);
-`;
+})(
+  window.open,
+  document.createElement,
+  MouseEvent.prototype.preventDefault,
+  MouseEvent.prototype.stopPropagation,
+  MouseEvent.prototype.stopImmediatePropagation,
+  document.write,
+  true,
+  false,
+  [],
+  [${oneTimeKeys}]
+);`;
 document.documentElement.appendChild(script);
 document.documentElement.removeChild(script);
 
