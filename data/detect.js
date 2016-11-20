@@ -186,13 +186,11 @@ script.textContent = `
   /*
   document.addEventListener('DOMContentLoaded', () => {
     [...document.querySelectorAll('a')].forEach(a => {
-      a.dataset.inserted = true;
       a.addEventListener('click', onclick);
     });
   });
   */
   document.addEventListener('click', onclick);
-  document.documentElement.dataset.installed = true;
 
   // dynamic "a" elements
   Object.defineProperty(document, 'createElement', {
@@ -201,7 +199,6 @@ script.textContent = `
     value: function (tagName) {
       let target = dPointer.apply(document, arguments);
       if (tagName.toLowerCase() === 'a') {
-        target.dataset.inserted = true;
         target.addEventListener('click', (e) => onclick({
           target,
           button: e.button,

@@ -29,8 +29,6 @@
         cursor: pointer;
         outline: none;
         margin-right: 5px;
-      }
-      a {
         padding: 5px 0;
       }
       input {
@@ -50,6 +48,7 @@
         width: 100px;
         height: 23px;
         vertical-align: middle;
+        padding: 0;
       }
     </style>
     <script>
@@ -86,9 +85,9 @@
         }
       }
       function method7 () {
-        var c = document.createElement('a'),
-          d = document.createEvent('MouseEvents');
-          c.href = 'about:blank', d.initMouseEvent('click', !1, !0, window, 0, 0, 0, 0, 0, !0, !1, !1, !0, 0, null), c.dispatchEvent(d);
+        var c = document.createElement('a');
+        var d = document.createEvent('MouseEvents');
+        c.href = 'about:blank', d.initMouseEvent('click', !1, !0, window, 0, 0, 0, 0, 0, !0, !1, !1, !0, 0, null), c.dispatchEvent(d);
       }
 
       function overwrite1 () {
@@ -96,7 +95,7 @@
           Object.defineProperty(window, 'open', {
             writable: false,
             value: function () {
-              alert('window.open is bypassed');
+              alert('window.open is bypassed; still your popup-blocker should not allow popups');
             }
           });
         }
@@ -113,8 +112,6 @@
           alert('Error: ' + e.message);
         }
       };
-
-
     </script>
     <h1>Test the effectiveness of your popup blocker add-on</h1>
     <ul>

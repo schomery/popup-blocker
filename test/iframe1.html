@@ -4,6 +4,9 @@
   <body>
     <base target="_parent" />
     <style>
+      body, html {
+        height: 100%;
+      }
       body {
         margin: 0;
         padding: 0;
@@ -15,7 +18,17 @@
         justify-content: center;
       }
       a {
+        border: none;
+        background-color: #ddd;
         text-decoration: none;
+        color: #000;
+        display: inline-block;
+        text-align: center;
+        font-size: 90%;
+        cursor: pointer;
+        outline: none;
+        margin-right: 5px;
+        padding: 5px 0;
       }
     </style>
     <a href="http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=6">Method 5</a>

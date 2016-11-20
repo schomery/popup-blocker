@@ -1,6 +1,4 @@
 {
-"update_url": "https://clients2.google.com/service/update2/crx",
-
   "name": "Popup Blocker (ultimate)",
   "short_name": "ipblocker",
   "description": "__MSG_appDesc__",
@@ -50,5 +48,10 @@
   },
   "web_accessible_resources": [
     "data/ui/*"
-  ]
+  ],
+  "applications": {
+    "gecko": {
+      "id": "{de22fd49-c9ab-4359-b722-b3febdc3a0b0}"
+    }
+  }
 }

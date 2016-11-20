@@ -2,7 +2,7 @@
 
 var iframe;
 
-chrome.runtime.onMessage.addListener((request) => {
+chrome.runtime.onMessage.addListener(request => {
   if (request.cmd === 'popup-request') {
     if (!iframe) {
       iframe = document.createElement('iframe');
