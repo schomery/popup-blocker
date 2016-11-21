@@ -8,7 +8,7 @@ function restore () {
     domain: false,
     target: true,
     'popup-hosts': ['google.com', 'bing.com'],
-    'top-hosts': []
+    'top-hosts': ['add0n.com']
   }, (obj) => {
     document.getElementById('numbers').value = obj.numbers;
     document.getElementById('timeout').value = obj.timeout;
@@ -30,7 +30,7 @@ function save() {
   var tops = document.getElementById('top-hosts').value;
   chrome.storage.local.set({
     numbers: Math.max(1, numbers),
-    timeout: Math.max(10, timeout),
+    timeout: Math.max(1, timeout),
     badge,
     domain,
     target,

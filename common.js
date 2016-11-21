@@ -23,7 +23,7 @@ chrome.storage.onChanged.addListener(prefs => {
 });
 chrome.storage.local.get({
   badge: true,
-  'top-hosts': []
+  'top-hosts': ['add0n.com']
 }, prefs => {
   badge = prefs.badge;
   whitelist = prefs['top-hosts'];
@@ -62,12 +62,15 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
   }
   // validate top level
   else if (request.cmd === 'validate') {
-    try {
-      let hostname = (new URL(sender.tab.url)).hostname;
-      let valid = whitelist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
-      response({valid});
+    // this is the test page
+    if (sender.tab.url !== 'http://tools.add0n.com/popup-blocker.html') {
+      try {
+        let hostname = (new URL(sender.tab.url)).hostname;
+        let valid = !!hostname && whitelist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
+        response({valid});
+      }
+      catch (e) {}
     }
-    catch (e) {}
   }
 
   // bouncing

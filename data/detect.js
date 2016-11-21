@@ -274,6 +274,7 @@ script.textContent = `
       }
     });
   });
+  console.error('installed');
 })(
   window.CustomEvent,
   window.open,
