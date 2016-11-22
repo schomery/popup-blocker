@@ -2,7 +2,7 @@
 'use strict';
 
 // Firefox does not allow to define non-configurable property over the "window" object.
-var configurable = navigator.userAgent.indexOf('Firefox') !== -1;
+var configurable = true; //navigator.userAgent.indexOf('Firefox') !== -1;
 
 var requests = {};
 var commands = {};
