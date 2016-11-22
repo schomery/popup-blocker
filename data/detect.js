@@ -1,9 +1,6 @@
 /* globals cloneInto */
 'use strict';
 
-// Firefox does not allow to define non-configurable property over the "window" object.
-var configurable = true; //navigator.userAgent.indexOf('Firefox') !== -1;
-
 var requests = {};
 var commands = {};
 var active = true;
@@ -56,210 +53,191 @@ chrome.runtime.onMessage.addListener(request => {
 
 var script = document.createElement('script');
 script.textContent = `
-(function (ePointer, wPointer, dPointer, preventDefault, stopPropagation, stopImmediatePropagation, write, isEnabled, isDomain, whitelist, activeElement) {
-  // protection channel; do not allow custom event generation with names starting with "ppp-blocker"
-  Object.defineProperty(window, 'CustomEvent', {
+'use strict';
+(function (
+  ePointer = window.CustomEvent, wPointer = window.open, dcPointer = document.createElement, snPointer = MouseEvent.prototype.stopPropagation, siPointer = MouseEvent.prototype.stopImmediatePropagation, dwPointer = document.write, ddPointer = document.documentElement, // pointers
+  isEnabled = true, isDomain = false, isTarget = true, whitelist = [], tURL = '', // configurations
+  activeElement // variables
+) {
+  // protect
+  let protect = (parent, name, value) => Object.defineProperty(parent, name, {
     writable: false,
-    configurable: ${configurable},
-    value: function (name, prps) {
-      if (name && !name.startsWith('ppp-blocker')) {
-        return new ePointer(name, prps);
-      }
-      return new ePointer('blocked-request');
+    // Firefox does not allow to define non-configurable property over the "window" object.
+    configurable: ${navigator.userAgent.indexOf('Firefox') !== -1},
+    value
+  });
+  let post  = (name, detail, top) => window[top ? 'top' : 'self'].document.dispatchEvent(new ePointer(name, {
+    detail,
+    bubbles: false,
+    cancelable: false
+  }));
+
+  // protection channel; do not allow custom event generation with names starting with "ppp-blocker"
+  protect(window, 'CustomEvent', function (name, prps) {
+    if (name && !name.startsWith('ppp-blocker')) {
+      return new ePointer(name, prps);
     }
+    return new ePointer('blocked-request');
   });
   // is this URL valid
   function permit (url) {
     // white-list section
+    let h;
     try {
-      let h = (new URL(url)).hostname;
-      for (let i = 0; i < whitelist.length; i++) {
-        let hostname = whitelist[i];
-        if (h && (h.endsWith(hostname) || hostname.endsWith(h))) {
-          return true;
-        }
+      h = (new URL(url)).hostname;
+    } catch (e) {}
+    for (let i = 0; i < whitelist.length && h; i++) {
+      let hostname = whitelist[i];
+      if (h.endsWith(hostname) || hostname.endsWith(h)) {
+        return true;
       }
     }
-    catch (e) {}
     // isDomain section
     if (!isDomain) {
       return false;
     }
-    try {
-      let hostname = window.top.location.hostname;
-      let h = (new URL(url)).hostname;
-      return h && (h.endsWith(hostname) || hostname.endsWith(h));
+    let hostname;
+    try { // if they are not in the same origin
+      hostname = tURL ? (new URL(tURL)).hostname : window.top.location.hostname;
+    } catch (e) {}
+    return h && hostname && (h.endsWith(hostname) || hostname.endsWith(h));
+  }
+  /* protection #1; window.open */
+  protect(window, 'open', function (url = '') {
+    if (!isEnabled || permit(url)) {
+      return wPointer.apply(window, arguments);
     }
-    catch (e) {}
-    return false;
-  }
 
-  function post (name, value, top) {
-    window[top ? 'top' : 'self'].document.dispatchEvent(new ePointer(name, {
-      detail: value,
-      bubbles: false,
-      cancelable: false
-    }));
-  }
-  Object.defineProperty(window, 'open', {
-    writable: false,
-    configurable: ${configurable},
-    value: function (url, name, specs, replace) {
-      if (isEnabled && !permit(url)) {
-        let id = Math.random();
+    let id = Math.random();
 
-        // in Firefox sometimes returns document.activeElement is document.body
-        window.setTimeout(() => {
-          // handling about:blank cases
-          let selected = document.activeElement === document.body && activeElement ? activeElement : document.activeElement;
-          if (!url || url.startsWith('about:')) {
-            selected.dataset.popupblocker = selected.dataset.popupblocker || id;
-          }
-          //
-          post('ppp-blocker-create', {
-            cmd: 'popup-request',
-            type: 'window.open',
-            url,
-            id,
-            arguments: Array.from(arguments),
-            tag: selected.dataset.popupblocker
+    // in Firefox sometimes returns document.activeElement is document.body
+    window.setTimeout(() => {
+      // handling about:blank cases
+      let selected = document.activeElement === document.body && activeElement ? activeElement : document.activeElement;
+      if (!url || url.startsWith('about:')) {
+        selected.dataset.popupblocker = selected.dataset.popupblocker || id;
+      }
+      //
+      post('ppp-blocker-create', {
+        cmd: 'popup-request',
+        type: 'window.open',
+        url,
+        id,
+        arguments: [...arguments],
+        tag: selected.dataset.popupblocker
+      });
+    }, 100);
+
+    return {
+      document: {
+        open: function () {
+          post('ppp-blocker-append', {
+            name: 'open',
+            arguments: [...arguments],
+            id
           });
-        }, 100);
-
-        return {
-          document: {
-            open: function () {
-              post('ppp-blocker-append', {
-                name: 'open',
-                arguments: Array.from(arguments),
-                id
-              });
-            },
-            write: function () {
-              post('ppp-blocker-append', {
-                name: 'write',
-                arguments: Array.from(arguments),
-                id
-              });
-            },
-            close: function () {
-              post('ppp-blocker-append', {
-                name: 'close',
-                arguments: Array.from(arguments),
-                id
-              });
-            }
-          },
-          focus: function () {
-            post('ppp-blocker-append', {
-              name: 'focus',
-              id
-            });
-          },
-          close: function () {
-            post('ppp-blocker-append', {
-              name: 'close',
-              arguments: Array.from(arguments),
-              id
-            });
-          }
+          return this;
+        },
+        write: function () {
+          post('ppp-blocker-append', {
+            name: 'write',
+            arguments: [...arguments],
+            id
+          });
+        },
+        close: function () {
+          post('ppp-blocker-append', {
+            name: 'close',
+            arguments: [...arguments],
+            id
+          });
         }
+      },
+      focus: function () {
+        post('ppp-blocker-append', {
+          name: 'focus',
+          id
+        });
+      },
+      close: function () {
+        post('ppp-blocker-append', {
+          name: 'close',
+          id
+        })
       }
-      else {
-        return wPointer.apply(window, arguments);
-      }
-    }
+    };
   });
-  // link[target=_blank]
-  var onclick = function (e, dynamic, child) {
-    activeElement = e.target;
+  /* protection #2; link[target=_blank] */
+  let onclick = function (e, target, child) {
+    activeElement = target = e.target || target;
     if (isEnabled) {
-      let a = e.target.closest('a');
+      let a = 'closest' in target ? target.closest('a') : null; // click after document.open
       if (!a) {
         return;
       }
-      let base = Array.from(document.querySelectorAll('base')).reduce((p, c) => p || c.target.toLowerCase() === '_blank' || c.target.toLowerCase() === '_parent', false);
+      let base = [...document.querySelectorAll('base')].concat(a)
+        .reduce((p, c) => p || ['_parent', '_tab', '_blank'].includes(c.target.toLowerCase()), false);
 
-      if ((a.target.toLowerCase() === '_blank' || a.target.toLowerCase() === '_parent' || base || dynamic) && e.button === 0 && !e.metaKey) {
-        if (!permit(a.href)) {
-          let id = Math.random();
-          post('ppp-blocker-create', {
-              cmd: 'popup-request',
-              type: 'target._blank',
-              url: a.href,
-              arguments: [a.href],
-              id
-          }, child);
+      if (base && e.button === 0 && !(e.metaKey && e.isTrusted) && !permit(a.href)) {
+        post('ppp-blocker-create', {
+          cmd: 'popup-request',
+          type: 'target._blank',
+          url: a.href,
+          arguments: [a.href],
+          id: Math.random()
+        }, child);
 
-          e.preventDefault();
-        }
+        e.preventDefault();
+        return true;
       }
     }
   };
   document.addEventListener('click', onclick);
-
-  // dynamic "a" elements
-  Object.defineProperty(document, 'createElement', {
-    writable: false,
-    configurable: ${configurable},
-    value: function (tagName) {
-      let target = dPointer.apply(document, arguments);
-      if (tagName.toLowerCase() === 'a') {
-        target.addEventListener('click', (e) => onclick({
-          target,
-          button: e.button,
-          preventDefault: () => e.preventDefault()
-        }, true), false);
-      }
-      return target;
+  /* protection #3; dynamic "a" creation; click is not propagation */
+  protect(document, 'createElement', function (tagName) {
+    let target = dcPointer.apply(document, arguments);
+    if (tagName.toLowerCase() === 'a') {
+      target.addEventListener('click', e => onclick(e, target), false);
+      // prevent dispatching click event
+      let dispatchEvent = target.dispatchEvent;
+      protect(target, 'dispatchEvent', function (e) {
+        if (e.type === 'click' && onclick(e, target)) {
+          return false;
+        }
+        return dispatchEvent(e);
+      });
     }
+    return target;
   });
-  // stopPropagation
-  Object.defineProperty(MouseEvent.prototype, 'stopPropagation', {
-    writable: false,
-    configurable: ${configurable},
-    value: function () {
-      onclick(this);
-      return stopPropagation.apply(this, arguments);
+  /* protection #4; when stopPropagation or stopImmediatePropagation is emited, our listener will not be called anymore */
+  protect(MouseEvent.prototype, 'stopPropagation', function () {
+    onclick(this);
+    return snPointer.apply(this, arguments);
+  });
+  protect(MouseEvent.prototype, 'stopImmediatePropagation', function () {
+    onclick(this);
+    return siPointer.apply(this, arguments);
+  });
+  /* protection #5; document.write; when document.open is called, old listeners are wiped out */
+  protect(document, 'write', function () {
+    let rtn = dwPointer.apply(this, arguments);
+    if (document.documentElement !== ddPointer) {
+      document.addEventListener('click', e => onclick(e, null, true));
+      ddPointer = document.documentElement;
     }
+    return rtn;
   });
-  // stopImmediatePropagation
-  Object.defineProperty(MouseEvent.prototype, 'stopImmediatePropagation', {
-    writable: false,
-    configurable: ${configurable},
-    value: function () {
-      onclick(this);
-      return stopImmediatePropagation.apply(this, arguments);
-    }
-  });
-  // preventDefault
-  Object.defineProperty(MouseEvent.prototype, 'preventDefault', {
-    writable: false,
-    configurable: ${configurable},
-    value: function () {
-      return preventDefault.apply(this, arguments);
-    }
-  });
-  //document.write
-  Object.defineProperty(document, 'write', {
-    writable: false,
-    configurable: ${configurable},
-    value: function () {
-      let rtn = write.apply(this, arguments);
-      document.addEventListener('click', (e) => onclick(e, false, true));
-      return rtn;
-    }
-  });
-
   // configurations
   document.addEventListener('ppp-blocker-status', e => isEnabled = e.detail.value);
+  document.addEventListener('ppp-blocker-top', e => tURL = e.detail.url);
   document.addEventListener('ppp-blocker-configure', e => {
     isEnabled = e.detail.enabled;
     isDomain = e.detail.domain;
-    whitelist = e.detail.whitelist;
-    if (!e.detail.target) {
+    isTarget = e.detail.target;
+    if (!isTarget) {
       document.removeEventListener('click', onclick);
     }
+    whitelist = e.detail.whitelist;
   });
   // execute
   document.addEventListener('ppp-blocker-exe', e => {
@@ -274,19 +252,8 @@ script.textContent = `
       }
     });
   });
-  console.error('installed');
-})(
-  window.CustomEvent,
-  window.open,
-  document.createElement,
-  MouseEvent.prototype.preventDefault,
-  MouseEvent.prototype.stopPropagation,
-  MouseEvent.prototype.stopImmediatePropagation,
-  document.write,
-  true,
-  false,
-  []
-);`;
+})();
+;`;
 document.documentElement.appendChild(script);
 document.documentElement.removeChild(script);
 
@@ -314,8 +281,9 @@ chrome.storage.onChanged.addListener(obj => {
 chrome.runtime.sendMessage({
   cmd: 'validate'
 }, (response) => {
-  if (response && response.valid) {
+  if (response.valid) {
     active = false;
-    post('ppp-blocker-status', {vslue: false});
+    post('ppp-blocker-status', {value: false});
   }
+  post('ppp-blocker-top', {url: response.url});
 });

@@ -17,7 +17,8 @@ chrome.storage.onChanged.addListener(prefs => {
       }));
     }
   }
-  else if (prefs['top-hosts']) {
+  // maybe both change
+  if (prefs['top-hosts']) {
     whitelist = prefs['top-hosts'].newValue;
   }
 });
@@ -62,15 +63,17 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
   }
   // validate top level
   else if (request.cmd === 'validate') {
-    // this is the test page
-    if (sender.tab.url !== 'http://tools.add0n.com/popup-blocker.html') {
-      try {
-        let hostname = (new URL(sender.tab.url)).hostname;
-        let valid = !!hostname && whitelist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
-        response({valid});
-      }
-      catch (e) {}
+    let valid = false;
+    try {
+      let hostname = (new URL(sender.tab.url)).hostname;
+      valid = !!hostname && whitelist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
+      valid = valid && sender.tab.url !== 'http://tools.add0n.com/popup-blocker.html';
     }
+    catch (e) {}
+    response({
+      valid,
+      url: sender.tab.url
+    });
   }
 
   // bouncing

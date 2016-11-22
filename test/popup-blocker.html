@@ -89,6 +89,19 @@
         var d = document.createEvent('MouseEvents');
         c.href = 'about:blank', d.initMouseEvent('click', !1, !0, window, 0, 0, 0, 0, 0, !0, !1, !1, !0, 0, null), c.dispatchEvent(d);
       }
+      function method10 () {
+        var a = document.createElement('a');
+        a.target="_blank";
+        a.href='about:blank';
+        document.body.appendChild(a);
+        var b = new MouseEvent("click", {
+          view: window,
+          bubbles: !1,
+          cancelable: !1
+        });
+        console.error(b)
+        a.dispatchEvent(b);
+      }
 
       function overwrite1 () {
         try {
@@ -141,10 +154,12 @@
         var f = document.createElement('iframe');
         var elem = document.getElementById('id3');
         elem.parentNode.insertBefore(f, elem);
-        f.contentDocument.write('<html><head><style>body{display: flex; align-items: center; justify-content: center; margin: 0;}</style></head><body><a href="http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=9" target="_blank">Method 9</a></body></html>');
+        f.contentDocument.write('<html><head><style>body{display: flex; align-items: center; justify-content: center; margin: 0;}</style></head><body><a href="http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=9" target="_blank">Method 9</a>');
+        f.contentDocument.write('</body></html>');
         f.contentDocument.documentElement.appendChild(document.querySelector('style').cloneNode(true));
         f.contentDocument.close();
       </script>
+      <li><input type="button" onclick="method10()" value="Method 10"> creating new element and dispatching an uncancellable click event</li>
     </ul>
     <p>
       Click <input type="button" onclick="overwrite1();" value="here"> to overwrite "window.open" and try tests one more time.
@@ -166,6 +181,5 @@
       ga('send', 'pageview');
 
     </script>
-
   </body>
 </html>

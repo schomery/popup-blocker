@@ -96,10 +96,6 @@ chrome.runtime.onMessage.addListener((request) => {
           timestamp: (new Date()).getTime()
         };
         //
-        chrome.runtime.sendMessage({
-          cmd: 'popup-number',
-          number: Object.keys(urls).length
-        });
         // remove extra
         let keys = Object.keys(urls);
         if (keys.length > prefs.numbers) {
@@ -107,6 +103,12 @@ chrome.runtime.onMessage.addListener((request) => {
           if (key) {
             remove(urls[key].div);
           }
+        }
+        else {
+          chrome.runtime.sendMessage({
+            cmd: 'popup-number',
+            number: Object.keys(urls).length
+          });
         }
       });
     }
