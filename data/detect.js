@@ -167,6 +167,8 @@ script.textContent = `
       }
     };
   });
+  // making the extension less visisble to external scripts
+  window.open.toString = window.open.toLocaleString = () => 'function open() { [native code] }';
   /* protection #2; link[target=_blank] */
   let onclick = function (e, target, child) {
     activeElement = target = e.target || target;
@@ -204,7 +206,7 @@ script.textContent = `
         if (e.type === 'click' && onclick(e, target)) {
           return false;
         }
-        return dispatchEvent(e);
+        return dispatchEvent.apply(this, arguments);
       });
     }
     return target;
