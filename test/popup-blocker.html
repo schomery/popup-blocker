@@ -130,20 +130,20 @@
     <ul>
       <li><input type="button" onclick="method1()" value="Method 1/1"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 1</li>
       <li><input type="button" onclick="method2()" value="Method 1/2"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 2 (test your popup blocker to see if it can differentiate different sources with the "about:blank" origin)</li>
-      <li><input type="button" onclick="window.open('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=3');" value="Method 2/1"> opening a new popup tab using window.open method</li>
-      <li><input type="button" onclick="pointer('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=4');" value="Method 2/2"> opening a new popup tab using a predefined pointer to window.open method</li>
-      <li><input type="button" onclick="method3('http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=5', 'new window', 600, 600)" value="Method 3"> opening a new popup window and passing arguments to it</li>
-      <li><a href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank&test=4" target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
+      <li><input type="button" onclick="window.open('about:blank');" value="Method 2/1"> opening a new popup tab using window.open method</li>
+      <li><input type="button" onclick="pointer('about:blank');" value="Method 2/2"> opening a new popup tab using a predefined pointer to window.open method</li>
+      <li><input type="button" onclick="method3('about:blank, 'new window', 600, 600)" value="Method 3"> opening a new popup window and passing arguments to it</li>
+      <li><a href='about:blank' target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
       <li><iframe sandbox="allow-forms allow-popups allow-scripts allow-same-origin" src="./popup-blocker-iframe.html"></iframe> opening a new popup tab using iframe with "base" header set to target="_parent" method</li>
-      <li><a href="http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=6">Method 6</a> opening a new popup tab using link with "base" header set to target="_blank"</li>
+      <li><a href='about:blank'>Method 6</a> opening a new popup tab using link with "base" header set to target="_blank"</li>
       <li><input type="button" onclick="method7()" value="Method 7"> opening a new about:blank popup window using createEvent method</li>
-      <li><a id="id1" href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank&test=8-1" target="_blank">Method 8/1</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
+      <li><a id="id1" href='about:blank' target="_blank">Method 8/1</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
       <script>
         document.getElementById('id1').addEventListener('click', function (e) {
           e.stopPropagation();
         });
       </script>
-      <li><a id="id2" href="http://add0n.com/popup-blocker.html?from=tester&action=about:blank&test=8-2" target="_blank">Method 8/2</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
+      <li><a id="id2" href='about:blank' target="_blank">Method 8/2</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
       <script>
         document.getElementById('id2').addEventListener('click', function (e) {
           e.stopImmediatePropagation();
@@ -154,7 +154,7 @@
         var f = document.createElement('iframe');
         var elem = document.getElementById('id3');
         elem.parentNode.insertBefore(f, elem);
-        f.contentDocument.write('<html><head><style>body{display: flex; align-items: center; justify-content: center; margin: 0;}</style></head><body><a href="http://add0n.com/popup-blocker.html?from=tester&action=window.open&test=9" target="_blank">Method 9</a>');
+        f.contentDocument.write('<html><head><style>body{display: flex; align-items: center; justify-content: center; margin: 0;}</style></head><body><a href="about:blank" target="_blank">Method 9</a>');
         f.contentDocument.write('</body></html>');
         f.contentDocument.documentElement.appendChild(document.querySelector('style').cloneNode(true));
         f.contentDocument.close();
@@ -168,7 +168,7 @@
       Click <input type="button" onclick="overwrite2();" value="here"> to overwrite "MouseEvent.prototype.preventDefault" and try tests one more time.
     </p>
 
-    <p>It is recommended to use <b>Popup Blocker (Ultimate)</b> add-on for the best experience; <a href="https://chrome.google.com/webstore/detail/aefkmifgmaafnojlojpnekbpbmjiiogg">Chrome</a>, <a href="https://addons.mozilla.org/firefox/addon/popup-blocker/">Firefox</a>, and <a href="https://addons.opera.com/extensions/">Opera</a>.
+    <p>It is recommended to use <b>Popup Blocker (Ultimate)</b> add-on for the best experience; <a href="https://chrome.google.com/webstore/detail/aefkmifgmaafnojlojpnekbpbmjiiogg">Chrome</a>, <a href="https://addons.mozilla.org/firefox/addon/popup-blocker/">Firefox</a>, and <a href="https://addons.opera.com/en/extensions/details/popup-blocker-ultimate/">Opera</a>.
     </p>
 
     <script>
