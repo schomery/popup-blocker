@@ -184,7 +184,7 @@ script.textContent = `
       let base = [...document.querySelectorAll('base')].concat(a)
         .reduce((p, c) => p || ['_parent', '_tab', '_blank'].includes(c.target.toLowerCase()), false);
 
-      if (base && e.button === 0 && !(e.metaKey && e.isTrusted) && !permit(a.href)) {
+      if ((base || !e.target) && e.button === 0 && !(e.metaKey && e.isTrusted) && !permit(a.href)) {
         post('ppp-blocker-create', {
           cmd: 'popup-request',
           type: 'target._blank',
@@ -192,8 +192,9 @@ script.textContent = `
           arguments: [a.href],
           id: Math.random()
         }, child);
-
-        e.preventDefault();
+        if (e.preventDefault) { // if element is not attached, there is no e.preventDefault
+          e.preventDefault();
+        }
         return true;
       }
     }
@@ -210,6 +211,7 @@ script.textContent = `
         if (e.type === 'click' && onclick(e, target)) {
           return false;
         }
+        console.error(e);
         return dispatchEvent.apply(this, arguments);
       });
     }
