@@ -55,17 +55,21 @@ var script = document.createElement('script');
 script.textContent = `
 'use strict';
 (function (
-  ePointer = window.CustomEvent, wPointer = window.open, dcPointer = document.createElement, snPointer = MouseEvent.prototype.stopPropagation, siPointer = MouseEvent.prototype.stopImmediatePropagation, dwPointer = document.write, ddPointer = document.documentElement, // pointers
+  ePointer = window.CustomEvent, wPointer = window.open, // pointers -> window
+  dcPointer = document.createElement, dwPointer = document.write, ddPointer = document.documentElement, // pointers -> document
+  snPointer = MouseEvent.prototype.stopPropagation, siPointer = MouseEvent.prototype.stopImmediatePropagation, // pointers -> MouseEvent
   isEnabled = true, isDomain = false, isTarget = true, whitelist = [], tURL = '', // configurations
   activeElement // variables
 ) {
   // protect
-  let protect = (parent, name, value) => Object.defineProperty(parent, name, {
-    writable: false,
-    // Firefox does not allow to define non-configurable property over the "window" object.
-    configurable: ${navigator.userAgent.indexOf('Firefox') !== -1},
-    value
-  });
+  let protect = (parent, name, value) => {
+    Object.defineProperty(parent, name, {
+      writable: true, // writable = false will cause issues with TamperMonkey
+      // Firefox does not allow to define non-configurable property over the "window" object.
+      configurable: ${navigator.userAgent.indexOf('Firefox') !== -1},
+      value
+    });
+  }
   let post  = (name, detail, top) => window[top ? 'top' : 'self'].document.dispatchEvent(new ePointer(name, {
     detail,
     bubbles: false,
