@@ -54,7 +54,16 @@
     <script>
       'use strict';
       var pointer = window.open;
-      console.error(pointer)
+      console.error('window.open is', pointer);
+
+      var e1 = document.createEvent('CustomEvent');
+      e1.initCustomEvent('ppp-blocker-create', false, false, {
+        cmd: 'open-tab',
+        url: 'about:blank'
+      });
+      console.error('custom event 1/2:', e1);
+      var e2 = new CustomEvent('ppp-blocker-create');
+      console.error('custom event 2/2:', e2);
 
       function method1 () {
         var newwindow = pointer('', 'result', 'status=1,width=700,height=500,menubar=yes');
@@ -87,12 +96,30 @@
       function method7 () {
         var c = document.createElement('a');
         var d = document.createEvent('MouseEvents');
-        c.href = 'about:blank', d.initMouseEvent('click', !1, !0, window, 0, 0, 0, 0, 0, !0, !1, !1, !0, 0, null), c.dispatchEvent(d);
+        c.href = 'https://example.com/test/7', d.initMouseEvent('click', !1, !0, window, 0, 0, 0, 0, 0, !0, !1, !1, !0, 0, null), c.dispatchEvent(d);
+      }
+      function method12_1 () {
+        document.getElementById('id4').dispatchEvent(new MouseEvent('click', {
+          button: 0
+        }));
+      }
+      function method12_2 () {
+        document.getElementById('id4').dispatchEvent(new MouseEvent('click', {
+          button: 1
+        }));
+      }
+      function method12_3 () {
+        var evt = document.createEvent('MouseEvents');
+        evt.initEvent('click', true, false);
+        document.getElementById('id4').dispatchEvent(evt);
+      }
+      function method12_4 () {
+        document.getElementById('id4').click();
       }
       function method10 () {
         var a = document.createElement('a');
         a.target="_blank";
-        a.href='about:blank';
+        a.href='https://example.com/test/10';
         document.body.appendChild(a);
         var b = new MouseEvent("click", {
           view: window,
@@ -129,20 +156,20 @@
     <ul>
       <li><input type="button" onclick="method1()" value="Method 1/1"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 1</li>
       <li><input type="button" onclick="method2()" value="Method 1/2"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 2 (test your popup blocker to see if it can differentiate different sources with the "about:blank" origin)</li>
-      <li><input type="button" onclick="window.open('about:blank');" value="Method 2/1"> opening a new popup tab using window.open method</li>
-      <li><input type="button" onclick="pointer('about:blank');" value="Method 2/2"> opening a new popup tab using a predefined pointer to window.open method</li>
-      <li><input type="button" onclick="method3('about:blank', 'new window', 600, 600)" value="Method 3"> opening a new popup window and passing arguments to it</li>
-      <li><a href='about:blank' target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
+      <li><input type="button" onclick="window.open('https://example.com/test/2/1');" value="Method 2/1"> opening a new popup tab using window.open method</li>
+      <li><input type="button" onclick="pointer('https://example.com/test/2/2');" value="Method 2/2"> opening a new popup tab using a predefined pointer to window.open method</li>
+      <li><input type="button" onclick="method3('https://example.com/test/3', 'new window', 600, 600)" value="Method 3"> opening a new popup window and passing arguments to it</li>
+      <li><a href='https://example.com/test/4' target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
       <li><iframe sandbox="allow-forms allow-popups allow-scripts allow-same-origin" src="./popup-blocker-iframe.html"></iframe> opening a new popup tab using iframe with "base" header set to target="_parent" method</li>
-      <li><a href='about:blank'>Method 6</a> opening a new popup tab using link with "base" header set to target="_blank"</li>
+      <li><a href='https://example.com/test/6'>Method 6</a> opening a new popup tab using link with "base" header set to target="_blank"</li>
       <li><input type="button" onclick="method7()" value="Method 7"> opening a new about:blank popup window using createEvent method</li>
-      <li><a id="id1" href='about:blank' target="_blank">Method 8/1</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
+      <li><a id="id1" href='https://example.com/test/8/1' target="_blank">Method 8/1</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
       <script>
         document.getElementById('id1').addEventListener('click', function (e) {
           e.stopPropagation();
         });
       </script>
-      <li><a id="id2" href='about:blank' target="_blank">Method 8/2</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
+      <li><a id="id2" href='https://example.com/test/8/2' target="_blank">Method 8/2</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
       <script>
         document.getElementById('id2').addEventListener('click', function (e) {
           e.stopImmediatePropagation();
@@ -153,12 +180,22 @@
         var f = document.createElement('iframe');
         var elem = document.getElementById('id3');
         elem.parentNode.insertBefore(f, elem);
-        f.contentDocument.write('<html><head><style>body{display: flex; align-items: center; justify-content: center; margin: 0;}</style></head><body><a href="about:blank" target="_blank">Method 9</a>');
+        f.contentDocument.write('<html><head><style>body{display: flex; align-items: center; justify-content: center; margin: 0;}</style></head><body><a href="https://example.com/test/9" target="_blank">Method 9</a>');
         f.contentDocument.write('</body></html>');
         f.contentDocument.documentElement.appendChild(document.querySelector('style').cloneNode(true));
         f.contentDocument.close();
       </script>
       <li><input type="button" onclick="method10()" value="Method 10"> creating new element and dispatching an uncancellable click event</li>
+      <li>
+        <form action="https://example.com/test/11" target="_blank">
+          <input type=submit value="Method 11">
+        </form> using form element to issue a popup
+      </li>
+      <div style="display: none;"><a href="https://example.com/test/12" id="id4"></a></div>
+      <li><input onclick="method12_1()" type="button" value="Method 12/1">generating click event (button=0) and dispatching it over a "a" element</li>
+      <li><input onclick="method12_2()" type="button" value="Method 12/2">generating click event (button=1) and dispatching it over a "a" element</li>
+      <li><input onclick="method12_3()" type="button" value="Method 12/3">generating click event (button=0) and dispatching it over a "a" element</li>
+      <li><input onclick="method12_4()" type="button" value="Method 12/4">fire click() over a "a" element</li>
     </ul>
     <p>
       Click <input type="button" onclick="overwrite1();" value="here"> to overwrite "window.open" and try tests one more time.

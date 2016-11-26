@@ -7,8 +7,8 @@ function restore () {
     badge: true,
     domain: false,
     target: true,
-    'popup-hosts': ['google.com', 'bing.com'],
-    'top-hosts': ['add0n.com']
+    'popup-hosts': ['google.com', 'bing.com', 't.co'],
+    'top-hosts': ['yahoo.com', 'add0n.com']
   }, (obj) => {
     document.getElementById('numbers').value = obj.numbers;
     document.getElementById('timeout').value = obj.timeout;
