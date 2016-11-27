@@ -1,5 +1,5 @@
-/* globals cloneInto */
 'use strict';
+/* globals cloneInto */
 
 var requests = {};
 var commands = {};
@@ -10,20 +10,31 @@ window.cloneInto = typeof cloneInto  === 'undefined' ? function (a) {
 } : cloneInto;
 
 function post (name, value) {
-  document.dispatchEvent(new CustomEvent(name, {
+  window.dispatchEvent(new CustomEvent(name, {
     detail: cloneInto(value, document.defaultView),
     bubbles: false,
     cancelable: false
   }));
 }
 
-document.addEventListener('ppp-blocker-create', e => {
+window.addEventListener('ppp-blocker-create', (e) => {
   let request = e.detail;
-  chrome.runtime.sendMessage(request);
-  requests[request.id] = e.detail;
+  // prevent unprotected script from issuing any other commands
+  if (!request || request.cmd !== 'popup-request') {
+    return;
+  }
+  // passing over the minimal needed details
+  chrome.runtime.sendMessage({
+    cmd: 'popup-request',
+    type: request.type,
+    url: request.url,
+    id: request.id,
+    tag: request.tag
+  });
+  requests[request.id] = request;
   commands[request.id] = commands[request.id] || [];
 });
-document.addEventListener('ppp-blocker-append', e => {
+window.addEventListener('ppp-blocker-append', e => {
   let request = e.detail;
   commands[request.id] = commands[request.id] || [];
   commands[request.id].push(request);
@@ -55,11 +66,10 @@ var script = document.createElement('script');
 script.textContent = `
 (function (
   wPointer = window.open, // pointers -> window
-  dcPointer = document.createElement, dwPointer = document.write, ddPointer = document.documentElement, // pointers -> document
-  pdPointer = MouseEvent.prototype.preventDefault, snPointer = MouseEvent.prototype.stopPropagation, siPointer = MouseEvent.prototype.stopImmediatePropagation, // pointers -> MouseEvent
-  cPointer = CustomEvent, cpiPointer = CustomEvent.prototype.initCustomEvent, // pointers -> CustomEvent
-  ndPointer = Node.prototype.dispatchEvent, // pointers -> Node
-  isEnabled = true, isDomain = false, isTarget = true, whitelist = [], sendToParent = false, // configurations
+  createElement = document.createElement, write = document.write, documentElement = document.documentElement, // pointers -> document
+  preventDefault = MouseEvent.prototype.preventDefault, stopPropagation = MouseEvent.prototype.stopPropagation,  stopImmediatePropagation = MouseEvent.prototype.stopImmediatePropagation, // pointers -> MouseEvent
+  dispatchEvent = Node.prototype.dispatchEvent, // pointers -> Node
+  isEnabled = true, isDomain = false, isTarget = true, whitelist = [], sendToTop = false, // configurations
   activeElement = null // variables
 ) {
   // protection
@@ -70,26 +80,23 @@ script.textContent = `
     value
   });
   // communication channel
-  let post  = (name, detail) => window[sendToParent ? 'parent' : 'self'].document.dispatchEvent(new cPointer(name, {
+  let post  = (name, detail) => dispatchEvent.call(sendToTop ? window.parent : window, new CustomEvent(name, {
     detail,
     bubbles: false,
     cancelable: false
   }));
-  // protection communication channel; do not allow custom event generation with used names
-  protect(CustomEvent.prototype, 'initCustomEvent', function (name = '') {
-    if (name.startsWith('ppp-blocker')) {
-      arguments[0] = 'blocked-request';
+  protect(window, 'dispatchEvent', function (e) {
+    if (e.type.startsWith('ppp-blocker-')) {
+      return false;
     }
-    return cpiPointer.apply(this, arguments);
-  });
-  protect(window, 'CustomEvent', function (name = '', prps) {
-    if (name.startsWith('ppp-blocker')) {
-      arguments[0] = 'blocked-request';
-    }
-    return new (cPointer.bind(cPointer, [...arguments]))();
-  });
+    return dispatchEvent.apply(this, arguments);
+  })
   // is this URL valid
-  function permit (url) {
+  function permit (url = '') {
+    // tags are allowed
+    if (url.startsWith('#') || url.startsWith(document.location.href + '#')) {
+      return true;
+    }
     // white-list section
     let h;
     try {
@@ -157,8 +164,7 @@ script.textContent = `
             arguments: [...arguments],
             id
           });
-        },
-        toString: () => '[object HTMLDocument]'
+        }
       },
       focus: function () {
         post('ppp-blocker-append', {
@@ -172,12 +178,9 @@ script.textContent = `
           id
         });
       },
-      toString: () => '[object Window]'
     };
   });
-  // making the extension less visible to external scripts
-  window.open.toString = window.open.toLocaleString = () => 'function open() { [native code] }';
-  /* protection #2; link[target=_blank] */
+  /* protection #2; link[target=_blank] or form[target=_blank] */
   let onclick = (e, target) => {
     activeElement = target = e.target || target;
     if (isEnabled) {
@@ -197,15 +200,14 @@ script.textContent = `
           arguments: [a.href],
           id: Math.random()
         });
-
-        pdPointer.apply(e);
+        preventDefault.apply(e);
         return true;
       }
     }
   };
   /* protection #3; dynamic "a" creation; click is not propagation */
   protect(document, 'createElement', function (tagName) {
-    let target = dcPointer.apply(document, arguments);
+    let target = createElement.apply(document, arguments);
     if (tagName.toLowerCase() === 'a') {
       target.addEventListener('click', e => onclick(e, target), false);
       // prevent dispatching click event
@@ -222,19 +224,19 @@ script.textContent = `
   /* protection #4; when stopPropagation or stopImmediatePropagation is emitted, our listener will not be called anymore */
   protect(MouseEvent.prototype, 'stopPropagation', function () {
     onclick(this);
-    return snPointer.apply(this, arguments);
+    return stopPropagation.apply(this, arguments);
   });
   protect(MouseEvent.prototype, 'stopImmediatePropagation', function () {
     onclick(this);
-    return siPointer.apply(this, arguments);
+    return stopImmediatePropagation.apply(this, arguments);
   });
   /* protection #5; document.write; when document.open is called, old listeners are wiped out */
   protect(document, 'write', function () {
-    let rtn = dwPointer.apply(this, arguments);
-    if (document.documentElement !== ddPointer) {
-      register(); // we need to register all event listeners one more time on new document creation
-      sendToParent = true;
-      ddPointer = document.documentElement;
+    let rtn = write.apply(this, arguments);
+    if (document.documentElement !== documentElement) {
+      document.addEventListener('click', onclick); // we need to register event listener one more time on new document creation
+      documentElement = document.documentElement;
+      sendToTop = true;
     }
     return rtn;
   });
@@ -243,25 +245,22 @@ script.textContent = `
     if (e.type === 'click' && onclick(e, this)) {
       return false;
     }
-    return ndPointer.apply(this, arguments);
+    return dispatchEvent.apply(this, arguments);
   });
   // configurations
-  function register () {
-    document.addEventListener('click', onclick);
-    document.addEventListener('ppp-blocker-status', e => isEnabled = e.detail.value);
-    document.addEventListener('ppp-blocker-configure', e => {
-      isEnabled = e.detail.enabled;
-      isDomain = e.detail.domain;
-      isTarget = e.detail.target;
-      if (!isTarget) {
-        document.removeEventListener('click', onclick);
-      }
-      whitelist = e.detail.whitelist;
-    });
-  }
-  register();
+  document.addEventListener('click', onclick);
+  window.addEventListener('ppp-blocker-status', e => isEnabled = e.detail.value);
+  window.addEventListener('ppp-blocker-configure', e => {
+    isEnabled = e.detail.enabled;
+    isDomain = e.detail.domain;
+    isTarget = e.detail.target;
+    if (!isTarget) {
+      document.removeEventListener('click', onclick);
+    }
+    whitelist = e.detail.whitelist;
+  });
   // execute
-  document.addEventListener('ppp-blocker-exe', e => {
+  window.addEventListener('ppp-blocker-exe', e => {
     let request = e.detail;
     let win = wPointer.apply(window, request.arguments);
     request.commands.forEach(obj => {
@@ -302,7 +301,7 @@ chrome.storage.onChanged.addListener(obj => {
 chrome.runtime.sendMessage({
   cmd: 'validate'
 }, (response) => {
-  if (response.valid) {
+  if (response && response.valid) {
     active = false;
     post('ppp-blocker-status', {value: false});
   }

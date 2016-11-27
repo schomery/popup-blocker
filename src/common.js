@@ -44,22 +44,25 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       });
     });
   }
-  // open new tab
-  else if (request.cmd === 'open-tab') {
-    chrome.tabs.create({
-      url: request.url,
-      active: false,
-      index: sender.tab.index + 1
-    });
-  }
-  // redirect current tab
-  else if (request.cmd === 'popup-redirect') {
-    chrome.tabs.query({
-      active: true,
-      currentWindow: true
-    }, tabs => chrome.tabs.update(tabs[0].id, {
-      url: request.url
-    }));
+  // open a new tab or redirect current tab
+  else if (request.cmd === 'popup-redirect' || request.cmd === 'open-tab') {
+    let url = request.url;
+    // validating request before proceeding
+    if (url.startsWith('http') || url.startsWith('ftp') || url === 'about:blank') {
+      if (request.cmd === 'popup-redirect') {
+        chrome.tabs.query({
+          active: true,
+          currentWindow: true
+        }, tabs => chrome.tabs.update(tabs[0].id, {url}));
+      }
+      else {
+        chrome.tabs.create({
+          url,
+          active: false,
+          index: sender.tab.index + 1
+        });
+      }
+    }
   }
   // is this tab (top level url) in whitelist?
   else if (request.cmd === 'validate') {
