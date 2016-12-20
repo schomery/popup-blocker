@@ -182,7 +182,7 @@ script.textContent = `
   });
   /* protection #2; link[target=_blank] or form[target=_blank] */
   let onclick = (e, target) => {
-    activeElement = target = e.target || target;
+    activeElement = target = target || e.target;
     if (isEnabled) {
       let a = 'closest' in target ? (target.closest('[target]') || target.closest('a')) : null; // click after document.open
       if (!a) {
@@ -197,7 +197,7 @@ script.textContent = `
           cmd: 'popup-request',
           type: 'target._blank',
           url: a.href || a.action,
-          arguments: [a.href],
+          arguments: [a.href || a.action],
           id: Math.random()
         });
         preventDefault.apply(e);
@@ -217,6 +217,15 @@ script.textContent = `
           return false;
         }
         return dispatchEvent.apply(this, arguments);
+      });
+    }
+    else if (tagName.toLowerCase() === 'form') {
+      let submit = target.submit;
+      protect(target, 'submit', function () {
+        if (onclick(event, target)) {
+          return false;
+        }
+        return submit.apply(this, arguments);
       });
     }
     return target;

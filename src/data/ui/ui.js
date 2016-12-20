@@ -82,7 +82,7 @@ chrome.runtime.onMessage.addListener((request) => {
         div.appendChild(p2);
         buttons.appendChild(cancel);
         buttons.appendChild(ok);
-        if (request.url.indexOf('://') !== -1) {
+        if (request.url.startsWith('http') || request.url.startsWith('ftp')) {
           buttons.appendChild(redirect);
           buttons.appendChild(background);
         }
