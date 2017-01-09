@@ -9,7 +9,8 @@ function restore () {
     domain: false,
     target: true,
     'popup-hosts': ['google.com', 'bing.com', 't.co'],
-    'top-hosts': ['yahoo.com', 'add0n.com']
+    'top-hosts': ['yahoo.com', 'add0n.com'],
+    'blacklist': []
   }, (obj) => {
     document.getElementById('numbers').value = obj.numbers;
     document.getElementById('timeout').value = obj.timeout;
@@ -19,6 +20,7 @@ function restore () {
     document.getElementById('target').checked = obj.target;
     document.getElementById('popup-hosts').value = obj['popup-hosts'].join(', ');
     document.getElementById('top-hosts').value = obj['top-hosts'].join(', ');
+    document.getElementById('blacklist').value = obj.blacklist.join(', ');
   });
 }
 
@@ -31,6 +33,7 @@ function save() {
   let target = document.getElementById('target').checked;
   let hosts = document.getElementById('popup-hosts').value;
   let tops = document.getElementById('top-hosts').value;
+  let blacklist = document.getElementById('blacklist').value;
   chrome.storage.local.set({
     numbers: Math.max(1, numbers),
     timeout: Math.max(1, timeout),
@@ -39,7 +42,8 @@ function save() {
     domain,
     target,
     'popup-hosts': hosts.split(',').map(s => s.trim()).filter((s, i, l) => s && l.indexOf(s) === i),
-    'top-hosts': tops.split(',').map(s => s.trim()).filter((s, i, l) => s && l.indexOf(s) === i)
+    'top-hosts': tops.split(',').map(s => s.trim()).filter((s, i, l) => s && l.indexOf(s) === i),
+    'blacklist': blacklist.split(',').map(s => s.trim()).filter((s, i, l) => s && l.indexOf(s) === i)
   }, () => {
     let status = document.getElementById('status');
     status.textContent = chrome.i18n.getMessage('options_msg');

@@ -36,10 +36,16 @@
     "message": "Use zero to disable countdown"
   },
   "options_item11": {
-    "message": "Comma separated list of host name or domain name for popups that are not going to be blocked (these domains can issue popups on any web-page)"
+    "message": "Comma separated list of host names  for popups that are not going to be blocked (these domains can issue popups on any web-page)"
   },
   "options_item12": {
-    "message": "Comma separated list of host name or domain name of web-pages that the popup blocker is completely disabled"
+    "message": "Comma separated list of host names of web-pages that the popup blocker is completely disabled"
+  },
+  "options_item13": {
+    "message": "Black-list (webpage):"
+  },
+  "options_item14": {
+    "message": "Comma separated list of host names that popup blocker should only be active on them. This means popup block is disabled on ALL other domains"
   },
   "options_save": {
     "message": "Save"

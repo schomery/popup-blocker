@@ -2,6 +2,7 @@
 
 var badge = true;
 var whitelist = [];
+var blacklist = [];
 var _ = chrome.i18n.getMessage;
 
 // config
@@ -21,20 +22,25 @@ chrome.storage.onChanged.addListener(prefs => {
   if (prefs['top-hosts']) {
     whitelist = prefs['top-hosts'].newValue;
   }
+  if (prefs.blacklist) {
+    blacklist = prefs.blacklist.newValue;
+  }
 });
 chrome.storage.local.get({
-  badge: true,
-  'top-hosts': ['yahoo.com', 'add0n.com']
+  'badge': true,
+  'top-hosts': ['yahoo.com', 'add0n.com'],
+  'blacklist': []
 }, prefs => {
   badge = prefs.badge;
   whitelist = prefs['top-hosts'];
+  blacklist = prefs.blacklist;
 });
 
 // bounce && badge
 chrome.runtime.onMessage.addListener((request, sender, response) => {
   // update badge counter
+  let tabId = sender.tab.id;
   if (request.cmd === 'popup-request' && badge) {
-    let tabId = sender.tab.id;
     chrome.browserAction.getBadgeText({tabId}, text => {
       text = text ? parseInt(text) : 0;
       text = (text + 1) + '';
@@ -64,15 +70,27 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       }
     }
   }
-  // is this tab (top level url) in whitelist?
+  // is this tab (top level url) in whitelist or blacklist?
   else if (request.cmd === 'validate') {
     let valid = false;
-    try {
-      let hostname = (new URL(sender.tab.url)).hostname;
-      valid = !!hostname && whitelist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
-      valid = valid && sender.tab.url !== 'http://tools.add0n.com/popup-blocker.html';
+    if (blacklist.length === 0) {
+      try {
+        let hostname = (new URL(sender.tab.url)).hostname;
+        valid = !!hostname && whitelist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
+      }
+      catch (e) {}
     }
-    catch (e) {}
+    else {
+      try {
+        let hostname = (new URL(sender.tab.url)).hostname;
+        valid = !!hostname && blacklist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
+        valid = !valid;
+      }
+      catch (e) {}
+    }
+    if (sender.tab.url.startsWith('http://tools.add0n.com/popup-blocker.html')) {
+      valid = false;
+    }
     response({valid});
   }
   else if (request.cmd === 'white-list') {

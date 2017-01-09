@@ -13,7 +13,6 @@
     "contextMenus"
   ],
   "background": {
-    "persistent": false,
     "scripts": [
       "common.js"
     ]
