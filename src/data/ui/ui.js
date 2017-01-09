@@ -2,6 +2,22 @@
 
 var urls = {};
 
+var cookie = {
+  get: host => {
+    let key = document.cookie.split(`${host}=`);
+    if (key.length > 1) {
+      return key[1].split(';')[0];
+    }
+  },
+  set: (host, cmd) => {
+    let days = 30;
+    let date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+
+    document.cookie = `${host}=${cmd}; expires=${date.toGMTString()}`;
+  }
+};
+
 function remove (div) {
   delete urls[div.dataset.url];
   try {
@@ -21,9 +37,14 @@ document.addEventListener('click', e => {
     let div = target.parentNode.parentNode;
     if (div) {
       let url = div.dataset.url;
+      let hostname = div.dataset.hostname;
       let id = div.dataset.id;
       remove(div);
       chrome.runtime.sendMessage({cmd, id, url});
+      // remember user action
+      if (hostname) {
+        cookie.set(hostname, cmd);
+      }
     }
   }
 });
@@ -42,7 +63,8 @@ chrome.runtime.onMessage.addListener((request) => {
     else {
       chrome.storage.local.get({
         numbers: 5,
-        timeout: 30
+        timeout: 30,
+        countdown: 5
       }, (prefs) => {
         let div = document.createElement('div');
         div.setAttribute('class', 'ppblocker-div');
@@ -70,6 +92,11 @@ chrome.runtime.onMessage.addListener((request) => {
         cancel.value = 'deny';
         cancel.title = 'Decline the popup/tab opening';
         cancel.dataset.cmd = 'popup-denied';
+        let whitelist = document.createElement('input');
+        whitelist.type = 'button';
+        whitelist.value = 'trust';
+        whitelist.title = 'White-list this domain to open popups';
+        whitelist.dataset.cmd = 'white-list';
 
         let p1 = document.createElement('p');
 
@@ -78,16 +105,46 @@ chrome.runtime.onMessage.addListener((request) => {
         div.dataset.url = tag;
         p2.title = p2.textContent = '↝ ' + (request.url || 'about:blank');
 
+        let ispage = request.url.startsWith('http') || request.url.startsWith('ftp');
+
+        if (ispage) {
+          buttons.appendChild(whitelist);
+          let spacer = document.createElement('span');
+          buttons.appendChild(spacer);
+        }
         div.appendChild(p1);
         div.appendChild(p2);
         buttons.appendChild(cancel);
         buttons.appendChild(ok);
-        if (request.url.startsWith('http') || request.url.startsWith('ftp')) {
+        if (ispage) {
           buttons.appendChild(redirect);
           buttons.appendChild(background);
         }
         div.appendChild(buttons);
         document.body.appendChild(div);
+        if (ispage && prefs.countdown) {
+          div.dataset.hostname = (new URL(request.url)).hostname;
+          let action = cookie.get(div.dataset.hostname);
+          if (action) {
+            let button = div.querySelector(`[data-cmd="${action}"`);
+            button.dataset.default = true;
+            let label = button.value;
+            let index = prefs.countdown;
+            if (button) {
+              let id = window.setInterval(() => {
+                index -= 1;
+                if (index) {
+                  button.value = label + ` (${index})`;
+                }
+                else {
+                  window.clearInterval(id);
+                  button.click();
+                }
+              }, 1000);
+              button.value = label + ` (${index})`;
+            }
+          }
+        }
         // timeout
         urls[tag] = {
           div,

@@ -15,6 +15,9 @@ input[type=button] {
   line-height: 20px;
   outline: none;
 }
+input[type=button][data-default=true] {
+  font-weight: bold;
+}
 
 .ppblocker-div {
   position: relative;
@@ -33,10 +36,15 @@ input[type=button] {
   display: flex;
   justify-content: flex-end;
 }
+.ppblocker-div>div>span {
+  display: flex;
+  flex: 1;
+}
 .ppblocker-div>p:first-of-type {
   font-weight: bold;
   margin: 0;
   padding: 0;
+  user-select: none;
 }
 .ppblocker-div>p:last-of-type {
   white-space: nowrap;

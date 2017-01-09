@@ -4,6 +4,7 @@ function restore () {
   chrome.storage.local.get({
     numbers: 5,
     timeout: 30,
+    countdown: 5,
     badge: true,
     domain: false,
     target: true,
@@ -12,6 +13,7 @@ function restore () {
   }, (obj) => {
     document.getElementById('numbers').value = obj.numbers;
     document.getElementById('timeout').value = obj.timeout;
+    document.getElementById('countdown').value = obj.countdown;
     document.getElementById('badge').checked = obj.badge;
     document.getElementById('domain').checked = obj.domain;
     document.getElementById('target').checked = obj.target;
@@ -21,16 +23,18 @@ function restore () {
 }
 
 function save() {
-  var numbers = document.getElementById('numbers').value;
-  var timeout = document.getElementById('timeout').value;
-  var badge = document.getElementById('badge').checked;
-  var domain = document.getElementById('domain').checked;
-  var target = document.getElementById('target').checked;
-  var hosts = document.getElementById('popup-hosts').value;
-  var tops = document.getElementById('top-hosts').value;
+  let numbers = document.getElementById('numbers').value;
+  let timeout = document.getElementById('timeout').value;
+  let countdown = document.getElementById('countdown').value;
+  let badge = document.getElementById('badge').checked;
+  let domain = document.getElementById('domain').checked;
+  let target = document.getElementById('target').checked;
+  let hosts = document.getElementById('popup-hosts').value;
+  let tops = document.getElementById('top-hosts').value;
   chrome.storage.local.set({
     numbers: Math.max(1, numbers),
     timeout: Math.max(1, timeout),
+    countdown: Math.max(0, countdown),
     badge,
     domain,
     target,

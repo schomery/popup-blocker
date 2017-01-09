@@ -75,7 +75,19 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     catch (e) {}
     response({valid});
   }
-
+  else if (request.cmd === 'white-list') {
+    try {
+      let hostname = new URL(request.url).hostname;
+      chrome.storage.local.get({
+        'popup-hosts': ['google.com', 'bing.com', 't.co']
+      }, prefs => {
+        prefs['popup-hosts'].push(hostname);
+        prefs['popup-hosts'] = prefs['popup-hosts'].filter((h, i, l) => l.indexOf(h) === i);
+        chrome.storage.local.set(prefs);
+      });
+    }
+    catch (e) {}
+  }
   // bouncing
   chrome.tabs.sendMessage(sender.tab.id, request);
 });
@@ -90,12 +102,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 // context menu
 chrome.contextMenus.create({
+  id: 'open-test-page',
   title: _('context_item1'),
-  contexts: ['browser_action'],
-  onclick: () => chrome.tabs.create({
-    url: 'http://tools.add0n.com/popup-blocker.html'
-  })
+  contexts: ['browser_action']
 });
+chrome.contextMenus.onClicked.addListener(() => chrome.tabs.create({
+  url: 'http://tools.add0n.com/popup-blocker.html'
+}));
 // browser action
 function update (toggle) {
   chrome.storage.local.get({

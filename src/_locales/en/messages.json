@@ -21,13 +21,25 @@
     "message": "Display the total number of blocked requests in the toolbar icon"
   },
   "options_item6": {
-    "message": "White-list (popup): Comma separated list of host name or domain name for popups that are not going to be blocked (these domains can issue popups on any web-page)"
+    "message": "White-list (popup):"
   },
   "options_item7": {
-    "message": "White-list (webpage): Comma separated list of host name or domain name of web-pages that the popup blocker is completely disabled"
+    "message": "White-list (webpage):"
   },
   "options_item8": {
     "message": "Tab refresh is required"
+  },
+  "options_item9": {
+    "message": "Countdown for performing the last action (in seconds)"
+  },
+  "options_item10": {
+    "message": "Use zero to disable countdown"
+  },
+  "options_item11": {
+    "message": "Comma separated list of host name or domain name for popups that are not going to be blocked (these domains can issue popups on any web-page)"
+  },
+  "options_item12": {
+    "message": "Comma separated list of host name or domain name of web-pages that the popup blocker is completely disabled"
   },
   "options_save": {
     "message": "Save"

@@ -14,16 +14,27 @@
     input[type=text] {
       width: 100%;
     }
+    .notes {
+      font-size: 80%;
+    }
   </style>
 </head>
 
 <body>
-  <p>
-    <label><span data-i18n="options_item1"></span> <input type="number" id="numbers" min=1> </label>
-  </p>
-  <p>
-    <label><span data-i18n="options_item2"></span><sup>1</sup> <input type="number" id="timeout" min=5></label>
-  </p>
+  <table>
+    <tr>
+      <td><span data-i18n="options_item1"></span></td>
+      <td><input type="number" id="numbers" min=1></td>
+    </tr>
+    <tr>
+      <td><span data-i18n="options_item2"></span><sup>1</sup></td>
+      <td><input type="number" id="timeout" min=5></td>
+    </tr>
+    <tr>
+      <td><span data-i18n="options_item9"></span><sup>2</sup></td>
+      <td><input type="number" id="countdown" min=0></td>
+    </tr>
+  </table>
   <p>
     <label><input type="checkbox" id="domain"> <span data-i18n="options_item3"></span><sup>1</sup></label>
     <br>
@@ -32,17 +43,23 @@
     <label><input type="checkbox" id="badge"> <span data-i18n="options_item5"></span><sup>1</sup></label>
   </p>
   <p>
-    <span data-i18n="options_item6"></span><sup>1</sup>
+    <span data-i18n="options_item6"></span><sup>1, 3</sup>
     <br>
     <input type="text" id="popup-hosts" rows="2">
   </p>
   <p>
-    <span data-i18n="options_item7"></span><sup>1</sup>
+    <span data-i18n="options_item7"></span><sup>1, 4</sup>
     <br>
     <input type="text" id="top-hosts" rows="2">
   </p>
-  <p>
+  <p class="notes">
     1: <span data-i18n="options_item8"></span>
+    <br>
+    2: <span data-i18n="options_item10"></span>
+    <br>
+    3: <span data-i18n="options_item11"></span>
+    <br>
+    4: <span data-i18n="options_item12"></span>
   </p>
   <div>
     <button id="save" data-i18n="options_save"></button> <span id="status"></span>

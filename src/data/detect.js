@@ -232,11 +232,15 @@ script.textContent = `
   });
   /* protection #4; when stopPropagation or stopImmediatePropagation is emitted, our listener will not be called anymore */
   protect(MouseEvent.prototype, 'stopPropagation', function () {
-    onclick(this);
+    if (this.type === 'click') {
+      onclick(this);
+    }
     return stopPropagation.apply(this, arguments);
   });
   protect(MouseEvent.prototype, 'stopImmediatePropagation', function () {
-    onclick(this);
+    if (this.type === 'click') {
+      onclick(this);
+    }
     return stopImmediatePropagation.apply(this, arguments);
   });
   /* protection #5; document.write; when document.open is called, old listeners are wiped out */
@@ -256,18 +260,18 @@ script.textContent = `
     }
     return dispatchEvent.apply(this, arguments);
   });
-  // configurations
+  // install listener
   document.addEventListener('click', onclick);
-  window.addEventListener('ppp-blocker-status', e => isEnabled = e.detail.value);
-  window.addEventListener('ppp-blocker-configure', e => {
-    isEnabled = e.detail.enabled;
-    isDomain = e.detail.domain;
-    isTarget = e.detail.target;
+  // configurations
+  window.addEventListener('ppp-blocker-configure-enabled', e => isEnabled = e.detail.value);
+  window.addEventListener('ppp-blocker-configure-target', e => {
+    isTarget = e.detail.value;
     if (!isTarget) {
       document.removeEventListener('click', onclick);
     }
-    whitelist = e.detail.whitelist;
   });
+  window.addEventListener('ppp-blocker-configure-domain', e => isDomain = e.detail.value);
+  window.addEventListener('ppp-blocker-configure-whitelist', e => whitelist = e.detail.value);
   // execute
   window.addEventListener('ppp-blocker-exe', e => {
     let request = e.detail;
@@ -292,18 +296,24 @@ chrome.storage.local.get({
   'domain': false,
   'popup-hosts': ['google.com', 'bing.com', 't.co']
 }, prefs => {
-  post('ppp-blocker-configure', {
-    cmd: 'configure',
-    enabled: prefs.enabled,
-    target: prefs.target,
-    domain: prefs.domain,
-    whitelist: prefs['popup-hosts']
-  });
+  post('ppp-blocker-configure-enabled', {value: prefs.enabled});
+  post('ppp-blocker-configure-target', {value: prefs.target});
+  post('ppp-blocker-configure-domain', {value: prefs.domain});
+  post('ppp-blocker-configure-whitelist', {value: prefs['popup-hosts']});
 });
 
 chrome.storage.onChanged.addListener(obj => {
   if (obj.enabled && active) {
-    post('ppp-blocker-status', {value: obj.enabled.newValue});
+    post('ppp-blocker-configure-enabled', {value: obj.enabled.newValue});
+  }
+  if (obj.target) {
+    post('ppp-blocker-configure-target', {value: obj.target.newValue});
+  }
+  if (obj.domain) {
+    post('ppp-blocker-configure-domain', {value: obj.domain.newValue});
+  }
+  if (obj['popup-hosts']) {
+    post('ppp-blocker-configure-whitelist', {value: obj['popup-hosts'].newValue});
   }
 });
 // is top domain white-listed.
@@ -312,6 +322,6 @@ chrome.runtime.sendMessage({
 }, (response) => {
   if (response && response.valid) {
     active = false;
-    post('ppp-blocker-status', {value: false});
+    post('ppp-blocker-configure-enabled', {value: false});
   }
 });
