@@ -6,10 +6,10 @@
     "message": "Test your popup blocker"
   },
   "options_item1": {
-    "message": "Maximum number of popup requests for a single page:"
+    "message": "Maximum number of popup requests for a single page"
   },
   "options_item2": {
-    "message": "Timeout for displaying each popup (in seconds):"
+    "message": "Timeout for displaying each popup (in seconds)"
   },
   "options_item3": {
     "message": "Do not block popup requests from same origin"
@@ -46,6 +46,12 @@
   },
   "options_item14": {
     "message": "Comma separated list of host names that popup blocker should only be active on them. This means popup block is disabled on ALL other domains"
+  },
+  "options_item15": {
+    "message": "Prevent page redirection for 10 seconds after a popup is requested"
+  },
+  "options_item16": {
+    "message": "On some websites, when popup ads are blocked, page redirection to advertisement destination is placed. This option can prevent this by warning you before redirection takes place."
   },
   "options_save": {
     "message": "Save"

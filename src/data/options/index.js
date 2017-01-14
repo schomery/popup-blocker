@@ -24,6 +24,15 @@ function restore () {
   });
 }
 
+function prepare (str) {
+  return str.split(/\s*\,\s*/)
+  .map(s => {
+    return s.replace('http://', '')
+      .replace('https://', '').split('/')[0].trim();
+  })
+  .filter((h, i, l) => h && l.indexOf(h) === i);
+}
+
 function save() {
   let numbers = document.getElementById('numbers').value;
   let timeout = document.getElementById('timeout').value;
@@ -41,9 +50,9 @@ function save() {
     badge,
     domain,
     target,
-    'popup-hosts': hosts.split(',').map(s => s.trim()).filter((s, i, l) => s && l.indexOf(s) === i),
-    'top-hosts': tops.split(',').map(s => s.trim()).filter((s, i, l) => s && l.indexOf(s) === i),
-    'blacklist': blacklist.split(',').map(s => s.trim()).filter((s, i, l) => s && l.indexOf(s) === i)
+    'popup-hosts': prepare(hosts),
+    'top-hosts': prepare(tops),
+    'blacklist': prepare(blacklist)
   }, () => {
     let status = document.getElementById('status');
     status.textContent = chrome.i18n.getMessage('options_msg');

@@ -10,7 +10,7 @@ var cookie = {
     }
   },
   set: (host, cmd) => {
-    let days = 30;
+    let days = 10;
     let date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
 

@@ -17,12 +17,21 @@ function post (name, value) {
   }));
 }
 
+var redirect = {
+  id: null,
+  active: false
+};
+
 window.addEventListener('ppp-blocker-create', (e) => {
   let request = e.detail;
   // prevent unprotected script from issuing any other commands
   if (!request || request.cmd !== 'popup-request') {
     return;
   }
+  redirect.active = true;
+  window.clearTimeout(redirect.id);
+  window.setTimeout(() => redirect.active = false, 10000);
+
   // passing over the minimal needed details
   chrome.runtime.sendMessage({
     cmd: 'popup-request',
@@ -59,6 +68,15 @@ chrome.runtime.onMessage.addListener(request => {
   ) {
     delete commands[id];
     delete requests[id];
+  }
+});
+// prevent ad page redirection when popup displaying is unsuccessful
+window.addEventListener('beforeunload', () => {
+  if (window.top === window && redirect.active) {
+    return `Popup Blocker (strict):
+
+Page is trying to redirect after a popup request.
+Sometimes when popup ads are blocked, page redirection to ads is replaced. Do you want to allow this?`;
   }
 });
 
@@ -294,12 +312,14 @@ chrome.storage.local.get({
   'enabled': true,
   'target': true,
   'domain': false,
-  'popup-hosts': ['google.com', 'bing.com', 't.co']
+  'popup-hosts': ['google.com', 'bing.com', 't.co'],
+  'block-page-redirection': false
 }, prefs => {
   post('ppp-blocker-configure-enabled', {value: prefs.enabled});
   post('ppp-blocker-configure-target', {value: prefs.target});
   post('ppp-blocker-configure-domain', {value: prefs.domain});
   post('ppp-blocker-configure-whitelist', {value: prefs['popup-hosts']});
+  redirect.active = prefs['block-page-redirection'];
 });
 
 chrome.storage.onChanged.addListener(obj => {
@@ -314,6 +334,9 @@ chrome.storage.onChanged.addListener(obj => {
   }
   if (obj['popup-hosts']) {
     post('ppp-blocker-configure-whitelist', {value: obj['popup-hosts'].newValue});
+  }
+  if (obj['block-page-redirection']) {
+    redirect.active = obj['block-page-redirection'].newValue;
   }
 });
 // is top domain white-listed.

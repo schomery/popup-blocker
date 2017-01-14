@@ -3,15 +3,19 @@
 <head>
   <title>Options Page :: Popup Blocker</title>
   <style>
-    body: {
+    body {
       padding: 10px;
       font-size: 13px;
-      font-family: arial,sans-serif;
+      font-family: arial, sans-serif;
+      width: 500px;
     }
     input[type=number] {
       width: 50px;
     }
     input[type=text] {
+      width: 100%;
+    }
+    table {
       width: 100%;
     }
     .notes {
@@ -22,6 +26,10 @@
 
 <body>
   <table>
+    <colgroup>
+      <col>
+      <col width="10">
+    </colgroup>
     <tr>
       <td><span data-i18n="options_item1"></span></td>
       <td><input type="number" id="numbers" min=1></td>
@@ -41,6 +49,8 @@
     <label><input type="checkbox" id="target"> <span data-i18n="options_item4"></span><sup>1</sup></label>
     <br>
     <label><input type="checkbox" id="badge"> <span data-i18n="options_item5"></span><sup>1</sup></label>
+    <br>
+    <label><input type="checkbox" id="block-page-redirection"> <span data-i18n="options_item15"></span><sup>6</sup></label>
   </p>
   <p>
     <span data-i18n="options_item6"></span><sup>1, 3</sup>
@@ -64,6 +74,8 @@
     4: <span data-i18n="options_item12"></span>
     <br>
     5: <span data-i18n="options_item14"></span>
+    <br>
+    6: <span data-i18n="options_item16"></span>
   </p>
   <div>
     <button id="save" data-i18n="options_save"></button> <span id="status"></span>
