@@ -42,7 +42,7 @@ document.addEventListener('click', e => {
       remove(div);
       chrome.runtime.sendMessage({cmd, id, url});
       // remember user action
-      if (hostname) {
+      if (hostname && (cmd !== 'white-list' && cmd !== 'popup-accepted')) {
         cookie.set(hostname, cmd);
       }
     }
@@ -62,9 +62,10 @@ chrome.runtime.onMessage.addListener((request) => {
     }
     else {
       chrome.storage.local.get({
-        numbers: 5,
-        timeout: 30,
-        countdown: 5
+        'numbers': 5,
+        'timeout': 30,
+        'countdown': 5,
+        'default-action': 'ignore'
       }, (prefs) => {
         let div = document.createElement('div');
         div.setAttribute('class', 'ppblocker-div');
@@ -124,24 +125,26 @@ chrome.runtime.onMessage.addListener((request) => {
         document.body.appendChild(div);
         if (ispage && prefs.countdown) {
           div.dataset.hostname = (new URL(request.url)).hostname;
-          let action = cookie.get(div.dataset.hostname);
+          let action = cookie.get(div.dataset.hostname) || prefs['default-action'];
           if (action) {
             let button = div.querySelector(`[data-cmd="${action}"`);
-            button.dataset.default = true;
-            let label = button.value;
-            let index = prefs.countdown;
             if (button) {
-              let id = window.setInterval(() => {
-                index -= 1;
-                if (index) {
-                  button.value = label + ` (${index})`;
-                }
-                else {
-                  window.clearInterval(id);
-                  button.click();
-                }
-              }, 1000);
-              button.value = label + ` (${index})`;
+              button.dataset.default = true;
+              let label = button.value;
+              let index = prefs.countdown;
+              if (button) {
+                let id = window.setInterval(() => {
+                  index -= 1;
+                  if (index) {
+                    button.value = label + ` (${index})`;
+                  }
+                  else {
+                    window.clearInterval(id);
+                    button.click();
+                  }
+                }, 1000);
+                button.value = label + ` (${index})`;
+              }
             }
           }
         }

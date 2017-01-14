@@ -53,6 +53,21 @@
   "options_item16": {
     "message": "On some websites, when popup ads are blocked, page redirection to advertisement destination is placed. This option can prevent this by warning you before redirection takes place."
   },
+  "options_item17": {
+    "message": "Default action when a popup is requested"
+  },
+  "options_item18": {
+    "message": "do nothing"
+  },
+  "options_item19": {
+    "message": "deny request"
+  },
+  "options_item20": {
+    "message": "open in background"
+  },
+  "options_item21": {
+    "message": "redirect page"
+  },
   "options_save": {
     "message": "Save"
   },
