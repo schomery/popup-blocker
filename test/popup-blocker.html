@@ -137,6 +137,21 @@
         document.getElementsByTagName("body").item(0).removeChild(f);
         return false;
       };
+      function method14 () {
+        function isWindow(obj) {
+            if (typeof(window.constructor) === 'undefined') {
+                return obj instanceof window.constructor;
+            } else {
+                return obj.window === obj;
+            }
+        }
+        var win = window.open('https://example.com/test/14');
+        if (!isWindow(win)) {
+          window.setTimeout(function () {
+            window.location.href = 'https://example.com/test/14';
+          }, 500);
+        }
+      }
 
       function overwrite1 () {
         try {
@@ -206,6 +221,7 @@
       <li><input onclick="method12_3()" type="button" value="Method 12/3">generating click event (button=0) and dispatching it over a "a" element</li>
       <li><input onclick="method12_4()" type="button" value="Method 12/4">fire click() over a "a" element</li>
       <li><input onclick="method13(event)" type="button" value="Method 13">opening link through form submission</li>
+      <li><input onclick="method14()" type="button" value="Method 14">opening a popup and if it was unsuccessful, redirect current page to destination. To prevent this enable "Prevent page redirection for 5 seconds after a popup is requested" in the options page.</li>
     </ul>
     <p>
       Click <input type="button" onclick="overwrite1();" value="here"> to overwrite "window.open" and try tests one more time.

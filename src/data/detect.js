@@ -30,7 +30,7 @@ window.addEventListener('ppp-blocker-create', (e) => {
   }
   redirect.active = true;
   window.clearTimeout(redirect.id);
-  window.setTimeout(() => redirect.active = false, 10000);
+  window.setTimeout(() => redirect.active = false, 5000);
 
   // passing over the minimal needed details
   chrome.runtime.sendMessage({
@@ -71,12 +71,9 @@ chrome.runtime.onMessage.addListener(request => {
   }
 });
 // prevent ad page redirection when popup displaying is unsuccessful
-window.addEventListener('beforeunload', () => {
+window.onbeforeunload = ('beforeunload', (e) => {
   if (window.top === window && redirect.active) {
-    return `Popup Blocker (strict):
-
-Page is trying to redirect after a popup request.
-Sometimes when popup ads are blocked, page redirection to ads is replaced. Do you want to allow this?`;
+    e.returnValue = 'false';
   }
 });
 
