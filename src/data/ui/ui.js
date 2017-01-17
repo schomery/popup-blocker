@@ -15,6 +15,12 @@ var cookie = {
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
 
     document.cookie = `${host}=${cmd}; expires=${date.toGMTString()}`;
+  },
+  remove: (host) => {
+    let cmd = cookie.get(host);
+    if (cmd) {
+      document.cookie = `${host}=${cmd}; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+    }
   }
 };
 
@@ -42,7 +48,10 @@ document.addEventListener('click', e => {
       remove(div);
       chrome.runtime.sendMessage({cmd, id, url});
       // remember user action
-      if (hostname && (cmd !== 'white-list' && cmd !== 'popup-accepted')) {
+      if (cmd === 'popup-close') {
+        cookie.remove(hostname);
+      }
+      else if (hostname && (cmd !== 'white-list' && cmd !== 'popup-accepted')) {
         cookie.set(hostname, cmd);
       }
     }
@@ -73,6 +82,11 @@ chrome.runtime.onMessage.addListener((request) => {
         div.dataset.id = request.id;
         let buttons = document.createElement('div');
 
+        let close = document.createElement('input');
+        close.type = 'button';
+        close.value =  '✗';
+        close.title = 'Close this notification';
+        close.dataset.cmd = 'popup-close';
         let ok = document.createElement('input');
         ok.type = 'button';
         ok.value = 'allow';
@@ -117,6 +131,7 @@ chrome.runtime.onMessage.addListener((request) => {
         div.appendChild(p2);
         buttons.appendChild(cancel);
         buttons.appendChild(ok);
+        buttons.appendChild(close);
         if (ispage) {
           buttons.appendChild(redirect);
           buttons.appendChild(background);

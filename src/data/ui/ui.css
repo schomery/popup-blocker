@@ -18,6 +18,13 @@ input[type=button] {
 input[type=button][data-default=true] {
   font-weight: bold;
 }
+input[type=button][data-cmd="popup-close"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+}
 
 .ppblocker-div {
   position: relative;
