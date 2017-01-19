@@ -2,12 +2,13 @@
 
 function restore () {
   chrome.storage.local.get({
-    numbers: 5,
-    timeout: 30,
-    countdown: 5,
-    badge: true,
-    domain: false,
-    target: true,
+    'numbers': 5,
+    'timeout': 30,
+    'countdown': 5,
+    'badge': true,
+    'domain': false,
+    'target': true,
+    'block-page-redirection': false,
     'popup-hosts': ['google.com', 'bing.com', 't.co'],
     'top-hosts': ['yahoo.com', 'add0n.com'],
     'blacklist': [],
@@ -19,6 +20,7 @@ function restore () {
     document.getElementById('badge').checked = obj.badge;
     document.getElementById('domain').checked = obj.domain;
     document.getElementById('target').checked = obj.target;
+    document.getElementById('block-page-redirection').checked = obj['block-page-redirection'];
     document.getElementById('popup-hosts').value = obj['popup-hosts'].join(', ');
     document.getElementById('top-hosts').value = obj['top-hosts'].join(', ');
     document.getElementById('blacklist').value = obj.blacklist.join(', ');
@@ -42,17 +44,19 @@ function save() {
   let badge = document.getElementById('badge').checked;
   let domain = document.getElementById('domain').checked;
   let target = document.getElementById('target').checked;
+  let redirection = document.getElementById('block-page-redirection').checked;
   let hosts = document.getElementById('popup-hosts').value;
   let tops = document.getElementById('top-hosts').value;
   let blacklist = document.getElementById('blacklist').value;
   let defaultAction = document.getElementById('default-action').value;
   chrome.storage.local.set({
-    numbers: Math.max(1, numbers),
-    timeout: Math.max(1, timeout),
-    countdown: Math.max(0, countdown),
+    'numbers': Math.max(1, numbers),
+    'timeout': Math.max(1, timeout),
+    'countdown': Math.max(0, countdown),
     badge,
     domain,
     target,
+    'block-page-redirection': redirection,
     'popup-hosts': prepare(hosts),
     'top-hosts': prepare(tops),
     'blacklist': prepare(blacklist),

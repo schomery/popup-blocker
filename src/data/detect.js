@@ -19,7 +19,10 @@ function post (name, value) {
 
 var redirect = {
   id: null,
-  active: false
+  active: false,
+  callback: (e) => {
+    e.returnValue = 'false';
+  }
 };
 
 window.addEventListener('ppp-blocker-create', (e) => {
@@ -28,10 +31,14 @@ window.addEventListener('ppp-blocker-create', (e) => {
   if (!request || request.cmd !== 'popup-request') {
     return;
   }
-  redirect.active = true;
-  window.clearTimeout(redirect.id);
-  window.setTimeout(() => redirect.active = false, 5000);
-
+  // prevent ad page redirection when popup displaying is unsuccessful for 2 seconds
+  if (redirect.active && window.top === window) {
+    window.addEventListener('beforeunload', redirect.callback);
+    window.clearTimeout(redirect.id);
+    redirect.id = window.setTimeout(() => {
+      window.removeEventListener('beforeunload', redirect.callback);
+    }, 2000);
+  }
   // passing over the minimal needed details
   chrome.runtime.sendMessage({
     cmd: 'popup-request',
@@ -68,12 +75,6 @@ chrome.runtime.onMessage.addListener(request => {
   ) {
     delete commands[id];
     delete requests[id];
-  }
-});
-// prevent ad page redirection when popup displaying is unsuccessful
-window.onbeforeunload = ('beforeunload', (e) => {
-  if (window.top === window && redirect.active) {
-    e.returnValue = 'false';
   }
 });
 
