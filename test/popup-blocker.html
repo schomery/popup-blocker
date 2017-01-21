@@ -152,6 +152,9 @@
           }, 500);
         }
       }
+      function method16 () {
+        window.open('popup-blocker.html');
+      }
 
       function overwrite1 () {
         try {
@@ -174,7 +177,7 @@
         catch (e) {
           alert('Error: ' + e.message);
         }
-      };
+      }
     </script>
     <h1>Test the effectiveness of your popup blocker add-on</h1>
     <ul>
@@ -222,6 +225,9 @@
       <li><input onclick="method12_4()" type="button" value="Method 12/4">fire click() over a "a" element</li>
       <li><input onclick="method13(event)" type="button" value="Method 13">opening link through form submission</li>
       <li><input onclick="method14()" type="button" value="Method 14">opening a popup and if it was unsuccessful, redirect current page to destination. To prevent this enable "Prevent page redirection for 5 seconds after a popup is requested" in the options page.</li>
+      <li><a href='javascript:window.open("https://example.com/test/15");' target="_blank">Method 15</a> open a popup through direct JS execution</li>
+      <li><a href='popup-blocker.html");' target="_blank">Method 16/1</a> open a popup using relative link</li>
+      <li><input type="button" onclick="method16()" value="Method 16/2"> open a popup using relative link</li>
     </ul>
     <p>
       Click <input type="button" onclick="overwrite1();" value="here"> to overwrite "window.open" and try tests one more time.

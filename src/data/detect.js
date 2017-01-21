@@ -143,6 +143,12 @@ script.textContent = `
     window.setTimeout(() => { // in Firefox sometimes returns document.activeElement is document.body
       // handling about:blank cases
       let selected = document.activeElement === document.body && activeElement ? activeElement : document.activeElement;
+      // convert relative URL to absolute URL
+      if (url && url.indexOf(':') === -1) {
+        let a = document.createElement('a');
+        a.href = url;
+        url = a.cloneNode(false).href;
+      }
       if (!url || url.startsWith('about:')) {
         selected.dataset.popupblocker = selected.dataset.popupblocker || id;
       }
