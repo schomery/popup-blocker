@@ -25,19 +25,24 @@ var redirect = {
   }
 };
 
+// prevent ad page redirection when popup displaying is unsuccessful for 2 seconds
+window.addEventListener('ppp-blocker-redirect', (e) => {
+  if (redirect.active && window.top === window) {
+    window.addEventListener('beforeunload', redirect.callback);
+    e.preventDefault();
+    e.stopPropagation();
+
+    window.clearTimeout(redirect.id);
+    redirect.id = window.setTimeout(() => {
+      window.removeEventListener('beforeunload', redirect.callback);
+    }, 2000);
+  }
+});
 window.addEventListener('ppp-blocker-create', (e) => {
   let request = e.detail;
   // prevent unprotected script from issuing any other commands
   if (!request || request.cmd !== 'popup-request') {
     return;
-  }
-  // prevent ad page redirection when popup displaying is unsuccessful for 2 seconds
-  if (redirect.active && window.top === window) {
-    window.addEventListener('beforeunload', redirect.callback);
-    window.clearTimeout(redirect.id);
-    redirect.id = window.setTimeout(() => {
-      window.removeEventListener('beforeunload', redirect.callback);
-    }, 2000);
   }
   // passing over the minimal needed details
   chrome.runtime.sendMessage({
@@ -140,6 +145,7 @@ script.textContent = `
       return wPointer.apply(window, arguments);
     }
     let id = Math.random();
+    post('ppp-blocker-redirect');
     window.setTimeout(() => { // in Firefox sometimes returns document.activeElement is document.body
       // handling about:blank cases
       let selected = document.activeElement === document.body && activeElement ? activeElement : document.activeElement;
@@ -161,7 +167,7 @@ script.textContent = `
         arguments: [...arguments],
         tag: selected.dataset.popupblocker
       });
-    }, 100);
+    }, 0);
 
     return {
       document: {
@@ -215,6 +221,7 @@ script.textContent = `
         .reduce((p, c) => p || ['_parent', '_tab', '_blank'].includes(c.target.toLowerCase()), false);
       // if element is not attached, a.click() opens a new tab
       if ((base || !e.target) && (e.button === 0 && !(e.metaKey && e.isTrusted) || (e.button === 1 && !e.isTrusted)) && !permit(a.href)) {
+        post('ppp-blocker-redirect');
         post('ppp-blocker-create', {
           cmd: 'popup-request',
           type: 'target._blank',

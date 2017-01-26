@@ -137,7 +137,7 @@
         document.getElementsByTagName("body").item(0).removeChild(f);
         return false;
       };
-      function method14 () {
+      function method14_1 () {
         function isWindow(obj) {
             if (typeof(window.constructor) === 'undefined') {
                 return obj instanceof window.constructor;
@@ -147,11 +147,28 @@
         }
         var win = window.open('https://example.com/test/14');
         if (!isWindow(win)) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          event.stopPropagation();
           window.setTimeout(function () {
             window.location.href = 'https://example.com/test/14';
           }, 500);
         }
       }
+      function method14_2 () {
+        function isWindow(obj) {
+            if (typeof(window.constructor) === 'undefined') {
+                return obj instanceof window.constructor;
+            } else {
+                return obj.window === obj;
+            }
+        }
+        var win = window.open('https://example.com/test/14');
+        if (!isWindow(win)) {
+          window.location.href = 'https://example.com/test/14';
+        }
+      }
+
       function method16 () {
         window.open('popup-blocker.html');
       }
@@ -224,7 +241,8 @@
       <li><input onclick="method12_3()" type="button" value="Method 12/3">generating click event (button=0) and dispatching it over a "a" element</li>
       <li><input onclick="method12_4()" type="button" value="Method 12/4">fire click() over a "a" element</li>
       <li><input onclick="method13(event)" type="button" value="Method 13">opening link through form submission</li>
-      <li><input onclick="method14()" type="button" value="Method 14">opening a popup and if it was unsuccessful, redirect current page to destination. To prevent this enable "Prevent page redirection for 5 seconds after a popup is requested" in the options page.</li>
+      <li><input onclick="method14_1()" type="button" value="Method 14/1">opening a popup and if it was unsuccessful, redirect current page to destination (redirect with delay). To prevent this enable "Prevent page redirection for 5 seconds after a popup is requested" in the options page.</li>
+      <li><input onclick="method14_2()" type="button" value="Method 14/2">opening a popup and if it was unsuccessful, redirect current page to destination (instant redirect). To prevent this enable "Prevent page redirection for 5 seconds after a popup is requested" in the options page.</li>
       <li><a href='javascript:window.open("https://example.com/test/15");' target="_blank">Method 15</a> open a popup through direct JS execution</li>
       <li><a href='popup-blocker.html");' target="_blank">Method 16/1</a> open a popup using relative link</li>
       <li><input type="button" onclick="method16()" value="Method 16/2"> open a popup using relative link</li>
