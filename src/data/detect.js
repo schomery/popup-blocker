@@ -167,7 +167,7 @@ script.textContent = `
         arguments: [...arguments],
         tag: selected.dataset.popupblocker
       });
-    }, 0);
+    }, 100);
 
     return {
       document: {

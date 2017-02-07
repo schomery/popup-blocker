@@ -6,6 +6,7 @@ function restore () {
     'timeout': 30,
     'countdown': 5,
     'badge': true,
+    'badge-color': '#6e6e6e',
     'domain': false,
     'target': true,
     'block-page-redirection': false,
@@ -18,6 +19,7 @@ function restore () {
     document.getElementById('timeout').value = obj.timeout;
     document.getElementById('countdown').value = obj.countdown;
     document.getElementById('badge').checked = obj.badge;
+    document.getElementById('badge-color').value = obj['badge-color'];
     document.getElementById('domain').checked = obj.domain;
     document.getElementById('target').checked = obj.target;
     document.getElementById('block-page-redirection').checked = obj['block-page-redirection'];
@@ -42,6 +44,7 @@ function save() {
   let timeout = document.getElementById('timeout').value;
   let countdown = document.getElementById('countdown').value;
   let badge = document.getElementById('badge').checked;
+  let badgeColor = document.getElementById('badge-color').value;
   let domain = document.getElementById('domain').checked;
   let target = document.getElementById('target').checked;
   let redirection = document.getElementById('block-page-redirection').checked;
@@ -54,6 +57,7 @@ function save() {
     'timeout': Math.max(1, timeout),
     'countdown': Math.max(0, countdown),
     badge,
+    'badge-color': badgeColor,
     domain,
     target,
     'block-page-redirection': redirection,

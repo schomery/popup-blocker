@@ -68,8 +68,11 @@
   "options_item21": {
     "message": "redirect page"
   },
+  "options_item22": {
+    "message": "Badge background-color"
+  },
   "options_save": {
-    "message": "Save"
+    "message": "Save Settings"
   },
   "options_msg": {
     "message": "Options are saved"

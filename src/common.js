@@ -18,7 +18,12 @@ chrome.storage.onChanged.addListener(prefs => {
       }));
     }
   }
-  // maybe both change
+  // maybe multiple prefs changed
+  if (prefs['badge-color']) {
+    chrome.browserAction.setBadgeBackgroundColor({
+      color: prefs['badge-color'].newValue
+    });
+  }
   if (prefs['top-hosts']) {
     whitelist = prefs['top-hosts'].newValue;
   }
@@ -28,12 +33,16 @@ chrome.storage.onChanged.addListener(prefs => {
 });
 chrome.storage.local.get({
   'badge': true,
+  'badge-color': '#6e6e6e',
   'top-hosts': ['yahoo.com', 'add0n.com'],
   'blacklist': []
 }, prefs => {
   badge = prefs.badge;
   whitelist = prefs['top-hosts'];
   blacklist = prefs.blacklist;
+  chrome.browserAction.setBadgeBackgroundColor({
+    color: prefs['badge-color']
+  });
 });
 
 // bounce && badge
