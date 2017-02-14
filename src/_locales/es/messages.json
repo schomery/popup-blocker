@@ -1,0 +1,106 @@
+{
+    "options_item12": {
+        "message": "Lista separada por comas de nombres de equipo de páginas web para las que el bloqueador está completamente desactivado",
+        "description": ""
+    },
+    "options_msg": {
+        "message": "Se han guardado las opciones",
+        "description": ""
+    },
+    "options_item10": {
+        "message": "Use el cero para desactivar la cuenta regresiva",
+        "description": ""
+    },
+    "context_item1": {
+        "message": "Probar su bloqueador de ventanas emergentes",
+        "description": ""
+    },
+    "options_item3": {
+        "message": "No bloquear solicitudes de ventanas emergentes provenientes del mismo origen",
+        "description": ""
+    },
+    "options_item16": {
+        "message": "En algunos sitios, cuando bloquea los anuncios emergentes, se le redirigirá al sitio del anunciante. Esta opción puede evitarlo mediante un aviso antes de que la redirección se lleve a cabo.",
+        "description": ""
+    },
+    "options_item4": {
+        "message": "Bloquear apertura de enlaces en pestañas nuevas",
+        "description": ""
+    },
+    "options_item15": {
+        "message": "Prevenir redirección de páginas por 2 segundos tras una solicitud de ventana emergente",
+        "description": ""
+    },
+    "appDesc": {
+        "message": "Bloquear estrictamente cualquier solicitud de ventana emergente de todos los sitios",
+        "description": ""
+    },
+    "options_item19": {
+        "message": "denegar solicitud",
+        "description": ""
+    },
+    "options_item9": {
+        "message": "Cuenta regresiva para realizar la última acción (segundos)",
+        "description": ""
+    },
+    "options_item2": {
+        "message": "Tiempo de espera para mostrar cada ventana emergente (segundos)",
+        "description": ""
+    },
+    "options_item7": {
+        "message": "Lista blanca (página web):",
+        "description": ""
+    },
+    "options_save": {
+        "message": "Guardar configuración",
+        "description": ""
+    },
+    "options_item22": {
+        "message": "Color de fondo de emblema",
+        "description": ""
+    },
+    "options_item1": {
+        "message": "Número máximo de solicitudes de ventanas emergentes para una única página",
+        "description": ""
+    },
+    "options_item17": {
+        "message": "Acción predeterminada cuando se solicita una ventana emergente",
+        "description": ""
+    },
+    "options_item14": {
+        "message": "Lista separada por comas de nombres de equipo para los que el bloqueador debe activarse exclusivamente. Esto quiere decir que el bloqueo de ventanas emergentes se desactivará en TODOS los otros dominios",
+        "description": ""
+    },
+    "options_item11": {
+        "message": "Lista separada por comas de nombres de equipo para ventanas emergentes que no se bloquearán (estos dominios pueden emitir ventanas emergentes en cualquier página web)",
+        "description": ""
+    },
+    "options_item18": {
+        "message": "no hacer nada",
+        "description": ""
+    },
+    "options_item21": {
+        "message": "redirigir página",
+        "description": ""
+    },
+    "options_item8": {
+        "message": "Se necesita actualizar la pestaña",
+        "description": ""
+    },
+    "options_item13": {
+        "message": "Lista negra (página web):",
+        "description": ""
+    },
+    "options_item5": {
+        "message": "Mostrar número total de solicitudes bloqueadas en el icono de la barra de herramientas",
+        "description": ""
+    },
+    "options_item6": {
+        "message": "Lista blanca (ventana emergente):",
+        "description": ""
+    },
+    "options_item20": {
+        "message": "abrir en segundo plano",
+        "description": ""
+    }
+}
