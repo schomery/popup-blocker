@@ -251,7 +251,7 @@ script.textContent = `
     else if (tagName.toLowerCase() === 'form') {
       let submit = target.submit;
       protect(target, 'submit', function () {
-        if (onclick(event, target)) {
+        if (onclick(typeof event === 'undefined' ? {target} : event, target)) {
           return false;
         }
         return submit.apply(this, arguments);
