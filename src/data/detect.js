@@ -251,7 +251,10 @@ script.textContent = `
     else if (tagName.toLowerCase() === 'form') {
       let submit = target.submit;
       protect(target, 'submit', function () {
-        if (onclick(typeof event === 'undefined' ? {target} : event, target)) {
+        if (onclick(typeof event === 'undefined' ? { // firefox does not support global events
+          target,
+          button: 0
+        } : event, target)) {
           return false;
         }
         return submit.apply(this, arguments);
