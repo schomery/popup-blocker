@@ -24,6 +24,29 @@ var cookie = {
   }
 };
 
+function Timer (callback, delay, ...args) {
+  let timerId, start, remaining = delay;
+
+  this.pause = function () {
+    window.clearTimeout(timerId);
+    remaining -= new Date() - start;
+  };
+
+  this.resume = function () {
+    start = new Date();
+    window.clearTimeout(timerId);
+    timerId = window.setTimeout(callback, remaining, ...args);
+    return timerId;
+  };
+
+  this.reset = function () {
+    remaining = delay;
+    this.resume();
+  };
+
+  return this.resume();
+}
+
 function remove (div) {
   delete urls[div.dataset.url];
   try {
@@ -65,9 +88,8 @@ chrome.runtime.onMessage.addListener((request) => {
       let obj = urls[tag];
       let div = obj.div;
       div.dataset.badge = +div.dataset.badge + 1;
-      window.clearTimeout(obj.id);
-      obj.id = window.setTimeout(remove, obj.prefs.timeout * 1000, div);
-      obj.timestamp = (new Date()).getTime();
+      obj.timer.reset();
+      obj.timestamp = Date.now();
     }
     else {
       chrome.storage.local.get({
@@ -80,6 +102,7 @@ chrome.runtime.onMessage.addListener((request) => {
         div.setAttribute('class', 'ppblocker-div');
         div.dataset.badge = 1;
         div.dataset.id = request.id;
+
         let buttons = document.createElement('div');
 
         let close = document.createElement('input');
@@ -118,7 +141,7 @@ chrome.runtime.onMessage.addListener((request) => {
         p1.textContent = 'Popup is requested for';
         let p2 = document.createElement('p');
         div.dataset.url = tag;
-        p2.title = p2.textContent = '↝ ' + (request.url || 'about:blank');
+        div.title = p2.title = p2.textContent = '↝ ' + (request.url || 'about:blank');
 
         let ispage = request.url.startsWith('http') || request.url.startsWith('ftp');
 
@@ -149,6 +172,11 @@ chrome.runtime.onMessage.addListener((request) => {
               let index = prefs.countdown;
               if (button) {
                 let id = window.setInterval(() => {
+                  // skip when mouse is over
+                  if (div.dataset.hover === 'true') {
+                    return;
+                  }
+
                   index -= 1;
                   if (index) {
                     button.value = label + ` (${index})`;
@@ -166,10 +194,18 @@ chrome.runtime.onMessage.addListener((request) => {
         // timeout
         urls[tag] = {
           div,
-          id: window.setTimeout(remove, prefs.timeout * 1000, div),
+          timer: new Timer(remove, prefs.timeout * 1000, div),
           prefs,
-          timestamp: (new Date()).getTime()
+          timestamp: Date.now()
         };
+        div.addEventListener('mouseenter', () => {
+          div.dataset.hover = true;
+          urls[tag].timer.pause();
+        });
+        div.addEventListener('mouseleave', () => {
+          div.dataset.hover = false;
+          urls[tag].timer.resume();
+        });
         //
         // remove extra
         let keys = Object.keys(urls);
