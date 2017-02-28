@@ -73,10 +73,15 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     // validating request before proceeding
     if (url.startsWith('http') || url.startsWith('ftp') || url === 'about:blank') {
       if (request.cmd === 'popup-redirect') {
-        chrome.tabs.query({
-          active: true,
-          currentWindow: true
-        }, tabs => chrome.tabs.update(tabs[0].id, {url}));
+        // make sure redirect prevent is off
+        chrome.tabs.sendMessage(sender.tab.id, {
+          cmd: 'release-beforeunload'
+        }, () => {
+          chrome.tabs.query({
+            active: true,
+            currentWindow: true
+          }, tabs => chrome.tabs.update(tabs[0].id, {url}));
+        });
       }
       else {
         chrome.tabs.create({

@@ -71,6 +71,11 @@ chrome.runtime.onMessage.addListener(request => {
       commands: commands[id]
     });
   }
+  // releasing page-redirect
+  else if (request.cmd === 'release-beforeunload' && window.top === window) {
+    window.clearTimeout(redirect.id);
+    window.removeEventListener('beforeunload', redirect.callback);
+  }
   // clean up
   if (
     request.cmd === 'popup.accepted' ||
