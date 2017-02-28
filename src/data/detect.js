@@ -170,6 +170,9 @@ script.textContent = `
     }, 100);
 
     return {
+      moveTo: function () {},
+      resizeTo: function () {},
+      location: {},
       document: {
         open: function () {
           post('ppp-blocker-append', {

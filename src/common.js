@@ -34,7 +34,7 @@ chrome.storage.onChanged.addListener(prefs => {
 chrome.storage.local.get({
   'badge': true,
   'badge-color': '#6e6e6e',
-  'top-hosts': ['yahoo.com', 'add0n.com'],
+  'top-hosts': ['yahoo.com', 'add0n.com', 'google.com'],
   'blacklist': []
 }, prefs => {
   badge = prefs.badge;
@@ -58,6 +58,14 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
         text
       });
     });
+  }
+  // bouncing back to ui.js
+  if (
+    request.cmd === 'popup-number' ||
+    request.cmd === 'popup-request' ||
+    request.cmd === 'popup-request-bounced'
+  ) {
+    chrome.tabs.sendMessage(sender.tab.id, request);
   }
   // open a new tab or redirect current tab
   else if (request.cmd === 'popup-redirect' || request.cmd === 'open-tab') {
@@ -115,8 +123,6 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     }
     catch (e) {}
   }
-  // bouncing
-  chrome.tabs.sendMessage(sender.tab.id, request);
 });
 // refresh
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {

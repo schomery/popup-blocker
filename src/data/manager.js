@@ -22,6 +22,7 @@ chrome.runtime.onMessage.addListener(request => {
       iframe.onload = () => {
         request.cmd = 'popup-request-bounced';
         chrome.runtime.sendMessage(request);
+        iframe.onload = null;
       };
       document.body.appendChild(iframe);
     }

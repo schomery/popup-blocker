@@ -127,7 +127,6 @@
         a.dispatchEvent(b);
       }
       function method13 (event) {
-
         var f = document.createElement("form");
         f.setAttribute("action", "https://example.com/test/13");
         f.setAttribute("method", "post");
@@ -171,6 +170,31 @@
 
       function method16 () {
         window.open('popup-blocker.html');
+      }
+      function method17_1 () {
+        var f = document.createElement('iframe');
+        f.style = 'display: none;';
+        document.body.appendChild(f);
+        f.contentWindow.open('https://example.com/test/17/1');
+      }
+      function method17_2 () {
+        var f = document.createElement('iframe');
+        f.style = 'display: none;';
+        document.body.appendChild(f);
+        window.setTimeout(function () {
+          f.contentWindow.open('https://example.com/test/17/1');
+        }, 2000);
+      }
+      function method17_3 () {
+        var f = document.createElement('iframe');
+        f.style = 'display: none;';
+        document.body.appendChild(f);
+
+        var a = f.contentDocument.createElement('a');
+        a.target="_blank";
+        a.href='https://example.com/test/17/2';
+        a.click();
+        document.body.appendChild(a);
       }
 
       function overwrite1 () {
@@ -224,7 +248,7 @@
         var f = document.createElement('iframe');
         var elem = document.getElementById('id3');
         elem.parentNode.insertBefore(f, elem);
-        f.contentDocument.write('<html><head><style>body{display: flex; align-items: center; justify-content: center; margin: 0;}</style></head><body><a href="https://example.com/test/9" target="_blank">Method 9</a>');
+        f.contentDocument.write('<html><head><style>body{display: flex; align-items: center; justify-content: center; margin: 0; overflow: hidden;}</style></head><body><a href="https://example.com/test/9" target="_blank">Method 9</a>');
         f.contentDocument.write('</body></html>');
         f.contentDocument.documentElement.appendChild(document.querySelector('style').cloneNode(true));
         f.contentDocument.close();
@@ -246,6 +270,9 @@
       <li><a href='javascript:window.open("https://example.com/test/15");' target="_blank">Method 15</a> open a popup through direct JS execution</li>
       <li><a href='popup-blocker.html");' target="_blank">Method 16/1</a> open a popup using relative link</li>
       <li><input type="button" onclick="method16()" value="Method 16/2"> open a popup using relative link</li>
+      <li><input type="button" onclick="method17_1()" value="Method 17/1"> open a popup by creating a dynamic iframe (method 1)</li>
+      <li><input type="button" onclick="method17_2()" value="Method 17/2"> open a popup by creating a dynamic iframe (method 1 with 2 secs delay)</li>
+      <li><input type="button" onclick="method17_3()" value="Method 17/3"> open a popup by creating a dynamic iframe (method 3)</li>
     </ul>
     <p>
       Click <input type="button" onclick="overwrite1();" value="here"> to overwrite "window.open" and try tests one more time.

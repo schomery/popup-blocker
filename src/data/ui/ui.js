@@ -81,7 +81,11 @@ document.addEventListener('click', e => {
   }
 });
 
-chrome.runtime.onMessage.addListener((request) => {
+chrome.runtime.onMessage.addListener((request, sender) => {
+  // make sure to ignore messages from page script
+  if (sender.tab) {
+    return;
+  }
   if (request.cmd === 'popup-request' || request.cmd === 'popup-request-bounced') {
     let tag  = request.url && request.url !== 'about:blank' ? request.url : request.tag;
     if (urls[tag]) {

@@ -11,7 +11,7 @@ function restore () {
     'target': true,
     'block-page-redirection': false,
     'popup-hosts': ['google.com', 'bing.com', 't.co'],
-    'top-hosts': ['yahoo.com', 'add0n.com'],
+    'top-hosts': ['yahoo.com', 'add0n.com', 'google.com'],
     'blacklist': [],
     'default-action': 'ignore'
   }, (obj) => {
