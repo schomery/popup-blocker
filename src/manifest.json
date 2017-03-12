@@ -3,7 +3,7 @@
   "short_name": "ipblocker",
   "description": "__MSG_appDesc__",
   "author": "Jeremy Schomery",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "manifest_version": 2,
   "default_locale": "en",
   "permissions": [

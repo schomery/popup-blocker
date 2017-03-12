@@ -61,6 +61,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
   }
   // bouncing back to ui.js
   if (
+    request.cmd === 'popup-accepted' ||
     request.cmd === 'popup-number' ||
     request.cmd === 'popup-request' ||
     request.cmd === 'popup-request-bounced'
