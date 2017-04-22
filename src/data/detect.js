@@ -151,7 +151,7 @@ script.textContent = `
     }
     let id = Math.random();
     post('ppp-blocker-redirect');
-    window.setTimeout(() => { // in Firefox sometimes returns document.activeElement is document.body
+    window.setTimeout(() => { // in Firefox sometimes returned document.activeElement is document.body
       // handling about:blank cases
       let selected = document.activeElement === document.body && activeElement ? activeElement : document.activeElement;
       // convert relative URL to absolute URL
@@ -174,47 +174,27 @@ script.textContent = `
       });
     }, 100);
 
-    return {
-      moveTo: function () {},
-      resizeTo: function () {},
-      location: {},
-      document: {
-        open: function () {
-          post('ppp-blocker-append', {
-            name: 'open',
-            arguments: [...arguments],
-            id
-          });
-          return this;
-        },
-        write: function () {
-          post('ppp-blocker-append', {
-            name: 'write',
-            arguments: [...arguments],
-            id
-          });
-        },
-        close: function () {
-          post('ppp-blocker-append', {
-            name: 'close',
-            arguments: [...arguments],
-            id
-          });
-        }
-      },
-      focus: function () {
-        post('ppp-blocker-append', {
-          name: 'focus',
-          id
-        });
-      },
-      close: function () {
-        post('ppp-blocker-append', {
-          name: 'close',
-          id
-        });
-      },
-    };
+    let iframe = Object.assign(document.createElement('iframe'), {
+      style: 'display: none'
+    });
+    document.body.appendChild(iframe);
+
+    (function (callback) {
+      iframe.contentDocument.open = callback.bind(this, 'open');
+      iframe.contentDocument.write = callback.bind(this, 'write');
+      iframe.contentDocument.close = callback.bind(this, 'close');
+      iframe.contentWindow.focus = callback.bind(this, 'focus');
+      iframe.contentWindow.close = callback.bind(this, 'close');
+    })(function (name) {
+      post('ppp-blocker-append', {
+        name,
+        arguments: [...arguments],
+        id
+      });
+      return this;
+    });
+
+    return iframe.contentWindow;
   });
   /* protection #2; link[target=_blank] or form[target=_blank] */
   let onclick = (e, target) => {
