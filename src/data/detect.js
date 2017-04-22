@@ -174,17 +174,17 @@ script.textContent = `
       });
     }, 100);
 
-    let iframe = Object.assign(document.createElement('iframe'), {
-      style: 'display: none'
-    });
-    document.body.appendChild(iframe);
+    let iframe = {};
+    iframe.document = {};
+    iframe.moveTo = iframe.resizeTo = function () {};
+    iframe.location = {};
 
     (function (callback) {
-      iframe.contentDocument.open = callback.bind(this, 'open');
-      iframe.contentDocument.write = callback.bind(this, 'write');
-      iframe.contentDocument.close = callback.bind(this, 'close');
-      iframe.contentWindow.focus = callback.bind(this, 'focus');
-      iframe.contentWindow.close = callback.bind(this, 'close');
+      iframe.document.open = callback.bind(this, 'open');
+      iframe.document.write = callback.bind(this, 'write');
+      iframe.document.close = callback.bind(this, 'close');
+      iframe.focus = callback.bind(this, 'focus');
+      iframe.close = callback.bind(this, 'close');
     })(function (name) {
       post('ppp-blocker-append', {
         name,
@@ -194,7 +194,7 @@ script.textContent = `
       return this;
     });
 
-    return iframe.contentWindow;
+    return iframe;
   });
   /* protection #2; link[target=_blank] or form[target=_blank] */
   let onclick = (e, target) => {
