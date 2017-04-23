@@ -77,6 +77,15 @@
   "options_item22": {
     "message": "Badge background-color"
   },
+  "options_item23": {
+    "message": "Ignore popup notification when possible (not recommended)"
+  },
+  "options_item24": {
+    "message": "This will ignore or open a popup without user action which is not recommended"
+  },
+  "options_item25": {
+    "message": "Descriptions"
+  },
   "options_save": {
     "message": "Save Settings"
   },

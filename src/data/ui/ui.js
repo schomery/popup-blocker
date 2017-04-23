@@ -47,8 +47,8 @@ function Timer (callback, delay, ...args) {
   return this.resume();
 }
 
-function remove (div) {
-  delete urls[div.dataset.url];
+function remove (div, url) {
+  delete urls[url || div.dataset.url];
   try {
     document.body.removeChild(div);
   }
@@ -61,14 +61,14 @@ function remove (div) {
 
 document.addEventListener('click', e => {
   let target = e.target;
-  let cmd = target.dataset.cmd;
+  let cmd = (e.detail || target.dataset).cmd;
   if (cmd) {
     let div = target.parentNode.parentNode;
     if (div) {
-      let url = div.dataset.url;
-      let hostname = div.dataset.hostname;
-      let id = div.dataset.id;
-      remove(div);
+      let url = (e.detail || div.dataset).url;
+      let hostname = (e.detail || div.dataset).hostname;
+      let id = (e.detail || div.dataset).id;
+      remove(div, url);
       chrome.runtime.sendMessage({cmd, id, url});
       // remember user action
       if (cmd === 'popup-close') {
@@ -100,7 +100,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         'numbers': 5,
         'timeout': 30,
         'countdown': 5,
-        'default-action': 'ignore'
+        'default-action': 'ignore',
+        'immediate-action': false
       }, (prefs) => {
         let div = document.createElement('div');
         div.setAttribute('class', 'ppblocker-div');
@@ -162,12 +163,24 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         if (ispage) {
           buttons.appendChild(redirect);
           buttons.appendChild(background);
+          div.dataset.hostname = (new URL(request.url)).hostname;
         }
         div.appendChild(buttons);
+        let action = cookie.get(div.dataset.hostname) || prefs['default-action'];
+        // immediate action
+        if (action && action !== 'ignore' && prefs['immediate-action']) {
+          let button = document.createElement('button');
+          document.body.appendChild(button);
+          button.dataset.cmd = action;
+          return document.body.dispatchEvent(new CustomEvent('click', {
+            bubbles: true,
+            detail: Object.assign(div.dataset, {
+              cmd: action
+            })
+          }));
+        }
         document.body.appendChild(div);
         if (ispage && prefs.countdown) {
-          div.dataset.hostname = (new URL(request.url)).hostname;
-          let action = cookie.get(div.dataset.hostname) || prefs['default-action'];
           if (action) {
             let button = div.querySelector(`[data-cmd="${action}"`);
             if (button) {

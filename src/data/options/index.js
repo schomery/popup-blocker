@@ -13,7 +13,8 @@ function restore () {
     'popup-hosts': ['google.com', 'bing.com', 't.co'],
     'top-hosts': ['yahoo.com', 'add0n.com', 'google.com'],
     'blacklist': [],
-    'default-action': 'ignore'
+    'default-action': 'ignore',
+    'immediate-action': false
   }, (obj) => {
     document.getElementById('numbers').value = obj.numbers;
     document.getElementById('timeout').value = obj.timeout;
@@ -27,6 +28,7 @@ function restore () {
     document.getElementById('top-hosts').value = obj['top-hosts'].join(', ');
     document.getElementById('blacklist').value = obj.blacklist.join(', ');
     document.getElementById('default-action').value = obj['default-action'];
+    document.getElementById('immediate-action').checked = obj['immediate-action'];
   });
 }
 
@@ -52,6 +54,7 @@ function save() {
   let tops = document.getElementById('top-hosts').value;
   let blacklist = document.getElementById('blacklist').value;
   let defaultAction = document.getElementById('default-action').value;
+  let immediateAction = document.getElementById('immediate-action').checked;
   chrome.storage.local.set({
     'numbers': Math.max(1, numbers),
     'timeout': Math.max(1, timeout),
@@ -64,7 +67,8 @@ function save() {
     'popup-hosts': prepare(hosts),
     'top-hosts': prepare(tops),
     'blacklist': prepare(blacklist),
-    'default-action': defaultAction
+    'default-action': defaultAction,
+    'immediate-action': immediateAction
   }, () => {
     let status = document.getElementById('status');
     status.textContent = chrome.i18n.getMessage('options_msg');
@@ -78,4 +82,11 @@ document.getElementById('save').addEventListener('click', save);
 
 Array.from(document.querySelectorAll('[data-i18n]')).forEach(e => {
   e.textContent = chrome.i18n.getMessage(e.dataset.i18n);
+});
+
+document.addEventListener('click', e => {
+  console.error(e.target.href)
+  if (e.target.href && e.target.href.indexOf('#') !== -1) {
+    document.querySelector('details').open = true;
+  }
 });
