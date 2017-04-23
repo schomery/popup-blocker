@@ -145,9 +145,28 @@ chrome.contextMenus.create({
   title: _('context_item1'),
   contexts: ['browser_action']
 });
-chrome.contextMenus.onClicked.addListener(() => chrome.tabs.create({
-  url: 'http://tools.add0n.com/popup-blocker.html'
-}));
+chrome.contextMenus.create({
+  id: 'allow-last-request',
+  title: _('context_item2'),
+  contexts: ['browser_action']
+});
+chrome.contextMenus.create({
+  id: 'deny-last-request',
+  title: _('context_item3'),
+  contexts: ['browser_action']
+});
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === 'open-test-page') {
+    chrome.tabs.create({
+      url: 'http://tools.add0n.com/popup-blocker.html'
+    });
+  }
+  else {
+    chrome.tabs.sendMessage(tab.id, {
+      cmd: info.menuItemId
+    });
+  }
+});
 // browser action
 function update (toggle) {
   chrome.storage.local.get({

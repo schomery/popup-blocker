@@ -5,6 +5,12 @@
   "context_item1": {
     "message": "Test your popup blocker"
   },
+  "context_item2": {
+    "message": "Allow the last popup request"
+  },
+  "context_item3": {
+    "message": "Deny the last popup request"
+  },
   "options_item1": {
     "message": "Maximum number of popup requests for a single page"
   },

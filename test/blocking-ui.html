@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Annoying popup</title>
+    <script type="text/javascript">
+      (function() {
+        var okay_i_popped = false;
+        function listener(e) {
+          if (okay_i_popped) {
+            e.currentTarget.removeEventListener("mousedown", listener, true);
+            e.currentTarget.parentNode.removeChild(e.currentTarget);
+            return;
+          }
+          e.preventDefault();
+          e.stopPropagation();
+          var win = null;
+          try {
+            win = window.open('about:blank', 'annoying');
+          }
+          catch(t) {
+          }
+          if (win && (typeof win === "object") && win.toString() === "[object Window]") {
+            okay_i_popped = true;
+            e.currentTarget.removeEventListener("mousedown", listener, true);
+            e.currentTarget.parentNode.removeChild(e.currentTarget);
+          }
+        }
+        var mylistenerdiv = null;
+        function checkforlistener() {
+          if (okay_i_popped) {
+            return;
+          }
+          window.requestAnimationFrame(checkforlistener);
+          if (!document.body) {
+            return;
+          }
+          if (mylistenerdiv) {
+            if (document.body.children[document.body.children.length-1] != mylistenerdiv) {
+              if (mylistenerdiv && mylistenerdiv.parentNode) {
+                try {
+                  mylistenerdiv.parentNode.removeChild(mylistenerdiv);
+                }
+                catch(t) {}
+              }
+              mylistenerdiv = null;
+            }
+          }
+          if (!mylistenerdiv) {
+            mylistenerdiv = document.createElement('div');
+            mylistenerdiv.addEventListener("mousedown", listener, true);
+            document.body.appendChild(mylistenerdiv);
+          }
+
+          mylistenerdiv.style.position = "fixed";
+          mylistenerdiv.style.display = "flex";
+          mylistenerdiv.style['align-items'] = "center";
+          mylistenerdiv.style['justify-content'] = "center";
+          mylistenerdiv.style.top = "0px";
+          mylistenerdiv.style.left = "0px";
+          mylistenerdiv.style.bottom = "0px";
+          mylistenerdiv.style.right = "0px";
+          mylistenerdiv.style.background = "rgba(0,0,0,0.1)";
+          mylistenerdiv.style.zIndex = 2147483649;
+          mylistenerdiv.textContent = 'Blocking the UI'
+        }
+        window.requestAnimationFrame(checkforlistener);
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#test">You want to click me</a>
+  </body>
+</html>

@@ -228,4 +228,16 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       });
     }
   }
+  else if (request.cmd === 'allow-last-request' || request.cmd === 'deny-last-request') {
+    const value = Object.values(urls).sort((a, b) => b.timestamp - a.timestamp).shift();
+    if (value) {
+      const div = value.div;
+      const button = div.querySelector(
+        request.cmd === 'allow-last-request' ? '[data-cmd="popup-accepted"]' : '[data-cmd="popup-denied"]'
+      );
+      if (button) {
+        button.click();
+      }
+    }
+  }
 });
