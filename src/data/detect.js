@@ -99,11 +99,12 @@ script.textContent = `
   activeElement = null // variables
 ) {
   // protection
-  let protect = (parent, name, value) =>  Object.defineProperty(parent, name, {
-    writable: true, // writable = false will cause issues with TamperMonkey
-    // Firefox does not allow to define non-configurable property over the "window" object.
+  let protect = (parent, name, callback, original) =>  Object.defineProperty(parent, name, {
     configurable: ${navigator.userAgent.indexOf('Firefox') !== -1},
-    value
+    get () {
+      return isEnabled ? callback : original || callback;
+    },
+    set () {/* dummy set call; TamperMonkey compatibility */}
   });
   // communication channel
   let post  = (name, detail) => dispatchEvent.call(sendToTop ? window.parent : window, new CustomEvent(name, {
@@ -111,13 +112,10 @@ script.textContent = `
     bubbles: false,
     cancelable: false
   }));
-  protect(window, 'dispatchEvent', function (e) {
-    if (e.type.startsWith('ppp-blocker-')) {
-      return false;
-    }
-    return dispatchEvent.apply(this, arguments);
-  })
-  // is this URL valid
+  protect(window, 'dispatchEvent', (e) => {
+    return e.type.startsWith('ppp-blocker-') ? false : dispatchEvent.apply(this, arguments);
+  }, dispatchEvent);
+  // is this a valid URL
   function permit (url = '') {
     // tags are allowed
     if (url.startsWith('#') || url.startsWith(document.location.href + '#')) {
@@ -178,7 +176,6 @@ script.textContent = `
     iframe.document = {};
     iframe.moveTo = iframe.resizeTo = function () {};
     iframe.location = {};
-
     (function (callback) {
       iframe.document.open = callback.bind(this, 'open');
       iframe.document.write = callback.bind(this, 'write');
@@ -193,9 +190,8 @@ script.textContent = `
       });
       return this;
     });
-
     return iframe;
-  });
+  }, wPointer);
   /* protection #2; link[target=_blank] or form[target=_blank] */
   let onclick = (e, target) => {
     activeElement = target = target || e.target;
@@ -234,7 +230,7 @@ script.textContent = `
           return false;
         }
         return dispatchEvent.apply(this, arguments);
-      });
+      }, dispatchEvent);
     }
     else if (tagName.toLowerCase() === 'form') {
       let submit = target.submit;
@@ -246,23 +242,23 @@ script.textContent = `
           return false;
         }
         return submit.apply(this, arguments);
-      });
+      }, submit);
     }
     return target;
-  });
+  }, createElement);
   /* protection #4; when stopPropagation or stopImmediatePropagation is emitted, our listener will not be called anymore */
   protect(MouseEvent.prototype, 'stopPropagation', function () {
     if (this.type === 'click') {
       onclick(this);
     }
     return stopPropagation.apply(this, arguments);
-  });
+  }, stopPropagation);
   protect(MouseEvent.prototype, 'stopImmediatePropagation', function () {
     if (this.type === 'click') {
       onclick(this);
     }
     return stopImmediatePropagation.apply(this, arguments);
-  });
+  }, stopImmediatePropagation);
   /* protection #5; document.write; when document.open is called, old listeners are wiped out */
   protect(document, 'write', function () {
     let rtn = write.apply(this, arguments);
@@ -272,18 +268,21 @@ script.textContent = `
       sendToTop = true;
     }
     return rtn;
-  });
+  }, write);
   /* protection #6; Node.prototype.dispatchEvent; directly dispatching "click" event over a "a" element */
   protect(Node.prototype, 'dispatchEvent', function (e) {
     if (e.type === 'click' && onclick(e, this)) {
       return false;
     }
     return dispatchEvent.apply(this, arguments);
-  });
+  }, dispatchEvent);
   // install listener
   document.addEventListener('click', onclick);
   // configurations
-  window.addEventListener('ppp-blocker-configure-enabled', e => isEnabled = e.detail.value);
+  window.addEventListener('ppp-blocker-configure-enabled', e => {
+    isEnabled = e.detail.value;
+    document[isEnabled ? 'addEventListener' : 'removeEventListener']('click', onclick);
+  });
   window.addEventListener('ppp-blocker-configure-target', e => {
     isTarget = e.detail.value;
     if (!isTarget) {
