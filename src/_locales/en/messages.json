@@ -86,6 +86,9 @@
   "options_item25": {
     "message": "Descriptions"
   },
+  "options_item26": {
+    "message": "Display FAQs page on updates"
+  },
   "options_save": {
     "message": "Save Settings"
   },

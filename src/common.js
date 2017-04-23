@@ -186,14 +186,19 @@ function update (toggle) {
 }
 chrome.browserAction.onClicked.addListener(() => update(true));
 update();
-// faqs
-chrome.storage.local.get('version', (obj) => {
+
+// FAQs & Feedback
+chrome.storage.local.get({
+  'version': null,
+  'faqs': false
+}, prefs => {
   let version = chrome.runtime.getManifest().version;
-  if (obj.version !== version) {
+
+  if (prefs.version ? (prefs.faqs && prefs.version !== version) : true) {
     chrome.storage.local.set({version}, () => {
       chrome.tabs.create({
-        url: 'http://add0n.com/popup-blocker.html?version=' + version + '&type=' +
-          (obj.version ? ('upgrade&p=' + obj.version) : 'install')
+        url: 'http://add0n.com/popup-blocker.html?version=' + version +
+          '&type=' + (prefs.version ? ('upgrade&p=' + prefs.version) : 'install')
       });
     });
   }

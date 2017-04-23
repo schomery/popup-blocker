@@ -9,6 +9,7 @@ function restore () {
     'badge-color': '#6e6e6e',
     'domain': false,
     'target': true,
+    'faqs': false,
     'block-page-redirection': false,
     'popup-hosts': ['google.com', 'bing.com', 't.co'],
     'top-hosts': ['yahoo.com', 'add0n.com', 'google.com'],
@@ -23,6 +24,7 @@ function restore () {
     document.getElementById('badge-color').value = obj['badge-color'];
     document.getElementById('domain').checked = obj.domain;
     document.getElementById('target').checked = obj.target;
+    document.getElementById('faqs').checked = obj.faqs;
     document.getElementById('block-page-redirection').checked = obj['block-page-redirection'];
     document.getElementById('popup-hosts').value = obj['popup-hosts'].join(', ');
     document.getElementById('top-hosts').value = obj['top-hosts'].join(', ');
@@ -49,6 +51,7 @@ function save() {
   let badgeColor = document.getElementById('badge-color').value;
   let domain = document.getElementById('domain').checked;
   let target = document.getElementById('target').checked;
+  let faqs = document.getElementById('faqs').checked;
   let redirection = document.getElementById('block-page-redirection').checked;
   let hosts = document.getElementById('popup-hosts').value;
   let tops = document.getElementById('top-hosts').value;
@@ -63,6 +66,7 @@ function save() {
     'badge-color': badgeColor,
     domain,
     target,
+    faqs,
     'block-page-redirection': redirection,
     'popup-hosts': prepare(hosts),
     'top-hosts': prepare(tops),
@@ -85,7 +89,6 @@ Array.from(document.querySelectorAll('[data-i18n]')).forEach(e => {
 });
 
 document.addEventListener('click', e => {
-  console.error(e.target.href)
   if (e.target.href && e.target.href.indexOf('#') !== -1) {
     document.querySelector('details').open = true;
   }
