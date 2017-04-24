@@ -1,5 +1,5 @@
-'use strict';
 /* globals cloneInto */
+'use strict';
 
 var requests = {};
 var commands = {};
