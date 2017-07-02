@@ -6,6 +6,19 @@
     <base target="_blank" />
   </head>
   <body>
+    <h1>
+      Popup Blocker Detection
+    </h1>
+    <p>
+      <ul>
+        <li>Do you have a popup blocker (sync):&nbsp;<b><script>document.write((/\{\s*\[native code\]\s*\}/).test('' + window.open) === false)</script></b></li>
+        <li>Do you have a popup blocker (async):&nbsp;<b id="detection"><script type="text/javascript">
+          window.setTimeout(function () {
+            document.getElementById('detection').textContent = /\{\s*\[native code\]\s*\}/.test('' + window.open) === false;
+          }, 0);
+        </script></b></li>
+      </ul>
+    </p>
     <style>
       body {
         font-size: 13px;

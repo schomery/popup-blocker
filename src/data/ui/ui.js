@@ -59,16 +59,17 @@ function remove (div, url) {
   });
 }
 
-document.addEventListener('click', e => {
-  let target = e.target;
-  let cmd = (e.detail || target.dataset).cmd;
+function onClick (e) {
+  const target = e.target;
+  const cmd = target.dataset.cmd;
   if (cmd) {
-    let div = target.parentNode.parentNode;
+    console.log(cmd);
+    const div = target.parentNode.parentNode;
     if (div) {
-      let url = (e.detail || div.dataset).url;
-      let hostname = (e.detail || div.dataset).hostname;
-      let id = (e.detail || div.dataset).id;
-      remove(div, url);
+      const url = div.dataset.url;
+      const hostname = div.dataset.hostname;
+      const id = div.dataset.id;
+      remove(div, url, id, cmd);
       chrome.runtime.sendMessage({cmd, id, url});
       // remember user action
       if (cmd === 'popup-close') {
@@ -79,7 +80,8 @@ document.addEventListener('click', e => {
       }
     }
   }
-});
+}
+document.addEventListener('click', onClick);
 
 chrome.runtime.onMessage.addListener((request, sender) => {
   // make sure to ignore messages from page script
@@ -169,15 +171,13 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         let action = cookie.get(div.dataset.hostname) || prefs['default-action'];
         // immediate action
         if (action && action !== 'ignore' && prefs['immediate-action']) {
-          let button = document.createElement('button');
-          document.body.appendChild(button);
+          const button = document.createElement('button');
+          buttons.appendChild(button);
           button.dataset.cmd = action;
-          return document.body.dispatchEvent(new CustomEvent('click', {
-            bubbles: true,
-            detail: Object.assign(div.dataset, {
-              cmd: action
-            })
-          }));
+
+          return onClick({
+            target: button
+          });
         }
         document.body.appendChild(div);
         if (ispage && prefs.countdown) {
