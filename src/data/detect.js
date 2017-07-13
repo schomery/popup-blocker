@@ -21,6 +21,7 @@ var redirect = {
   id: null,
   active: false,
   callback: (e) => {
+    console.log(e, redirect);
     e.returnValue = 'false';
   }
 };
@@ -92,7 +93,7 @@ var script = document.createElement('script');
 script.textContent = `
 {
   let activeElement = null;
-  let documentElement = document.documentElement
+  let documentElement = document.documentElement;
   let config = {
     isEnabled: true,
     isDomain: false,
@@ -110,7 +111,8 @@ script.textContent = `
   };
 
   // protection
-  const protect = (parent, name, callback, original) =>  {
+  const protect = (parent, name, callback) =>  {
+    const original = parent[name];
     Object.defineProperty(parent, name, {
       configurable: ${navigator.userAgent.indexOf('Firefox') !== -1},
       get () {
@@ -129,9 +131,9 @@ script.textContent = `
   }));
   protect(window, 'dispatchEvent', function (e) {
     return e.type.startsWith('ppp-blocker-') ? false : pointers.npd.apply(this, arguments);
-  }, pointers.npd);
+  });
   // is this a valid URL
-  function permit (url = '') {
+  const permit = (url = '') => {
     // tags are allowed
     if (url.startsWith('#') || url.startsWith(document.location.href + '#')) {
       return true;
@@ -156,7 +158,7 @@ script.textContent = `
       return h && hostname && (h.endsWith(hostname) || hostname.endsWith(h));
     }
     return false;
-  }
+  };
   /* protection #1; window.open */
   protect(window, 'open', function (url = '') {
     if (!config.isEnabled || permit(url)) {
@@ -169,7 +171,7 @@ script.textContent = `
       let selected = document.activeElement === document.body && activeElement ? activeElement : document.activeElement;
       // convert relative URL to absolute URL
       if (url && url.indexOf(':') === -1) {
-        let a = pointers.dce('a');
+        let a = pointers.dce.call(document, 'a');
         a.href = url;
         url = a.cloneNode(false).href;
       }
@@ -206,9 +208,9 @@ script.textContent = `
       return this;
     });
     return iframe;
-  }, pointers.wop);
+  });
   /* protection #2; link[target=_blank] or form[target=_blank] */
-  let onclick = (e, target) => {
+  const onclick = (e, target) => {
     activeElement = target = target || e.target;
     if (config.isEnabled) {
       let a = 'closest' in target ? (target.closest('[target]') || target.closest('a')) : null; // click after document.open
@@ -219,7 +221,9 @@ script.textContent = `
         .filter(a => a)
         .reduce((p, c) => p || ['_parent', '_tab', '_blank'].includes(c.target.toLowerCase()), false);
       // if element is not attached, a.click() opens a new tab
-      if ((base || !e.target) && (e.button === 0 && !(e.metaKey && e.isTrusted) || (e.button === 1 && !e.isTrusted)) && !permit(a.href)) {
+      if ((base || !e.target) && (
+        e.button === 0 && !(e.metaKey && e.isTrusted) || (e.button === 1 && !e.isTrusted)
+      ) && !permit(a.href)) {
         post('ppp-blocker-redirect');
         post('ppp-blocker-create', {
           cmd: 'popup-request',
@@ -245,10 +249,10 @@ script.textContent = `
           return false;
         }
         return dispatchEvent.apply(this, arguments);
-      }, dispatchEvent);
+      });
     }
     else if (tagName.toLowerCase() === 'form') {
-      let submit = target.submit;
+      const submit = target.submit;
       protect(target, 'submit', function () {
         if (onclick(typeof event === 'undefined' ? { // firefox does not support global events
           target,
@@ -257,23 +261,23 @@ script.textContent = `
           return false;
         }
         return submit.apply(this, arguments);
-      }, submit);
+      });
     }
     return target;
-  }, pointers.dce);
+  });
   /* protection #4; when stopPropagation or stopImmediatePropagation is emitted, our listener will not be called anymore */
   protect(MouseEvent.prototype, 'stopPropagation', function () {
     if (this.type === 'click') {
       onclick(this);
     }
     return pointers.mps.apply(this, arguments);
-  }, pointers.mps);
+  });
   protect(MouseEvent.prototype, 'stopImmediatePropagation', function () {
     if (this.type === 'click') {
       onclick(this);
     }
     return pointers.mpi.apply(this, arguments);
-  }, pointers.mpi);
+  });
   /* protection #5; document.write; when document.open is called, old listeners are wiped out */
   protect(document, 'write', function () {
     let rtn = pointers.dwr.apply(this, arguments);
@@ -283,14 +287,14 @@ script.textContent = `
       config.sendToTop = true;
     }
     return rtn;
-  }, pointers.dwr);
+  });
   /* protection #6; Node.prototype.dispatchEvent; directly dispatching "click" event over a "a" element */
   protect(Node.prototype, 'dispatchEvent', function (e) {
     if (e.type === 'click' && onclick(e, this)) {
       return false;
     }
     return pointers.npd.apply(this, arguments);
-  }, pointers.npd);
+  });
   // install listener
   document.addEventListener('click', onclick);
   // configurations
@@ -318,7 +322,7 @@ script.textContent = `
       }
     });
   });
-};`;
+}`;
 document.documentElement.appendChild(script);
 document.documentElement.removeChild(script);
 
