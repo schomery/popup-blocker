@@ -11,8 +11,8 @@ function restore () {
     'target': true,
     'faqs': false,
     'block-page-redirection': false,
-    'popup-hosts': ['google.com', 'bing.com', 't.co'],
-    'top-hosts': ['yahoo.com', 'add0n.com', 'google.com'],
+    'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com'],
+    'top-hosts': ['yahoo.com', 'disqus.com', 'github.com', 'add0n.com', 'google.com'],
     'blacklist': [],
     'default-action': 'ignore',
     'immediate-action': false

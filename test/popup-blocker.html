@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Popup blocking test suite :: tools.add0n.com</title>
-    <base target="_blank" />
+
   </head>
   <body>
     <h1>
@@ -241,7 +241,8 @@
       <li><input type="button" onclick="pointer('https://example.com/test/2/2');" value="Method 2/2"> opening a new popup tab using a predefined pointer to window.open method</li>
       <li><input type="button" onclick="method3('https://example.com/test/3', 'new window', 600, 600)" value="Method 3"> opening a new popup window and passing arguments to it</li>
       <li><a href='https://example.com/test/4' target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
-      <li><iframe sandbox="allow-forms allow-popups allow-scripts allow-same-origin" src="./popup-blocker-iframe.html"></iframe> opening a new popup tab using iframe with "base" header set to target="_parent" method</li>
+      <li><iframe src="./popup-blocker-iframe.html?title=Method 5/1"></iframe> redirecting tab using iframe with "base" header set to target="_parent" method</li>
+      <li><iframe sandbox="allow-forms allow-popups allow-scripts allow-same-origin" src="./popup-blocker-iframe.html?title=Method 5/2"></iframe> opening a new popup tab using iframe with "base" header set to target="_parent" method when iframe is sandboxed</li>
       <li><a href='https://example.com/test/6'>Method 6</a> opening a new popup tab using link with "base" header set to target="_blank"</li>
       <li><input type="button" onclick="method7()" value="Method 7"> opening a new about:blank popup window using createEvent method</li>
       <li><a id="id1" href='https://example.com/test/8/1' target="_blank">Method 8/1</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
@@ -286,6 +287,7 @@
       <li><input type="button" onclick="method17_1()" value="Method 17/1"> open a popup by creating a dynamic iframe (method 1); <b>PB blocks this type even when it is disabled</b></li>
       <li><input type="button" onclick="method17_2()" value="Method 17/2"> open a popup by creating a dynamic iframe (method 1 with 2 secs delay)</li>
       <li><input type="button" onclick="method17_3()" value="Method 17/3"> open a popup by creating a dynamic iframe (method 3); <b>PB blocks this type even when it is disabled</b></li>
+      <li><a href="#" target="_blank">Method 18</a>Same origin tag</li>
     </ul>
     <p>
       Click <input type="button" onclick="overwrite1();" value="here"> to overwrite "window.open" and try tests one more time.

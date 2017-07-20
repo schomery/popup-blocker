@@ -34,7 +34,7 @@ chrome.storage.onChanged.addListener(prefs => {
 chrome.storage.local.get({
   'badge': true,
   'badge-color': '#6e6e6e',
-  'top-hosts': ['yahoo.com', 'add0n.com', 'google.com'],
+  'top-hosts': ['yahoo.com', 'disqus.com', 'github.com', 'twitter.com', 'add0n.com', 'google.com'],
   'blacklist': []
 }, prefs => {
   badge = prefs.badge;
@@ -48,11 +48,11 @@ chrome.storage.local.get({
 // bounce && badge
 chrome.runtime.onMessage.addListener((request, sender, response) => {
   // update badge counter
-  let tabId = sender.tab.id;
+  const tabId = sender.tab.id;
   if (request.cmd === 'popup-request' && badge) {
     chrome.browserAction.getBadgeText({tabId}, text => {
       text = text ? parseInt(text) : 0;
-      text = (text + 1) + '';
+      text = String(text + 1);
       chrome.browserAction.setBadgeText({
         tabId,
         text
@@ -70,7 +70,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
   }
   // open a new tab or redirect current tab
   else if (request.cmd === 'popup-redirect' || request.cmd === 'open-tab') {
-    let url = request.url;
+    const url = request.url;
     // validating request before proceeding
     if (url.startsWith('http') || url.startsWith('ftp') || url === 'about:blank') {
       if (request.cmd === 'popup-redirect') {
@@ -98,15 +98,15 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     let valid = false;
     if (blacklist.length === 0) {
       try {
-        let hostname = (new URL(sender.tab.url)).hostname;
-        valid = !!hostname && whitelist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
+        const hostname = (new URL(sender.tab.url)).hostname;
+        valid = Boolean(hostname) && whitelist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
       }
       catch (e) {}
     }
     else {
       try {
-        let hostname = (new URL(sender.tab.url)).hostname;
-        valid = !!hostname && blacklist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
+        const hostname = (new URL(sender.tab.url)).hostname;
+        valid = Boolean(hostname) && blacklist.reduce((p, c) => p || c.endsWith(hostname) || hostname.endsWith(c), false);
         valid = !valid;
       }
       catch (e) {}
@@ -118,9 +118,9 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
   }
   else if (request.cmd === 'white-list') {
     try {
-      let hostname = new URL(request.url).hostname;
+      const hostname = new URL(request.url).hostname;
       chrome.storage.local.get({
-        'popup-hosts': ['google.com', 'bing.com', 't.co']
+        'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com']
       }, prefs => {
         prefs['popup-hosts'].push(hostname);
         prefs['popup-hosts'] = prefs['popup-hosts'].filter((h, i, l) => l.indexOf(h) === i);
@@ -155,6 +155,11 @@ chrome.contextMenus.create({
   title: _('context_item3'),
   contexts: ['browser_action']
 });
+chrome.contextMenus.create({
+  id: 'allow-shadow',
+  title: _('context_item4'),
+  contexts: ['browser_action']
+});
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'open-test-page') {
     chrome.tabs.create({
@@ -168,7 +173,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 });
 // browser action
-function update (toggle) {
+function update(toggle) {
   chrome.storage.local.get({
     'enabled': true
   }, obj => {
@@ -192,7 +197,7 @@ chrome.storage.local.get({
   'version': null,
   'faqs': false
 }, prefs => {
-  let version = chrome.runtime.getManifest().version;
+  const version = chrome.runtime.getManifest().version;
 
   if (prefs.version ? (prefs.faqs && prefs.version !== version) : true) {
     chrome.storage.local.set({version}, () => {
@@ -203,7 +208,7 @@ chrome.storage.local.get({
     });
   }
 });
-(function () {
-  let {name, version} = chrome.runtime.getManifest();
+(function() {
+  const {name, version} = chrome.runtime.getManifest();
   chrome.runtime.setUninstallURL('http://add0n.com/feedback.html?name=' + name + '&version=' + version);
 })();

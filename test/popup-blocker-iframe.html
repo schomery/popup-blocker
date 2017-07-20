@@ -1,8 +1,8 @@
 <html>
   <head>
+    <base target="_parent"/>
   </head>
   <body>
-    <base target="_parent" />
     <style>
       body, html {
         height: 100%;
@@ -31,6 +31,6 @@
         padding: 5px 0;
       }
     </style>
-    <a href='https://example.com/test/5'>Method 5</a>
+    <a href='https://example.com/test/5' style="color: #f00"><script>document.write(decodeURIComponent(document.location.search.substr(7)))</script></a>
   </body>
 </html>

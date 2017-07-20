@@ -5,11 +5,11 @@ var requests = {};
 var commands = {};
 var active = true;
 
-window.cloneInto = typeof cloneInto  === 'undefined' ? function (a) {
+window.cloneInto = typeof cloneInto === 'undefined' ? function (a) {
   return a;
 } : cloneInto;
 
-function post (name, value) {
+function post(name, value) {
   window.dispatchEvent(new CustomEvent(name, {
     detail: cloneInto(value, document.defaultView),
     bubbles: false,
@@ -20,14 +20,13 @@ function post (name, value) {
 var redirect = {
   id: null,
   active: false,
-  callback: (e) => {
-    console.log(e, redirect);
+  callback: e => {
     e.returnValue = 'false';
   }
 };
 
 // prevent ad page redirection when popup displaying is unsuccessful for 2 seconds
-window.addEventListener('ppp-blocker-redirect', (e) => {
+window.addEventListener('ppp-blocker-redirect', e => {
   if (redirect.active && window.top === window) {
     window.addEventListener('beforeunload', redirect.callback);
     e.preventDefault();
@@ -39,8 +38,8 @@ window.addEventListener('ppp-blocker-redirect', (e) => {
     }, 2000);
   }
 });
-window.addEventListener('ppp-blocker-create', (e) => {
-  let request = e.detail;
+window.addEventListener('ppp-blocker-create', e => {
+  const request = e.detail;
   // prevent unprotected script from issuing any other commands
   if (!request || request.cmd !== 'popup-request') {
     return;
@@ -57,13 +56,13 @@ window.addEventListener('ppp-blocker-create', (e) => {
   commands[request.id] = commands[request.id] || [];
 });
 window.addEventListener('ppp-blocker-append', e => {
-  let request = e.detail;
+  const request = e.detail;
   commands[request.id] = commands[request.id] || [];
   commands[request.id].push(request);
 });
 
 chrome.runtime.onMessage.addListener(request => {
-  let id = request.id;
+  const id = request.id;
 
   // apply popup accept on the context where it is originally requested
   if (request.cmd === 'popup-accepted' && requests[id]) {
@@ -76,6 +75,9 @@ chrome.runtime.onMessage.addListener(request => {
   else if (request.cmd === 'release-beforeunload' && window.top === window) {
     window.clearTimeout(redirect.id);
     window.removeEventListener('beforeunload', redirect.callback);
+  }
+  else if (request.cmd === 'allow-shadow') {
+    post('ppp-blocker-configure-shadow', {value: true});
   }
   // clean up
   if (
@@ -94,11 +96,12 @@ script.textContent = `
 {
   let activeElement = null;
   let documentElement = document.documentElement;
-  let config = {
+  const config = {
     isEnabled: true,
     isDomain: false,
     whitelist: [],
-    sendToTop: false
+    sendToTop: false,
+    shadow: false
   };
   const pointers = {
     'npd': Node.prototype.dispatchEvent,
@@ -111,40 +114,37 @@ script.textContent = `
   };
 
   // protection
-  const protect = (parent, name, callback) =>  {
+  const protect = (parent, name, callback) => {
     const original = parent[name];
     Object.defineProperty(parent, name, {
-      configurable: ${navigator.userAgent.indexOf('Firefox') !== -1},
-      get () {
+      configurable: true,
+      get() {
         return config.isEnabled ? callback : original;
       },
-      set (v) {
+      set(v) {
         callback = v;
       }
     });
   };
   // communication channel
-  const post  = (name, detail) => pointers.npd.call(config.sendToTop ? window.parent : window, new CustomEvent(name, {
+  const post = (name, detail) => pointers.npd.call(config.sendToTop ? window.parent : window, new CustomEvent(name, {
     detail,
     bubbles: false,
     cancelable: false
   }));
-  protect(window, 'dispatchEvent', function (e) {
+  protect(window, 'dispatchEvent', function(e) {
     return e.type.startsWith('ppp-blocker-') ? false : pointers.npd.apply(this, arguments);
   });
   // is this a valid URL
   const permit = (url = '') => {
-    // tags are allowed
-    if (url.startsWith('#') || url.startsWith(document.location.href + '#')) {
-      return true;
-    }
     // white-list section
     let h;
     try {
       h = (new URL(url)).hostname;
-    } catch (e) {}
+    }
+    catch (e) {}
     for (let i = 0; i < config.whitelist.length && h; i++) {
-      let hostname = config.whitelist[i];
+      const hostname = config.whitelist[i];
       if (h.endsWith(hostname) || hostname.endsWith(h)) {
         return true;
       }
@@ -154,24 +154,25 @@ script.textContent = `
       let hostname;
       try { // if they are not in the same origin
         hostname = window.top.location.hostname;
-      } catch (e) {}
+      }
+      catch (e) {}
       return h && hostname && (h.endsWith(hostname) || hostname.endsWith(h));
     }
     return false;
   };
   /* protection #1; window.open */
-  protect(window, 'open', function (url = '') {
+  protect(window, 'open', function(url = '') {
     if (!config.isEnabled || permit(url)) {
       return pointers.wop.apply(window, arguments);
     }
-    let id = Math.random();
+    const id = Math.random();
     post('ppp-blocker-redirect');
     window.setTimeout(() => { // in Firefox sometimes returned document.activeElement is document.body
       // handling about:blank cases
-      let selected = document.activeElement === document.body && activeElement ? activeElement : document.activeElement;
+      const selected = document.activeElement === document.body && activeElement ? activeElement : document.activeElement;
       // convert relative URL to absolute URL
       if (url && url.indexOf(':') === -1) {
-        let a = pointers.dce.call(document, 'a');
+        const a = pointers.dce.call(document, 'a');
         a.href = url;
         url = a.cloneNode(false).href;
       }
@@ -189,17 +190,23 @@ script.textContent = `
       });
     }, 100);
 
-    let iframe = {};
-    iframe.document = {};
-    iframe.moveTo = iframe.resizeTo = function () {};
-    iframe.location = {};
-    (function (callback) {
-      iframe.document.open = callback.bind(this, 'open');
-      iframe.document.write = callback.bind(this, 'write');
-      iframe.document.close = callback.bind(this, 'close');
-      iframe.focus = callback.bind(this, 'focus');
-      iframe.close = callback.bind(this, 'close');
-    })(function (name) {
+    let win = {};
+    win.document = {};
+    if (config.shadow) {
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+      return iframe.contentWindow;
+    }
+    win.moveTo = win.resizeTo = function() {};
+    win.location = {};
+    (function(callback) {
+      win.document.open = callback.bind(this, 'open');
+      win.document.write = callback.bind(this, 'write');
+      win.document.close = callback.bind(this, 'close');
+      win.focus = callback.bind(this, 'focus');
+      win.close = callback.bind(this, 'close');
+    })(function(name) {
       post('ppp-blocker-append', {
         name,
         arguments: [...arguments],
@@ -207,28 +214,32 @@ script.textContent = `
       });
       return this;
     });
-    return iframe;
+    return win;
   });
   /* protection #2; link[target=_blank] or form[target=_blank] */
-  const onclick = (e, target) => {
+  const onclick = (e, target, type = 'target._blank') => {
     activeElement = target = target || e.target;
     if (config.isEnabled) {
-      let a = 'closest' in target ? (target.closest('[target]') || target.closest('a')) : null; // click after document.open
+      const a = 'closest' in target ? (target.closest('[target]') || target.closest('a')) : null; // click after document.open
       if (!a) {
         return;
       }
-      let base = [...document.querySelectorAll('base')].concat(a)
+      if (e.defaultPrevented) {
+        return;
+      }
+      const base = [...document.querySelectorAll('base'), a]
         .filter(a => a)
-        .reduce((p, c) => p || ['_parent', '_tab', '_blank'].includes(c.target.toLowerCase()), false);
+        .reduce((p, c) => p || ['_tab', '_blank'].includes(c.target.toLowerCase()), false);
+      const url = a.href || a.action;
       // if element is not attached, a.click() opens a new tab
       if ((base || !e.target) && (
         e.button === 0 && !(e.metaKey && e.isTrusted) || (e.button === 1 && !e.isTrusted)
-      ) && !permit(a.href)) {
+      ) && !permit(url)) {
         post('ppp-blocker-redirect');
         post('ppp-blocker-create', {
           cmd: 'popup-request',
-          type: 'target._blank',
-          url: a.href || a.action,
+          type,
+          url,
           arguments: [a.href || a.action],
           id: Math.random()
         });
@@ -238,14 +249,14 @@ script.textContent = `
     }
   };
   /* protection #3; dynamic "a" creation; click is not propagation */
-  protect(document, 'createElement', function (tagName) {
-    let target = pointers.dce.apply(document, arguments);
+  protect(document, 'createElement', function(tagName) {
+    const target = pointers.dce.apply(document, arguments);
     if (tagName.toLowerCase() === 'a') {
-      target.addEventListener('click', e => onclick(e, target), false);
+      target.addEventListener('click', e => onclick(e, target, 'a.createElement'), false);
       // prevent dispatching click event
       const dispatchEvent = target.dispatchEvent;
-      protect(target, 'dispatchEvent', function (e) {
-        if (e.type === 'click' && onclick(e, target)) {
+      protect(target, 'dispatchEvent', function(e) {
+        if (e.type === 'click' && onclick(e, target, 'a.dynamic.dispatchEvent')) {
           return false;
         }
         return dispatchEvent.apply(this, arguments);
@@ -253,11 +264,11 @@ script.textContent = `
     }
     else if (tagName.toLowerCase() === 'form') {
       const submit = target.submit;
-      protect(target, 'submit', function () {
+      protect(target, 'submit', function() {
         if (onclick(typeof event === 'undefined' ? { // firefox does not support global events
           target,
           button: 0
-        } : event, target)) {
+        } : event, target, 'form.submit')) {
           return false;
         }
         return submit.apply(this, arguments);
@@ -266,37 +277,37 @@ script.textContent = `
     return target;
   });
   /* protection #4; when stopPropagation or stopImmediatePropagation is emitted, our listener will not be called anymore */
-  protect(MouseEvent.prototype, 'stopPropagation', function () {
+  protect(MouseEvent.prototype, 'stopPropagation', function() {
     if (this.type === 'click') {
-      onclick(this);
+      onclick(this, null, 'event.stopPropagation');
     }
     return pointers.mps.apply(this, arguments);
   });
-  protect(MouseEvent.prototype, 'stopImmediatePropagation', function () {
+  protect(MouseEvent.prototype, 'stopImmediatePropagation', function() {
     if (this.type === 'click') {
-      onclick(this);
+      onclick(this, null, 'event.stopImmediatePropagation');
     }
     return pointers.mpi.apply(this, arguments);
   });
   /* protection #5; document.write; when document.open is called, old listeners are wiped out */
-  protect(document, 'write', function () {
-    let rtn = pointers.dwr.apply(this, arguments);
+  protect(document, 'write', function() {
+    const rtn = pointers.dwr.apply(this, arguments);
     if (document.documentElement !== documentElement) {
-      document.addEventListener('click', onclick); // we need to register event listener one more time on new document creation
+      document.addEventListener('click', e => onclick); // we need to register event listener one more time on new document creation
       documentElement = document.documentElement;
       config.sendToTop = true;
     }
     return rtn;
   });
   /* protection #6; Node.prototype.dispatchEvent; directly dispatching "click" event over a "a" element */
-  protect(Node.prototype, 'dispatchEvent', function (e) {
-    if (e.type === 'click' && onclick(e, this)) {
+  protect(Node.prototype, 'dispatchEvent', function(e) {
+    if (e.type === 'click' && onclick(e, this, 'event.dispatchEvent')) {
       return false;
     }
     return pointers.npd.apply(this, arguments);
   });
   // install listener
-  document.addEventListener('click', onclick);
+  document.addEventListener('click', e => onclick);
   // configurations
   window.addEventListener('ppp-blocker-configure-enabled', e => {
     config.isEnabled = e.detail.value;
@@ -309,10 +320,11 @@ script.textContent = `
   });
   window.addEventListener('ppp-blocker-configure-domain', e => config.isDomain = e.detail.value);
   window.addEventListener('ppp-blocker-configure-whitelist', e => config.whitelist = e.detail.value);
+  window.addEventListener('ppp-blocker-configure-shadow', e => config.shadow = e.detail.value);
   // execute
   window.addEventListener('ppp-blocker-exe', e => {
-    let request = e.detail;
-    let win = pointers.wop.apply(window, request.arguments);
+    const request = e.detail;
+    const win = pointers.wop.apply(window, request.arguments);
     request.commands.forEach(obj => {
       if (obj.name === 'focus') {
         win.focus();
@@ -322,7 +334,8 @@ script.textContent = `
       }
     });
   });
-}`;
+}
+`;
 document.documentElement.appendChild(script);
 document.documentElement.removeChild(script);
 
@@ -330,7 +343,7 @@ chrome.storage.local.get({
   'enabled': true,
   'target': true,
   'domain': false,
-  'popup-hosts': ['google.com', 'bing.com', 't.co'],
+  'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com'],
   'block-page-redirection': false
 }, prefs => {
   post('ppp-blocker-configure-enabled', {value: prefs.enabled});
