@@ -192,6 +192,7 @@ script.textContent = `
 
     let win = {};
     win.document = {};
+    win.location = {};
     if (config.shadow) {
       const iframe = document.createElement('iframe');
       iframe.style.display = 'none';
@@ -199,7 +200,6 @@ script.textContent = `
       return iframe.contentWindow;
     }
     win.moveTo = win.resizeTo = function() {};
-    win.location = {};
     (function(callback) {
       win.document.open = callback.bind(this, 'open');
       win.document.write = callback.bind(this, 'write');
@@ -218,6 +218,10 @@ script.textContent = `
   });
   /* protection #2; link[target=_blank] or form[target=_blank] */
   const onclick = (e, target, type = 'target._blank') => {
+    if (config.shadow) {
+      [...document.elementsFromPoint(e.clientX, e.clientY)]
+        .filter(e => e.tagName === 'INPUT').forEach(e => e.focus());
+    }
     activeElement = target = target || e.target;
     if (config.isEnabled) {
       const a = 'closest' in target ? (target.closest('[target]') || target.closest('a')) : null; // click after document.open

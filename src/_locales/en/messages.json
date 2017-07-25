@@ -12,7 +12,7 @@
     "message": "Deny the last popup request"
   },
   "context_item4": {
-    "message": "Create show window on popup request"
+    "message": "Create shadow window on popup request"
   },
   "options_item1": {
     "message": "Maximum number of popup requests for a single page"
