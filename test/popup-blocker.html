@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Popup blocking test suite :: tools.add0n.com</title>
-
+    <base target="_blank">
   </head>
   <body>
     <h1>
@@ -67,7 +67,6 @@
     <script>
       'use strict';
       var pointer = window.open;
-
 
       var e1 = document.createEvent('CustomEvent');
       e1.initCustomEvent('ppp-blocker-create', false, false, {

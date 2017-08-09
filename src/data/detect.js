@@ -5,7 +5,7 @@ var requests = {};
 var commands = {};
 var active = true;
 
-window.cloneInto = typeof cloneInto === 'undefined' ? function (a) {
+window.cloneInto = typeof cloneInto === 'undefined' ? function(a) {
   return a;
 } : cloneInto;
 
@@ -114,7 +114,7 @@ script.textContent = `
   };
 
   // protection
-  const protect = (parent, name, callback) => {
+  function protect(parent, name, callback) {
     const original = parent[name];
     Object.defineProperty(parent, name, {
       configurable: true,
@@ -123,6 +123,20 @@ script.textContent = `
       },
       set(v) {
         callback = v;
+      }
+    });
+  };
+  // invisible
+  const invisible = (parent, name, callback) => {
+    let original = parent[name];
+    Object.defineProperty(parent, name, {
+      configurable: true,
+      get() {
+        callback();
+        return original;
+      },
+      set(v) {
+        original = v;
       }
     });
   };
@@ -209,7 +223,7 @@ script.textContent = `
     })(function(name) {
       post('ppp-blocker-append', {
         name,
-        arguments: [...arguments],
+        arguments: [...arguments].slice(1),
         id
       });
       return this;
@@ -280,7 +294,8 @@ script.textContent = `
     }
     return target;
   });
-  /* protection #4; when stopPropagation or stopImmediatePropagation is emitted, our listener will not be called anymore */
+  /* protection #4; when stopPropagation or stopImmediatePropagation is emitted,
+   * our listener will not be called anymore */
   protect(MouseEvent.prototype, 'stopPropagation', function() {
     if (this.type === 'click') {
       onclick(this, null, 'event.stopPropagation');
@@ -294,14 +309,14 @@ script.textContent = `
     return pointers.mpi.apply(this, arguments);
   });
   /* protection #5; document.write; when document.open is called, old listeners are wiped out */
-  protect(document, 'write', function() {
-    const rtn = pointers.dwr.apply(this, arguments);
+  // https://github.com/schomery/popup-blocker/issues/43
+  invisible(document, 'write', function() {
     if (document.documentElement !== documentElement) {
-      document.addEventListener('click', e => onclick); // we need to register event listener one more time on new document creation
+      // we need to register event listener one more time on new document creation
+      document.addEventListener('click', onclick);
       documentElement = document.documentElement;
       config.sendToTop = true;
     }
-    return rtn;
   });
   /* protection #6; Node.prototype.dispatchEvent; directly dispatching "click" event over a "a" element */
   protect(Node.prototype, 'dispatchEvent', function(e) {
@@ -311,7 +326,7 @@ script.textContent = `
     return pointers.npd.apply(this, arguments);
   });
   // install listener
-  document.addEventListener('click', e => onclick);
+  document.addEventListener('click', onclick);
   // configurations
   window.addEventListener('ppp-blocker-configure-enabled', e => {
     config.isEnabled = e.detail.value;
@@ -377,7 +392,7 @@ chrome.storage.onChanged.addListener(obj => {
 // is top domain white-listed.
 chrome.runtime.sendMessage({
   cmd: 'validate'
-}, (response) => {
+}, response => {
   if (response && response.valid) {
     active = false;
     post('ppp-blocker-configure-enabled', {value: false});
