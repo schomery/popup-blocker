@@ -30,10 +30,10 @@
     "message": "Display the total number of blocked requests in the toolbar icon"
   },
   "options_item6": {
-    "message": "White-list (popup):"
+    "message": "Whitelist destinations:"
   },
   "options_item7": {
-    "message": "White-list (webpage):"
+    "message": "Whitelist sources:"
   },
   "options_item8": {
     "message": "Tab refresh is required"
@@ -42,19 +42,19 @@
     "message": "Countdown for performing the last action (in seconds)"
   },
   "options_item10": {
-    "message": "Use zero to disable countdown"
+    "message": "Use zero to disable the countdown "
   },
   "options_item11": {
-    "message": "Comma separated list of host names  for popups that are not going to be blocked (these domains can issue popups on any web-page)"
+    "message": "Comma separated list of domains that are not going to be blocked (these domains can issue popups on any website)"
   },
   "options_item12": {
-    "message": "Comma separated list of host names of web-pages that the popup blocker is completely disabled"
+    "message": "Comma separated list of domains that the popup blocker extension is completely disabled on them"
   },
   "options_item13": {
-    "message": "Black-list (webpage):"
+    "message": "Blacklist sources:"
   },
   "options_item14": {
-    "message": "Comma separated list of host names that popup blocker should only be active on them. This means popup block is disabled on ALL other domains"
+    "message": "Comma separated list of domains that popup blocker should only be active on them. This means that the popup blocker is disabled on ALL other domains"
   },
   "options_item15": {
     "message": "Prevent page redirection for 2 seconds after a popup is requested"
@@ -84,7 +84,7 @@
     "message": "Ignore popup notification when possible (not recommended)"
   },
   "options_item24": {
-    "message": "This will ignore or open a popup without user action which is not recommended"
+    "message": "This will \"ignore\" or \"accept\" a popup without user interaction (not recommended)"
   },
   "options_item25": {
     "message": "Descriptions"

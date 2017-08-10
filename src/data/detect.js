@@ -104,7 +104,7 @@ script.textContent = `
     shadow: false
   };
   const pointers = {
-    'npd': Node.prototype.dispatchEvent,
+    'epd': EventTarget.prototype.dispatchEvent,
     'mpp': MouseEvent.prototype.preventDefault,
     'mps': MouseEvent.prototype.stopPropagation,
     'mpi': MouseEvent.prototype.stopImmediatePropagation,
@@ -114,40 +114,40 @@ script.textContent = `
   };
 
   // protection
-  function protect(parent, name, callback) {
+  const protect = (parent, name, callback) => {
     const original = parent[name];
     Object.defineProperty(parent, name, {
       configurable: true,
       get() {
-        return config.isEnabled ? callback : original;
+        return config.isEnabled ? this._ppc || callback : original;
       },
       set(v) {
-        callback = v;
+        this._ppc = v;
       }
     });
   };
   // invisible
   const invisible = (parent, name, callback) => {
-    let original = parent[name];
+    const original = parent[name];
     Object.defineProperty(parent, name, {
       configurable: true,
       get() {
         callback();
-        return original;
+        return this._ppc || original;
       },
       set(v) {
-        original = v;
+        this._ppc = v;
       }
     });
   };
   // communication channel
-  const post = (name, detail) => pointers.npd.call(config.sendToTop ? window.parent : window, new CustomEvent(name, {
+  const post = (name, detail) => pointers.epd.call(config.sendToTop ? window.parent : window, new CustomEvent(name, {
     detail,
     bubbles: false,
     cancelable: false
   }));
   protect(window, 'dispatchEvent', function(e) {
-    return e.type.startsWith('ppp-blocker-') ? false : pointers.npd.apply(this, arguments);
+    return e.type.startsWith('ppp-blocker-') ? false : pointers.epd.apply(this, arguments);
   });
   // is this a valid URL
   const permit = (url = '') => {
@@ -318,12 +318,12 @@ script.textContent = `
       config.sendToTop = true;
     }
   });
-  /* protection #6; Node.prototype.dispatchEvent; directly dispatching "click" event over a "a" element */
-  protect(Node.prototype, 'dispatchEvent', function(e) {
+  /* protection #6; EventTarget.prototype.dispatchEvent; directly dispatching "click" event over a "a" element */
+  protect(EventTarget.prototype, 'dispatchEvent', function(e) {
     if (e.type === 'click' && onclick(e, this, 'event.dispatchEvent')) {
       return false;
     }
-    return pointers.npd.apply(this, arguments);
+    return pointers.epd.apply(this, arguments);
   });
   // install listener
   document.addEventListener('click', onclick);
