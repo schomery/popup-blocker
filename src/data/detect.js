@@ -114,29 +114,34 @@ script.textContent = `
   };
 
   // protection
-  const protect = (parent, name, callback) => {
+  const protect = (parent, name, callback, scope = false) => {
     const original = parent[name];
     Object.defineProperty(parent, name, {
       configurable: true,
       get() {
-        return config.isEnabled ? this._ppc || callback : original;
+        return config.isEnabled ? this._PPBcB || callback : original;
       },
       set(v) {
-        this._ppc = v;
+        if (scope) {
+          this._PPBcB = v;
+        }
+        else {
+          callback = v;
+        }
       }
     });
   };
   // invisible
   const invisible = (parent, name, callback) => {
-    const original = parent[name];
+    let original = parent[name];
     Object.defineProperty(parent, name, {
       configurable: true,
       get() {
         callback();
-        return this._ppc || original;
+        return original;
       },
       set(v) {
-        this._ppc = v;
+        original = v;
       }
     });
   };
@@ -301,13 +306,13 @@ script.textContent = `
       onclick(this, null, 'event.stopPropagation');
     }
     return pointers.mps.apply(this, arguments);
-  });
+  }, true);
   protect(MouseEvent.prototype, 'stopImmediatePropagation', function() {
     if (this.type === 'click') {
       onclick(this, null, 'event.stopImmediatePropagation');
     }
     return pointers.mpi.apply(this, arguments);
-  });
+  }, true);
   /* protection #5; document.write; when document.open is called, old listeners are wiped out */
   // https://github.com/schomery/popup-blocker/issues/43
   invisible(document, 'write', function() {
@@ -324,7 +329,7 @@ script.textContent = `
       return false;
     }
     return pointers.epd.apply(this, arguments);
-  });
+  }, true);
   // install listener
   document.addEventListener('click', onclick);
   // configurations
