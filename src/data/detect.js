@@ -114,19 +114,20 @@ script.textContent = `
   };
 
   // protection
+  // test with Firefox on https://www.webcomponents.org/element/WEBDMG/Gathr-Events
   const protect = (parent, name, callback, scope = false) => {
-    const original = parent[name];
+    let original = parent[name];
     Object.defineProperty(parent, name, {
       configurable: true,
       get() {
-        return config.isEnabled ? this._PPBcB || callback : original;
+        return config.isEnabled ? (this._PPBcB || callback) : original;
       },
       set(v) {
         if (scope) {
           this._PPBcB = v;
         }
         else {
-          callback = v;
+          callback = original = v;
         }
       }
     });
