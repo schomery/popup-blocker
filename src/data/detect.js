@@ -226,6 +226,11 @@ script.textContent = `
       win.document.close = callback.bind(this, 'close');
       win.focus = callback.bind(this, 'focus');
       win.close = callback.bind(this, 'close');
+      Object.defineProperty(win.location, 'href', {
+        set (v) {
+          callback('window.location.href', v);
+        }
+      });
     })(function(name) {
       post('ppp-blocker-append', {
         name,
@@ -353,6 +358,9 @@ script.textContent = `
     request.commands.forEach(obj => {
       if (obj.name === 'focus') {
         win.focus();
+      }
+      else if (obj.name === 'window.location.href') {
+        win.location.href = obj.arguments[0];
       }
       else {
         win.document[obj.name].apply(win.document, obj.arguments);
