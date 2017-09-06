@@ -3,7 +3,7 @@
   "short_name": "ipblocker",
   "description": "__MSG_appDesc__",
   "author": "Jeremy Schomery",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "manifest_version": 2,
   "default_locale": "en",
   "permissions": [
@@ -56,7 +56,8 @@
   ],
   "applications": {
     "gecko": {
-      "id": "{de22fd49-c9ab-4359-b722-b3febdc3a0b0}"
+      "id": "{de22fd49-c9ab-4359-b722-b3febdc3a0b0}",
+      "strict_min_version": "48.0"
     }
   }
 }
