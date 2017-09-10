@@ -278,7 +278,7 @@ script.textContent = `
     }
   };
   /* protection #3; dynamic "a" creation; click is not propagation */
-  protect(document, 'createElement', function(tagName) {
+  protect(document, 'createElement', function(tagName = '') {
     const target = pointers.dce.apply(document, arguments);
     if (tagName.toLowerCase() === 'a') {
       target.addEventListener('click', e => onclick(e, target, 'a.createElement'), false);
