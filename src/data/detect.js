@@ -96,8 +96,23 @@ script.textContent = `
 {
   let activeElement = null;
   let documentElement = document.documentElement;
+
+  const records = [];
+
   const config = {
-    isEnabled: true,
+    _isEnabled: true,
+    get isEnabled () {
+      return config._isEnabled;
+    },
+    set isEnabled (v) {
+      if (v !== config._isEnabled) {
+        console.log('reset')
+        records.forEach(o => {
+          o.parent[o.name] = v ? o.value : o.original;
+        });
+      }
+      config._isEnabled = v;
+    },
     isDomain: false,
     whitelist: [],
     sendToTop: false,
@@ -115,22 +130,9 @@ script.textContent = `
 
   // protection
   // test with Firefox on https://www.webcomponents.org/element/WEBDMG/Gathr-Events
-  const protect = (parent, name, callback, scope = false) => {
-    let original = parent[name];
-    Object.defineProperty(parent, name, {
-      configurable: true,
-      get() {
-        return config.isEnabled ? (this._PPBcB || callback) : original;
-      },
-      set(v) {
-        if (scope) {
-          this._PPBcB = v;
-        }
-        else {
-          callback = original = v;
-        }
-      }
-    });
+  const protect = (parent, name, value) => {
+    records.push({parent, name, original: parent[name], value});
+    parent[name] = value;
   };
   // invisible
   const invisible = (parent, name, callback) => {
