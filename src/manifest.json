@@ -54,6 +54,15 @@
   "web_accessible_resources": [
     "data/ui/*"
   ],
+  "commands": {
+    "allow-last-request": {
+      "description": "__MSG_context_item2__"
+    },
+    "deny-last-request": {
+      "description": "__MSG_context_item3__"
+    }
+  },
+
   "applications": {
     "gecko": {
       "id": "{de22fd49-c9ab-4359-b722-b3febdc3a0b0}",

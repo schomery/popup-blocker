@@ -247,6 +247,14 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     });
   }
 });
+chrome.commands.onCommand.addListener(cmd => {
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, tabs => tabs && tabs[0] && chrome.tabs.sendMessage(tabs[0].id, {
+    cmd
+  }));
+});
 // browser action
 function update(toggle) {
   chrome.storage.local.get({
