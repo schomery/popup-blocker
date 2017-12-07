@@ -123,8 +123,7 @@ script.textContent = `
     'mpp': MouseEvent.prototype.preventDefault,
     'mps': MouseEvent.prototype.stopPropagation,
     'mpi': MouseEvent.prototype.stopImmediatePropagation,
-    'dwr': document.write,
-    'dce': document.createElement,
+    'dce': Document.prototype.createElement,
     'wop': window.open, // pointers -> window
   };
 
@@ -280,7 +279,7 @@ script.textContent = `
     }
   };
   /* protection #3; dynamic "a" creation; click is not propagation */
-  protect(document, 'createElement', function(tagName = '') {
+  protect(Document.prototype, 'createElement', function(tagName = '') {
     const target = pointers.dce.apply(document, arguments);
     if (tagName.toLowerCase() === 'a') {
       target.addEventListener('click', e => onclick(e, target, 'a.createElement'), false);
