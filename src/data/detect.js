@@ -355,6 +355,11 @@ script.textContent = `
   // execute
   window.addEventListener('ppp-blocker-exe', e => {
     const request = e.detail;
+    // deal with "javascript:"
+    const url = request.arguments[0];
+    if (url && url.startsWith('javascript:')) {
+      return location.replace(url);
+    }
     const win = pointers.wop.apply(window, request.arguments);
     request.commands.forEach(obj => {
       if (obj.name === 'focus') {
