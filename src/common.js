@@ -114,10 +114,9 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
         chrome.tabs.sendMessage(sender.tab.id, {
           cmd: 'release-beforeunload'
         }, () => {
-          chrome.tabs.query({
-            active: true,
-            currentWindow: true
-          }, tabs => chrome.tabs.update(tabs[0].id, {url}));
+          chrome.tabs.update(sender.tab.id, {
+            url
+          });
         });
       }
       else {
