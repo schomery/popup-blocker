@@ -92,6 +92,12 @@
   "options_item26": {
     "message": "Display FAQs page on updates"
   },
+  "options_item27": {
+    "message": "Whitelist protocols:"
+  },
+  "options_item28": {
+    "message": "The listed protocols can be opened in a new browser tab. For instance add 'magnet:' to allow magnet links to be opened in a browser tab."
+  },
   "options_save": {
     "message": "Save Settings"
   },

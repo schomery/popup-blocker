@@ -116,7 +116,8 @@ script.textContent = `
     isDomain: false,
     whitelist: [],
     sendToTop: false,
-    shadow: false
+    shadow: false,
+    protocols: []
   };
   const pointers = {
     'epd': EventTarget.prototype.dispatchEvent,
@@ -159,11 +160,17 @@ script.textContent = `
   // is this a valid URL
   const permit = (url = '') => {
     // white-list section
-    let h;
+    let h, p;
     try {
-      h = (new URL(url)).hostname;
+      const u = (new URL(url));
+      h = u.hostname;
+      p = u.protocol;
     }
     catch (e) {}
+    console.log(config.protocols, p);
+    if (p && config.protocols.indexOf(p) !== -1) {
+      return true;
+    }
     for (let i = 0; i < config.whitelist.length && h; i++) {
       const hostname = config.whitelist[i];
       if (h.endsWith(hostname) || hostname.endsWith(h)) {
@@ -351,6 +358,7 @@ script.textContent = `
   });
   window.addEventListener('ppp-blocker-configure-domain', e => config.isDomain = e.detail.value);
   window.addEventListener('ppp-blocker-configure-whitelist', e => config.whitelist = e.detail.value);
+  window.addEventListener('ppp-blocker-configure-protocols', e => config.protocols = e.detail.value);
   window.addEventListener('ppp-blocker-configure-shadow', e => config.shadow = e.detail.value);
   // execute
   window.addEventListener('ppp-blocker-exe', e => {
@@ -383,12 +391,14 @@ chrome.storage.local.get({
   'target': true,
   'domain': false,
   'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com'],
-  'block-page-redirection': false
+  'block-page-redirection': false,
+  'protocols': ['magnet:']
 }, prefs => {
   post('ppp-blocker-configure-enabled', {value: prefs.enabled});
   post('ppp-blocker-configure-target', {value: prefs.target});
   post('ppp-blocker-configure-domain', {value: prefs.domain});
   post('ppp-blocker-configure-whitelist', {value: prefs['popup-hosts']});
+  post('ppp-blocker-configure-protocols', {value: prefs.protocols});
   redirect.active = prefs['block-page-redirection'];
 });
 

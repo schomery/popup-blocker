@@ -1,6 +1,6 @@
 'use strict';
 
-function restore () {
+function restore() {
   chrome.storage.local.get({
     'numbers': 5,
     'timeout': 30,
@@ -14,50 +14,51 @@ function restore () {
     'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com'],
     'top-hosts': ['yahoo.com', 'disqus.com', 'github.com', 'add0n.com', 'google.com'],
     'blacklist': [],
+    'protocols': ['magnet:'],
     'default-action': 'ignore',
     'immediate-action': false
-  }, (obj) => {
-    document.getElementById('numbers').value = obj.numbers;
-    document.getElementById('timeout').value = obj.timeout;
-    document.getElementById('countdown').value = obj.countdown;
-    document.getElementById('badge').checked = obj.badge;
-    document.getElementById('badge-color').value = obj['badge-color'];
-    document.getElementById('domain').checked = obj.domain;
-    document.getElementById('target').checked = obj.target;
-    document.getElementById('faqs').checked = obj.faqs;
-    document.getElementById('block-page-redirection').checked = obj['block-page-redirection'];
-    document.getElementById('popup-hosts').value = obj['popup-hosts'].join(', ');
-    document.getElementById('top-hosts').value = obj['top-hosts'].join(', ');
-    document.getElementById('blacklist').value = obj.blacklist.join(', ');
-    document.getElementById('default-action').value = obj['default-action'];
-    document.getElementById('immediate-action').checked = obj['immediate-action'];
+  }, prefs => {
+    document.getElementById('numbers').value = prefs.numbers;
+    document.getElementById('timeout').value = prefs.timeout;
+    document.getElementById('countdown').value = prefs.countdown;
+    document.getElementById('badge').checked = prefs.badge;
+    document.getElementById('badge-color').value = prefs['badge-color'];
+    document.getElementById('domain').checked = prefs.domain;
+    document.getElementById('target').checked = prefs.target;
+    document.getElementById('faqs').checked = prefs.faqs;
+    document.getElementById('block-page-redirection').checked = prefs['block-page-redirection'];
+    document.getElementById('popup-hosts').value = prefs['popup-hosts'].join(', ');
+    document.getElementById('top-hosts').value = prefs['top-hosts'].join(', ');
+    document.getElementById('blacklist').value = prefs.blacklist.join(', ');
+    document.getElementById('protocols').value = prefs.protocols.join(', ');
+    document.getElementById('default-action').value = prefs['default-action'];
+    document.getElementById('immediate-action').checked = prefs['immediate-action'];
   });
 }
 
-function prepare (str) {
-  return str.split(/\s*\,\s*/)
-  .map(s => {
-    return s.replace('http://', '')
-      .replace('https://', '').split('/')[0].trim();
-  })
+function prepare(str) {
+  return str.split(/\s*,\s*/)
+  .map(s => s.replace('http://', '')
+  .replace('https://', '').split('/')[0].trim())
   .filter((h, i, l) => h && l.indexOf(h) === i);
 }
 
 function save() {
-  let numbers = document.getElementById('numbers').value;
-  let timeout = document.getElementById('timeout').value;
-  let countdown = document.getElementById('countdown').value;
-  let badge = document.getElementById('badge').checked;
-  let badgeColor = document.getElementById('badge-color').value;
-  let domain = document.getElementById('domain').checked;
-  let target = document.getElementById('target').checked;
-  let faqs = document.getElementById('faqs').checked;
-  let redirection = document.getElementById('block-page-redirection').checked;
-  let hosts = document.getElementById('popup-hosts').value;
-  let tops = document.getElementById('top-hosts').value;
-  let blacklist = document.getElementById('blacklist').value;
-  let defaultAction = document.getElementById('default-action').value;
-  let immediateAction = document.getElementById('immediate-action').checked;
+  const numbers = document.getElementById('numbers').value;
+  const timeout = document.getElementById('timeout').value;
+  const countdown = document.getElementById('countdown').value;
+  const badge = document.getElementById('badge').checked;
+  const badgeColor = document.getElementById('badge-color').value;
+  const domain = document.getElementById('domain').checked;
+  const target = document.getElementById('target').checked;
+  const faqs = document.getElementById('faqs').checked;
+  const redirection = document.getElementById('block-page-redirection').checked;
+  const hosts = document.getElementById('popup-hosts').value;
+  const tops = document.getElementById('top-hosts').value;
+  const blacklist = document.getElementById('blacklist').value;
+  const protocols = document.getElementById('protocols').value;
+  const defaultAction = document.getElementById('default-action').value;
+  const immediateAction = document.getElementById('immediate-action').checked;
   chrome.storage.local.set({
     'numbers': Math.max(1, numbers),
     'timeout': Math.max(1, timeout),
@@ -71,10 +72,11 @@ function save() {
     'popup-hosts': prepare(hosts),
     'top-hosts': prepare(tops),
     'blacklist': prepare(blacklist),
+    'protocols': protocols.split(/\s*,\s*/).filter(s => s && s.endsWith(':')),
     'default-action': defaultAction,
     'immediate-action': immediateAction
   }, () => {
-    let status = document.getElementById('status');
+    const status = document.getElementById('status');
     status.textContent = chrome.i18n.getMessage('options_msg');
     restore();
     setTimeout(() => status.textContent = '', 750);
