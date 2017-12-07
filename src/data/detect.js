@@ -282,7 +282,7 @@ script.textContent = `
   /* protection #3; dynamic "a" creation; click is not propagation */
   protect(document, 'createElement', function(tagName = '') {
     const target = pointers.dce.apply(document, arguments);
-    if (tagName.toLowerCase() === 'a') {
+    if (tagName.toString().toLowerCase() === 'a') {
       target.addEventListener('click', e => onclick(e, target, 'a.createElement'), false);
       // prevent dispatching click event
       const dispatchEvent = target.dispatchEvent;
@@ -293,7 +293,7 @@ script.textContent = `
         return dispatchEvent.apply(this, arguments);
       });
     }
-    else if (tagName.toLowerCase() === 'form') {
+    else if (tagName.toString().toLowerCase() === 'form') {
       const submit = target.submit;
       protect(target, 'submit', function() {
         if (onclick(typeof event === 'undefined' ? { // firefox does not support global events
