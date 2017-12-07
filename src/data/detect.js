@@ -106,7 +106,6 @@ script.textContent = `
     },
     set isEnabled (v) {
       if (v !== config._isEnabled) {
-        console.log('reset')
         records.forEach(o => {
           o.parent[o.name] = v ? o.value : o.original;
         });
@@ -167,7 +166,6 @@ script.textContent = `
       p = u.protocol;
     }
     catch (e) {}
-    console.log(config.protocols, p);
     if (p && config.protocols.indexOf(p) !== -1) {
       return true;
     }

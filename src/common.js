@@ -5,6 +5,22 @@ var whitelist = [];
 var blacklist = [];
 var _ = chrome.i18n.getMessage;
 
+var cookie = {
+  get: host => {
+    const key = document.cookie.split(`${host}=`);
+    if (key.length > 1) {
+      return key[1].split(';')[0];
+    }
+  },
+  set: (host, cmd) => {
+    const days = 10;
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+
+    document.cookie = `${host}=${cmd}; expires=${date.toGMTString()}`;
+  }
+};
+
 // config
 chrome.storage.onChanged.addListener(prefs => {
   if (prefs.badge) {
@@ -59,9 +75,29 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       });
     });
   }
+  // popup is accepted
+  if (request.cmd === 'popup-accepted') {
+    if (request.url.startsWith('http') || request.url.startsWith('ftp')) {
+      chrome.storage.local.get({
+        'simulate-allow': true
+      }, prefs => {
+        if (prefs['simulate-allow']) {
+          chrome.tabs.create({
+            url: request.url,
+            openerTabId: sender.tab.id
+          });
+        }
+        else {
+          chrome.tabs.sendMessage(sender.tab.id, request);
+        }
+      });
+    }
+    else {
+      chrome.tabs.sendMessage(sender.tab.id, request);
+    }
+  }
   // bouncing back to ui.js
   if (
-    request.cmd === 'popup-accepted' ||
     request.cmd === 'popup-number' ||
     request.cmd === 'popup-request' ||
     request.cmd === 'popup-request-bounced'
@@ -128,6 +164,27 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       });
     }
     catch (e) {}
+  }
+  else if (request.cmd === 'wot') {
+    const c = cookie.get(request.hostname);
+    if (c) {
+      response(Number(c));
+    }
+    const key = atob('MjRmMTIwNDVlYjQ3Y2NmYzJkODdmNWQxOWM1MzY5NmIyZThlMjYwMg==');
+    fetch(`http://api.mywot.com/0.4/public_link_json2?hosts=${request.hostname}/&key=${key}`)
+      .then(r => r.json()).then(r => {
+        let reputation = -1;
+        try {
+          reputation = r[request.hostname][0][0];
+        }
+        catch (e) {}
+        if (r) {
+          cookie.set(request.hostname, reputation);
+        }
+        response(reputation);
+      })
+      .catch(() => response());
+    return true;
   }
 });
 // refresh

@@ -9,6 +9,8 @@ function restore() {
     'badge-color': '#6e6e6e',
     'domain': false,
     'target': true,
+    'wot': true,
+    'simulate-allow': true,
     'faqs': false,
     'block-page-redirection': false,
     'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com'],
@@ -25,6 +27,8 @@ function restore() {
     document.getElementById('badge-color').value = prefs['badge-color'];
     document.getElementById('domain').checked = prefs.domain;
     document.getElementById('target').checked = prefs.target;
+    document.getElementById('wot').checked = prefs.wot;
+    document.getElementById('simulate-allow').checked = prefs['simulate-allow'];
     document.getElementById('faqs').checked = prefs.faqs;
     document.getElementById('block-page-redirection').checked = prefs['block-page-redirection'];
     document.getElementById('popup-hosts').value = prefs['popup-hosts'].join(', ');
@@ -51,6 +55,7 @@ function save() {
   const badgeColor = document.getElementById('badge-color').value;
   const domain = document.getElementById('domain').checked;
   const target = document.getElementById('target').checked;
+  const wot = document.getElementById('wot').checked;
   const faqs = document.getElementById('faqs').checked;
   const redirection = document.getElementById('block-page-redirection').checked;
   const hosts = document.getElementById('popup-hosts').value;
@@ -67,6 +72,8 @@ function save() {
     'badge-color': badgeColor,
     domain,
     target,
+    wot,
+    'simulate-allow': document.getElementById('simulate-allow').checked,
     faqs,
     'block-page-redirection': redirection,
     'popup-hosts': prepare(hosts),
