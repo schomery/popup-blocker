@@ -156,7 +156,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       chrome.storage.local.get({
         'whitelist-mode': 'popup-hosts',
         'top-hosts': ['yahoo.com', 'disqus.com', 'github.com', 'add0n.com', 'google.com'],
-        'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com']
+        'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com', 'disqus.com']
       }, prefs => {
         const mode = prefs['whitelist-mode'];
         const hostname = new URL(mode === 'popup-hosts' ? request.url : sender.tab.url).hostname;
@@ -264,11 +264,18 @@ function update(toggle) {
       obj.enabled = !obj.enabled;
       chrome.storage.local.set(obj);
     }
+    const path = {
+      16: 'data/icons/' + (obj.enabled ? '' : 'disabled/') + '16.png',
+      19: 'data/icons/' + (obj.enabled ? '' : 'disabled/') + '19.png',
+      32: 'data/icons/' + (obj.enabled ? '' : 'disabled/') + '32.png',
+      38: 'data/icons/' + (obj.enabled ? '' : 'disabled/') + '38.png'
+    };
+    if (window.navigator.userAgent.indexOf('Edge') > -1) {
+      delete path['16'];
+      delete path['32'];
+    }
     chrome.browserAction.setIcon({
-      path: {
-        16: 'data/icons/' + (obj.enabled ? '' : 'disabled/') + '16.png',
-        32: 'data/icons/' + (obj.enabled ? '' : 'disabled/') + '32.png'
-      }
+      path
     });
   });
 }
@@ -278,20 +285,34 @@ update();
 // FAQs & Feedback
 chrome.storage.local.get({
   'version': null,
-  'faqs': false
+  'faqs': false,
+  'last-update': 0,
 }, prefs => {
   const version = chrome.runtime.getManifest().version;
 
   if (prefs.version ? (prefs.faqs && prefs.version !== version) : true) {
-    chrome.storage.local.set({version}, () => {
-      chrome.tabs.create({
-        url: 'http://add0n.com/popup-blocker.html?version=' + version +
-          '&type=' + (prefs.version ? ('upgrade&p=' + prefs.version) : 'install')
-      });
+    const now = Date.now();
+    const doUpdate = (now - prefs['last-update']) / 1000 / 60 / 60 / 24 > 30;
+    chrome.storage.local.set({
+      version,
+      'last-update': doUpdate ? Date.now() : prefs['last-update']
+    }, () => {
+      // do not display the FAQs page if last-update occurred less than 30 days ago.
+      if (doUpdate) {
+        const p = Boolean(prefs.version);
+        chrome.tabs.create({
+          url: chrome.runtime.getManifest().homepage_url + '?version=' + version +
+            '&type=' + (p ? ('upgrade&p=' + prefs.version) : 'install'),
+          active: p === false
+        });
+      }
     });
   }
 });
-(function() {
+
+{
   const {name, version} = chrome.runtime.getManifest();
-  chrome.runtime.setUninstallURL('http://add0n.com/feedback.html?name=' + name + '&version=' + version);
-})();
+  chrome.runtime.setUninstallURL(
+    chrome.runtime.getManifest().homepage_url + '?rd=feedback&name=' + name + '&version=' + version
+  );
+}

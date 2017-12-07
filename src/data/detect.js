@@ -396,7 +396,7 @@ chrome.storage.local.get({
   'enabled': true,
   'target': true,
   'domain': false,
-  'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com'],
+  'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com', 'disqus.com'],
   'block-page-redirection': false,
   'protocols': ['magnet:']
 }, prefs => {
