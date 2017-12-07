@@ -18,6 +18,7 @@ function restore() {
     'blacklist': [],
     'protocols': ['magnet:'],
     'default-action': 'ignore',
+    'whitelist-mode': 'popup-hosts',
     'immediate-action': false
   }, prefs => {
     document.getElementById('numbers').value = prefs.numbers;
@@ -36,6 +37,7 @@ function restore() {
     document.getElementById('blacklist').value = prefs.blacklist.join(', ');
     document.getElementById('protocols').value = prefs.protocols.join(', ');
     document.getElementById('default-action').value = prefs['default-action'];
+    document.getElementById('whitelist-mode').value = prefs['whitelist-mode'];
     document.getElementById('immediate-action').checked = prefs['immediate-action'];
   });
 }
@@ -62,7 +64,6 @@ function save() {
   const tops = document.getElementById('top-hosts').value;
   const blacklist = document.getElementById('blacklist').value;
   const protocols = document.getElementById('protocols').value;
-  const defaultAction = document.getElementById('default-action').value;
   const immediateAction = document.getElementById('immediate-action').checked;
   chrome.storage.local.set({
     'numbers': Math.max(1, numbers),
@@ -80,7 +81,8 @@ function save() {
     'top-hosts': prepare(tops),
     'blacklist': prepare(blacklist),
     'protocols': protocols.split(/\s*,\s*/).filter(s => s && s.endsWith(':')),
-    'default-action': defaultAction,
+    'default-action': document.getElementById('default-action').value,
+    'whitelist-mode': document.getElementById('whitelist-mode').value,
     'immediate-action': immediateAction
   }, () => {
     const status = document.getElementById('status');

@@ -104,6 +104,15 @@
   "options_item30": {
     "message": "Simulate the 'allow' button to prevent your browser's internal popup blocker from blocking these requests"
   },
+  "options_item31": {
+    "message": "When 'trust' button is pressed, add hostname to"
+  },
+  "options_item32": {
+    "message": "Whitelist destinations"
+  },
+  "options_item33": {
+    "message": "Whitelist sources"
+  },
   "options_save": {
     "message": "Save Settings"
   },

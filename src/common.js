@@ -153,13 +153,28 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
   }
   else if (request.cmd === 'white-list') {
     try {
-      const hostname = new URL(request.url).hostname;
       chrome.storage.local.get({
+        'whitelist-mode': 'popup-hosts',
+        'top-hosts': ['yahoo.com', 'disqus.com', 'github.com', 'add0n.com', 'google.com'],
         'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com']
       }, prefs => {
-        prefs['popup-hosts'].push(hostname);
-        prefs['popup-hosts'] = prefs['popup-hosts'].filter((h, i, l) => l.indexOf(h) === i);
-        chrome.storage.local.set(prefs);
+        const mode = prefs['whitelist-mode'];
+        const hostname = new URL(mode === 'popup-hosts' ? request.url : sender.tab.url).hostname;
+        if (hostname === 'tools.add0n.com') {
+          return chrome.tabs.executeScript({
+            code: 'window.alert("tools.add0n.com is used for popup testing. This hostname cannot be added to the whitelist.")'
+          });
+        }
+        prefs[mode].push(hostname);
+        prefs[mode] = prefs[mode].filter((h, i, l) => l.indexOf(h) === i);
+        chrome.storage.local.set({
+          [mode]: prefs[mode]
+        });
+        if (mode === 'top-hosts') {
+          chrome.tabs.sendMessage(sender.tab.id, {
+            cmd: 'disabled-top'
+          });
+        }
       });
     }
     catch (e) {}

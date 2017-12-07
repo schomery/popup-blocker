@@ -139,7 +139,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
         const close = document.createElement('input');
         close.type = 'button';
-        close.value =  '✗';
+        close.value = '✗';
         close.title = 'Close this notification';
         close.dataset.cmd = 'popup-close';
         const ok = document.createElement('input');

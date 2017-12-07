@@ -79,6 +79,9 @@ chrome.runtime.onMessage.addListener(request => {
   else if (request.cmd === 'allow-shadow') {
     post('ppp-blocker-configure-shadow', {value: true});
   }
+  else if (request.cmd === 'disabled-top') {
+    post('ppp-blocker-configure-enabled', {value: false});
+  }
   // clean up
   if (
     request.cmd === 'popup.accepted' ||
@@ -400,21 +403,21 @@ chrome.storage.local.get({
   redirect.active = prefs['block-page-redirection'];
 });
 
-chrome.storage.onChanged.addListener(obj => {
-  if (obj.enabled && active) {
-    post('ppp-blocker-configure-enabled', {value: obj.enabled.newValue});
+chrome.storage.onChanged.addListener(prefs => {
+  if (prefs.enabled && active) {
+    post('ppp-blocker-configure-enabled', {value: prefs.enabled.newValue});
   }
-  if (obj.target) {
-    post('ppp-blocker-configure-target', {value: obj.target.newValue});
+  if (prefs.target) {
+    post('ppp-blocker-configure-target', {value: prefs.target.newValue});
   }
-  if (obj.domain) {
-    post('ppp-blocker-configure-domain', {value: obj.domain.newValue});
+  if (prefs.domain) {
+    post('ppp-blocker-configure-domain', {value: prefs.domain.newValue});
   }
-  if (obj['popup-hosts']) {
-    post('ppp-blocker-configure-whitelist', {value: obj['popup-hosts'].newValue});
+  if (prefs['popup-hosts']) {
+    post('ppp-blocker-configure-whitelist', {value: prefs['popup-hosts'].newValue});
   }
-  if (obj['block-page-redirection']) {
-    redirect.active = obj['block-page-redirection'].newValue;
+  if (prefs['block-page-redirection']) {
+    redirect.active = prefs['block-page-redirection'].newValue;
   }
 });
 // is top domain white-listed.
