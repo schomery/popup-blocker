@@ -163,6 +163,11 @@ script.textContent = `
   const permit = (url = '') => {
     // white-list section
     let h, p;
+    if (url && url.indexOf(':') === -1) {
+      const a = pointers.dce.call(document, 'a');
+      a.href = url;
+      url = a.cloneNode(false).href;
+    }
     try {
       const u = (new URL(url));
       h = u.hostname;

@@ -175,6 +175,10 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
             cmd: 'disabled-top'
           });
         }
+        chrome.tabs.create({
+          url: request.url,
+          openerTabId: sender.tab.id
+        });
       });
     }
     catch (e) {}
