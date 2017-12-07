@@ -113,8 +113,17 @@
   "options_item33": {
     "message": "Whitelist sources"
   },
+  "options_import": {
+    "message": "Import"
+  },
+  "options_export": {
+    "message": "Export"
+  },
+  "options_reset": {
+    "message": "Reset to Defaults"
+  },
   "options_save": {
-    "message": "Save Settings"
+    "message": "Save"
   },
   "options_msg": {
     "message": "Options are saved"

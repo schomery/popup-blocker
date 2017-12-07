@@ -31,6 +31,12 @@
       text-decoration: none;
       cursor: pointer;
     }
+    #status {
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   </style>
 </head>
 
@@ -111,8 +117,13 @@
     <input type="text" id="blacklist" rows="2">
   </p>
 
-  <div>
-    <button id="save" data-i18n="options_save"></button> <span id="status"></span>
+  <div style="display: flex">
+    <button id="import" data-i18n="options_import"></button>
+    <button id="export" data-i18n="options_export"></button>
+    <button id="reset" data-i18n="options_reset"></button>
+    <span style="flex: 1"></span>
+    <span id="status"></span>
+    <button id="save" data-i18n="options_save"></button>
   </div>
 
   <hr>

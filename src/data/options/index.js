@@ -1,7 +1,7 @@
 'use strict';
 
-function restore() {
-  chrome.storage.local.get({
+function restore(defaults = false) {
+  const ps = {
     'numbers': 5,
     'timeout': 30,
     'countdown': 5,
@@ -11,7 +11,7 @@ function restore() {
     'target': true,
     'wot': true,
     'simulate-allow': true,
-    'faqs': false,
+    'faqs': true,
     'block-page-redirection': false,
     'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com'],
     'top-hosts': ['yahoo.com', 'disqus.com', 'github.com', 'add0n.com', 'google.com'],
@@ -20,7 +20,9 @@ function restore() {
     'default-action': 'ignore',
     'whitelist-mode': 'popup-hosts',
     'immediate-action': false
-  }, prefs => {
+  };
+  chrome.storage.local.get(ps, prefs => {
+    prefs = defaults ? ps : prefs;
     document.getElementById('numbers').value = prefs.numbers;
     document.getElementById('timeout').value = prefs.timeout;
     document.getElementById('countdown').value = prefs.countdown;
@@ -92,7 +94,7 @@ function save() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', restore);
+document.addEventListener('DOMContentLoaded', () => restore());
 document.getElementById('save').addEventListener('click', save);
 
 Array.from(document.querySelectorAll('[data-i18n]')).forEach(e => {
@@ -102,5 +104,49 @@ Array.from(document.querySelectorAll('[data-i18n]')).forEach(e => {
 document.addEventListener('click', e => {
   if (e.target.href && e.target.href.indexOf('#') !== -1) {
     document.querySelector('details').open = true;
+  }
+});
+
+document.getElementById('reset').addEventListener('click', () => restore(true));
+document.getElementById('export').addEventListener('click', () => {
+  chrome.storage.local.get(null, prefs => {
+    const text = JSON.stringify(prefs, null, '\t');
+    const blob = new Blob([text], {type: 'application/json'});
+    const objectURL = URL.createObjectURL(blob);
+    Object.assign(document.createElement('a'), {
+      href: objectURL,
+      type: 'application/json',
+      download: 'popup-blocker-preferences.json',
+    }).dispatchEvent(new MouseEvent('click'));
+    setTimeout(() => URL.revokeObjectURL(objectURL));
+  });
+});
+document.getElementById('import').addEventListener('click', () => {
+  const fileInput = document.createElement('input');
+  fileInput.style.display = 'none';
+  fileInput.type = 'file';
+  fileInput.accept = '.json';
+  fileInput.acceptCharset = 'utf-8';
+
+  document.body.appendChild(fileInput);
+  fileInput.initialValue = fileInput.value;
+  fileInput.onchange = readFile;
+  fileInput.click();
+
+  function readFile() {
+    if (fileInput.value !== fileInput.initialValue) {
+      const file = fileInput.files[0];
+      if (file.size > 100e6) {
+        console.warn('100MB backup? I don\'t believe you.');
+        return;
+      }
+      const fReader = new FileReader();
+      fReader.onloadend = event => {
+        fileInput.remove();
+        const json = JSON.parse(event.target.result);
+        chrome.storage.local.set(json, () => chrome.runtime.reload());
+      };
+      fReader.readAsText(file, 'utf-8');
+    }
   }
 });
