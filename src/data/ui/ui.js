@@ -89,12 +89,12 @@ function onClick(e) {
   if (cmd) {
     const div = target.parentNode.parentNode;
     if (div) {
-      const url = div.dataset.url;
-      const hostname = div.dataset.hostname;
-      const id = div.dataset.id;
+      const {url, hostname, id, useNative} = div.dataset;
       remove(div, url, id, cmd);
-
-      chrome.runtime.sendMessage({cmd, id, url});
+      // on user-action use native method
+      chrome.runtime.sendMessage({cmd, id, url,
+        'use-native': useNative === 'true' || (e.isTrusted && navigator.userAgent.indexOf('Firefox') === -1)
+      });
       // remember user action
       if (cmd === 'popup-close') {
         cookie.remove(hostname);
@@ -128,12 +128,14 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         'countdown': 5,
         'default-action': 'ignore',
         'immediate-action': false,
+        'simulate-allow': true,
         'wot': true,
       }, prefs => {
         const div = document.createElement('div');
         div.setAttribute('class', 'ppblocker-div');
         div.dataset.badge = 1;
         div.dataset.id = request.id;
+        div.dataset.useNative = request['use-native'];
 
         const buttons = document.createElement('div');
 
@@ -252,19 +254,25 @@ chrome.runtime.onMessage.addListener((request, sender) => {
               }
 
               if (r >= 60) {
-                const button = div.querySelector('[data-cmd="popup-accepted"');
+                const button = div.querySelector(
+                  prefs['simulate-allow'] ? '[data-cmd="popup-accepted"]' : '[data-cmd="open-tab"]'
+                );
                 doTimer(button);
               }
             }).catch(() => {});
           };
-          if (prefs.countdown) {
+          // only perform automatic action when there is no native request
+          if (prefs.countdown && request['use-native'] === false) {
             if (action) {
-              const button = div.querySelector(`[data-cmd="${action}"`);
-              if (button) {
-                doTimer(button);
-              }
-              else if (prefs.wot) {
-                doWOT();
+              // to prevent internal popup blocker from rejecting the request
+              if (action !== 'popup-accepted' || prefs['simulate-allow']) {
+                const button = div.querySelector(`[data-cmd="${action}"`);
+                if (button) {
+                  doTimer(button);
+                }
+                else if (prefs.wot) {
+                  doWOT();
+                }
               }
             }
             else if (prefs.wot) {

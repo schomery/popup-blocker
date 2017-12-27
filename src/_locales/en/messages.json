@@ -14,6 +14,9 @@
   "context_item4": {
     "message": "Create shadow window on popup request"
   },
+  "context_item5": {
+    "message": "Open options page"
+  },
   "options_item1": {
     "message": "Maximum number of popup requests for a single page"
   },

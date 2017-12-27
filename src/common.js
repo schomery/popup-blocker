@@ -81,7 +81,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       chrome.storage.local.get({
         'simulate-allow': true
       }, prefs => {
-        if (prefs['simulate-allow']) {
+        if (prefs['simulate-allow'] && request['use-native'] === false) {
           chrome.tabs.create({
             url: request.url,
             openerTabId: sender.tab.id
@@ -235,11 +235,21 @@ chrome.contextMenus.create({
   title: _('context_item4'),
   contexts: ['browser_action']
 });
+if (navigator.userAgent.indexOf('Firefox') !== -1) {
+  chrome.contextMenus.create({
+    id: 'open-options',
+    title: _('context_item5'),
+    contexts: ['browser_action']
+  });
+}
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'open-test-page') {
     chrome.tabs.create({
       url: 'http://tools.add0n.com/popup-blocker.html'
     });
+  }
+  else if (info.menuItemId === 'open-options') {
+    chrome.runtime.openOptionsPage();
   }
   else {
     chrome.tabs.sendMessage(tab.id, {

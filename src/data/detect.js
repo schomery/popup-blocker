@@ -50,7 +50,8 @@ window.addEventListener('ppp-blocker-create', e => {
     type: request.type,
     url: request.url,
     id: request.id,
-    tag: request.tag
+    tag: request.tag,
+    'use-native': request.arguments && request.arguments.length > 1
   });
   requests[request.id] = request;
   commands[request.id] = commands[request.id] || [];
@@ -274,6 +275,9 @@ script.textContent = `
         .filter(a => a)
         .reduce((p, c) => p || ['_tab', '_blank'].includes(c.target.toLowerCase()), false);
       const url = a.href || a.action;
+      if (url === 'https://syndication.twitter.com/i/jot') {
+        return;
+      }
       // if element is not attached, a.click() opens a new tab
       if ((base || !e.target) && (
         e.button === 0 && !(e.metaKey && e.isTrusted) || (e.button === 1 && !e.isTrusted)
@@ -375,17 +379,19 @@ script.textContent = `
       return location.replace(url);
     }
     const win = pointers.wop.apply(window, request.arguments);
-    request.commands.forEach(obj => {
-      if (obj.name === 'focus') {
-        win.focus();
-      }
-      else if (obj.name === 'window.location.href') {
-        win.location.href = obj.arguments[0];
-      }
-      else {
-        win.document[obj.name].apply(win.document, obj.arguments);
-      }
-    });
+    if (win) {
+      request.commands.forEach(obj => {
+        if (obj.name === 'focus') {
+          win.focus();
+        }
+        else if (obj.name === 'window.location.href') {
+          win.location.href = obj.arguments[0];
+        }
+        else {
+          win.document[obj.name].apply(win.document, obj.arguments);
+        }
+      });
+    }
   });
 }
 `;
