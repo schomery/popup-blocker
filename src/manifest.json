@@ -20,9 +20,11 @@
   "browser_action": {
     "default_icon": {
       "16": "data/icons/16.png",
+      "19": "data/icons/19.png",
       "32": "data/icons/32.png",
+      "38": "data/icons/38.png",
       "48": "data/icons/48.png",
-      "64": "data/icons/48.png",
+      "64": "data/icons/64.png",
       "128": "data/icons/128.png"
     }
   },
@@ -46,7 +48,7 @@
     "32": "data/icons/32.png",
     "38": "data/icons/38.png",
     "48": "data/icons/48.png",
-    "64": "data/icons/48.png",
+    "64": "data/icons/64.png",
     "128": "data/icons/128.png"
   },
   "options_ui": {
