@@ -9,20 +9,16 @@ window.cloneInto = typeof cloneInto === 'undefined' ? function(a) {
   return a;
 } : cloneInto;
 
-function post(name, value) {
-  window.dispatchEvent(new CustomEvent(name, {
-    detail: cloneInto(value, document.defaultView),
-    bubbles: false,
-    cancelable: false
-  }));
-}
+const post = (name, value) => window.dispatchEvent(new CustomEvent(name, {
+  detail: cloneInto(value, document.defaultView),
+  bubbles: false,
+  cancelable: false
+}));
 
 var redirect = {
   id: null,
   active: false,
-  callback: e => {
-    e.returnValue = 'false';
-  }
+  callback: e => e.returnValue = 'false';
 };
 
 // prevent ad page redirection when popup displaying is unsuccessful for 2 seconds

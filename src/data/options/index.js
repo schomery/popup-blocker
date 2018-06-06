@@ -9,7 +9,7 @@ function restore(defaults = false) {
     'badge-color': '#6e6e6e',
     'domain': false,
     'target': true,
-    'wot': true,
+    'wot': false,
     'simulate-allow': true,
     'faqs': false,
     'block-page-redirection': false,

@@ -129,7 +129,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         'default-action': 'ignore',
         'immediate-action': false,
         'simulate-allow': true,
-        'wot': true,
+        'wot': false,
       }, prefs => {
         const div = document.createElement('div');
         div.setAttribute('class', 'ppblocker-div');
