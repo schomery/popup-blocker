@@ -1,0 +1,178 @@
+{
+    "options_export": {
+        "message": "Exportera",
+        "description": ""
+    },
+    "options_item12": {
+        "message": "Kommaseparerad lista över domäner som har popup-blockeringstillägget helt inaktiverat",
+        "description": ""
+    },
+    "options_msg": {
+        "message": "Alternativen sparas",
+        "description": ""
+    },
+    "options_item23": {
+        "message": "Ignorera popup-aviseringar när det är möjligt (rekommenderas inte)",
+        "description": ""
+    },
+    "options_item10": {
+        "message": "Använd noll för att inaktivera nedräkningen",
+        "description": ""
+    },
+    "context_item1": {
+        "message": "Testa din popup-blockerare",
+        "description": ""
+    },
+    "options_item3": {
+        "message": "Blockera inte popup-förfrågningar från samma ursprung",
+        "description": ""
+    },
+    "options_item16": {
+        "message": "På vissa webbplatser, när popup-annonser blockeras, omdirigerings sidan till annonsdestinationen. Det här alternativet kan förhindra detta genom att varna dig innan omdirigering sker.",
+        "description": ""
+    },
+    "options_item4": {
+        "message": "Blockera länköppning i nya flikar",
+        "description": ""
+    },
+    "options_item24": {
+        "message": "Detta kommer att \"ignorera\" eller \"acceptera\" en popup utan användarinteraktion (rekommenderas inte)",
+        "description": ""
+    },
+    "context_item5": {
+        "message": "Öppna sida med alternativ",
+        "description": ""
+    },
+    "options_item25": {
+        "message": "Beskrivningar",
+        "description": ""
+    },
+    "options_item15": {
+        "message": "Förhindra omdirigering av sidor i 2 sekunder efter att en popup har begärts",
+        "description": ""
+    },
+    "appDesc": {
+        "message": "Strängt blockera alla popup-förfrågningar från vilken webbplats som helst",
+        "description": ""
+    },
+    "options_item19": {
+        "message": "neka förfrågan",
+        "description": ""
+    },
+    "options_item9": {
+        "message": "Nedräkning för att utföra den senaste åtgärden (i sekunder)",
+        "description": ""
+    },
+    "options_item33": {
+        "message": "Vitlistans källor",
+        "description": ""
+    },
+    "options_item2": {
+        "message": "Tid för visning av varje popup (i sekunder)",
+        "description": ""
+    },
+    "options_item7": {
+        "message": "Vitlistans källor:",
+        "description": ""
+    },
+    "options_item28": {
+        "message": "De listade protokollen kan öppnas i en ny webbläsarflik. Till exempel lägg till \"magnet:\" så att magnetlänkar öppnas i en webbläsarflik.",
+        "description": ""
+    },
+    "options_save": {
+        "message": "Spara",
+        "description": ""
+    },
+    "options_item31": {
+        "message": "När \"lita på\"-knappen trycks, lägg till värdnamn till",
+        "description": ""
+    },
+    "options_item26": {
+        "message": "Visa Vanliga frågor-sidan vid uppdateringar",
+        "description": ""
+    },
+    "options_item22": {
+        "message": "Bakgrundsfärg för bricka",
+        "description": ""
+    },
+    "context_item4": {
+        "message": "Skapa skuggfönster på popup-förfrågan",
+        "description": ""
+    },
+    "options_item1": {
+        "message": "Maximalt antal popup-förfrågningar för en enskild sida",
+        "description": ""
+    },
+    "options_item30": {
+        "message": "Simulera knappen \"tillåt\" för att förhindra att webbläsarens interna popup-blockerare blockerar dessa förfrågningar",
+        "description": ""
+    },
+    "options_item17": {
+        "message": "Standardåtgärd vid en popup-förfrågan",
+        "description": ""
+    },
+    "options_item27": {
+        "message": "Vitlistans protokoll:",
+        "description": ""
+    },
+    "options_item14": {
+        "message": "Kommaseparerad lista över domäner som popup-blockeraren ska vara aktiv på. Det betyder att popup-blockeraren är inaktiverad på alla andra domäner",
+        "description": ""
+    },
+    "options_item11": {
+        "message": "Kommaseparerad lista över domäner som inte kommer att blockeras (dessa domäner kan utfärda popup-fönster på vilken webbplats som helst)",
+        "description": ""
+    },
+    "options_item18": {
+        "message": "gör ingenting",
+        "description": ""
+    },
+    "options_item29": {
+        "message": "Använd tjänsten Web of Trust (WOT) för att bestämma om popup är från ett betrott värdnamn eller inte",
+        "description": ""
+    },
+    "options_item21": {
+        "message": "omdirigera sida",
+        "description": ""
+    },
+    "options_item8": {
+        "message": "Flikuppdatering krävs",
+        "description": ""
+    },
+    "options_item13": {
+        "message": "Svartlistans källor:",
+        "description": ""
+    },
+    "options_item5": {
+        "message": "Visa det totala antalet blockerade förfrågningar i verktygsfältikonen",
+        "description": ""
+    },
+    "options_import": {
+        "message": "Importera",
+        "description": ""
+    },
+    "options_item6": {
+        "message": "Vitlistans destinationer:",
+        "description": ""
+    },
+    "context_item3": {
+        "message": "Neka den senaste popup-förfrågan",
+        "description": ""
+    },
+    "options_reset": {
+        "message": "Återställ till standardvärden",
+        "description": ""
+    },
+    "options_item32": {
+        "message": "Vitlistans destinationer",
+        "description": ""
+    },
+    "options_item20": {
+        "message": "öppna i bakgrunden",
+        "description": ""
+    },
+    "context_item2": {
+        "message": "Tillåt den senaste popup-förfrågan",
+        "description": ""
+    }
+}
