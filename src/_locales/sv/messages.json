@@ -51,7 +51,7 @@
         "message": "Förhindra omdirigering av sidor i 2 sekunder efter att en popup har begärts",
         "description": ""
     },
-    "appDesc": {
+    "app_description": {
         "message": "Strängt blockera alla popup-förfrågningar från vilken webbplats som helst",
         "description": ""
     },

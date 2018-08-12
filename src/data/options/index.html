@@ -7,7 +7,7 @@
       padding: 10px;
       font-size: 13px;
       font-family: arial, sans-serif;
-      width: 500px;
+      width: 600px;
     }
     input[type=number] {
       width: 50px;
@@ -86,8 +86,6 @@
   <p>
     <label><input type="checkbox" id="domain"> <span data-i18n="options_item3"></span><sup><a href="#n1">1</a></sup></label>
     <br>
-    <label><input type="checkbox" id="target"> <span data-i18n="options_item4"></span><sup><a href="#n1">1</a></sup></label>
-    <br>
     <label><input type="checkbox" id="badge"> <span data-i18n="options_item5"></span><sup><a href="#n1">1</a></sup></label>
     <br>
     <label><input type="checkbox" id="block-page-redirection"> <span data-i18n="options_item15"></span><sup><a href="#n6">6</a></sup></label>
@@ -118,6 +116,7 @@
   </p>
 
   <div style="display: flex">
+    <button id="support" data-i18n="options_support"></button>
     <button id="import" data-i18n="options_import"></button>
     <button id="export" data-i18n="options_export"></button>
     <button id="reset" data-i18n="options_reset"></button>
@@ -149,6 +148,7 @@
     </p>
   </details>
 
+  <script src="/config.js"></script>
   <script src="index.js"></script>
 </body>
 </html>

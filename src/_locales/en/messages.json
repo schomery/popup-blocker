@@ -1,6 +1,9 @@
 {
-  "appDesc": {
+  "app_description": {
     "message": "Strictly block all popup requests from any website"
+  },
+  "background_msg1": {
+    "message": "tools.add0n.com is used for popup testing. This hostname cannot be added to the whitelist."
   },
   "context_item1": {
     "message": "Test your popup blocker"
@@ -25,9 +28,6 @@
   },
   "options_item3": {
     "message": "Do not block popup requests from same origin"
-  },
-  "options_item4": {
-    "message": "Block link opening in new tabs"
   },
   "options_item5": {
     "message": "Display the total number of blocked requests in the toolbar icon"
@@ -116,6 +116,9 @@
   "options_item33": {
     "message": "Whitelist sources"
   },
+  "options_support": {
+    "message": "Support Development"
+  },
   "options_import": {
     "message": "Import"
   },
@@ -130,5 +133,23 @@
   },
   "options_msg": {
     "message": "Options are saved"
+  },
+  "ui_msg": {
+    "message": "Popup is requested for"
+  },
+  "ui_button_allow": {
+    "message": "Allow this popup"
+  },
+  "ui_button_redirect": {
+    "message": "Redirect current page to the new destination instead of opening it in a new tab or popup"
+  },
+  "ui_button_background": {
+    "message": "Open the link in a background tab"
+  },
+  "ui_button_deny": {
+    "message": "Decline the popup or tab opening"
+  },
+  "ui_button_trust": {
+    "message": "White-list this domain to open popups"
   }
 }

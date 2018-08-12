@@ -1,9 +1,9 @@
 {
   "name": "Popup Blocker (strict)",
   "short_name": "ipblocker",
-  "description": "__MSG_appDesc__",
+  "description": "__MSG_app_description__",
   "author": "Jeremy Schomery",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "manifest_version": 2,
   "default_locale": "en",
   "permissions": [
@@ -13,7 +13,9 @@
     "contextMenus"
   ],
   "background": {
+    "persistent": false,
     "scripts": [
+      "config.js",
       "common.js"
     ]
   },
@@ -31,13 +33,15 @@
   "content_scripts": [{
     "match_about_blank": true,
     "matches": ["<all_urls>"],
-    "js": ["data/detect.js"],
+    "js": [
+      "data/inject/blocker.js"
+    ],
     "run_at": "document_start",
     "all_frames": true
   },
   {
     "matches": ["<all_urls>"],
-    "js": ["data/manager.js"],
+    "js": ["data/iframe.js"],
     "run_at": "document_start",
     "all_frames": false
   }],

@@ -31,7 +31,7 @@
         "message": "팝업을 요청한 페이지에서 2초간 다른 페이지로 전송 방지",
         "description": ""
     },
-    "appDesc": {
+    "app_description": {
         "message": "모든 웹 사이트의 팝업 요청을 엄격하게 차단합니다.",
         "description": ""
     },

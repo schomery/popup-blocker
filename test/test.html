@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Untitled Document</title>
+  </head>
+
+  <body>
+    <table>
+      <tr>
+        <td><input type="button" id="method-1/1" value="window.open('absolute')"/></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><input type="button" id="method-1/2" value="window.open('relative')"/></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><input type="button" id="method-2" value="window.open('about:blank')"/></td>
+        <td>double click to confirm the popup blocker can distinguish it is a duplicated event</td>
+      </tr>
+      <tr>
+        <td><a href="http://example.com/method/3" target="_blank">method 3/1</a></td>
+        <td>Link[target=_blank] -> remote</td>
+      </tr>
+      <tr>
+        <td><a href="local/1" target="_blank">method 3/2</a></td>
+        <td>Link[target=_blank] -> relative</td>
+      </tr>
+      <tr>
+        <td><input type="button" id="method-4" value="a.click();"/></td>
+        <td>create a element and click on it without attaching it</td>
+      </tr>
+      <tr>
+        <td><input type="button" id="method-5" value="a.dispatchEvent();"/></td>
+        <td>create a element and dispatch click event</td>
+      </tr>
+      <tr>
+        <td><a href="http://example.com/method/6" target="_blank" id="method-6">method 6</a></td>
+        <td>Link[target=_blank] -> remote + stopPropagation</td>
+      </tr>
+    </table>
+
+    <script>
+      document.getElementById('method-1/1').addEventListener('click', () => {
+        window.open('http://example.com/method/1');
+      });
+      document.getElementById('method-1/2').addEventListener('click', () => {
+        window.open('/method/1');
+      });
+      document.getElementById('method-2').addEventListener('click', () => {
+        window.open('about:blank');
+      });
+      document.getElementById('method-4').addEventListener('click', () => {
+        const a = document.createElement('a');
+        a.href = 'http://example.com/method/4';
+        a.target = '_blank';
+        a.click();
+      });
+      document.getElementById('method-5').addEventListener('click', () => {
+        const a = document.createElement('a');
+        a.href = 'http://example.com/method/4';
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.dispatchEvent(new Event('click', {
+          bubbles: true
+        }));
+      });
+      document.getElementById('method-6').addEventListener('click', e => {
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+      });
+    </script>
+  </body>
+</html>

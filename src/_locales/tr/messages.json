@@ -43,7 +43,7 @@
         "message": "Popup isteğinden 2 saniye sonra yönlendirmeyi engelle",
         "description": ""
     },
-    "appDesc": {
+    "app_description": {
         "message": "Kesin olarak bütün popup isteklerini engeller",
         "description": ""
     },

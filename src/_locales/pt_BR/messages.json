@@ -51,7 +51,7 @@
         "message": "Previne o redirecionamento de página por 2 segundos após a solicitação de um pop-up",
         "description": ""
     },
-    "appDesc": {
+    "app_description": {
         "message": "Bloquear estritamente todos os pedidos de pop-up de qualquer site",
         "description": ""
     },

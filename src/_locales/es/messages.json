@@ -31,7 +31,7 @@
         "message": "Prevenir redirección de páginas por 2 segundos tras una solicitud de ventana emergente",
         "description": ""
     },
-    "appDesc": {
+    "app_description": {
         "message": "Bloquear estrictamente cualquier solicitud de ventana emergente de todos los sitios",
         "description": ""
     },

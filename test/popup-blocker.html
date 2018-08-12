@@ -6,23 +6,41 @@
     <base target="_blank">
   </head>
   <body>
-    <h1>
-      Popup Blocker Detection
-    </h1>
+    <h1>Popup Blocker Detection</h1>
     <p>
       <ul>
-        <li>Do you have a popup blocker (sync):&nbsp;<b><script>document.write((/\{\s*\[native code\]\s*\}/).test('' + window.open) === false)</script></b></li>
-        <li>Do you have a popup blocker (async):&nbsp;<b id="detection"><script type="text/javascript">
-          window.setTimeout(function () {
+        <li>Do you have a popup blocker (sync):&nbsp;<b>
+        <script>
+          /* eslint no-trailing-spaces: 0, eol-last: 0 */
+          document.write((/\{\s*\[native code\]\s*\}/).test('' + window.open) === false);
+        </script>
+        </b></li>
+        <li>Do you have a popup blocker (async):&nbsp;<b id="detection">
+        <script type="text/javascript">
+          /* eslint no-trailing-spaces: 0, eol-last: 0 */
+          window.setTimeout(() => {
             document.getElementById('detection').textContent = /\{\s*\[native code\]\s*\}/.test('' + window.open) === false;
           }, 0);
-        </script></b></li>
+        </script>
+        </b></li>
+        <li>Do you have a popup blocker (iframe sync):&nbsp;<b>
+        <script>
+          /* eslint no-trailing-spaces: 0, eol-last: 0 */
+          var iframe = document.createElement('iframe');
+          document.body.appendChild(iframe);
+          document.write((/\{\s*\[native code\]\s*\}/).test('' + iframe.contentWindow.open) === false);
+          iframe.remove();
+        </script>
+        </b></li>
       </ul>
     </p>
     <style>
       body {
+        font-family: "Helvetica Neue",Helvetica,sans-serif;
         font-size: 13px;
-        font-family: arial,sans-serif;
+      }
+      h1 {
+        font-weight: 400;
       }
       li {
         margin: 5px 0;
@@ -65,6 +83,7 @@
       }
     </style>
     <script>
+      /* eslint no-trailing-spaces: 0, eol-last: 0 */
       'use strict';
       var pointer = window.open;
 
@@ -75,24 +94,27 @@
       });
       new CustomEvent('ppp-blocker-create');
 
-      function method1 () {
+      function method1() {
         var newwindow = pointer('', 'result', 'status=1,width=700,height=500,menubar=yes');
         newwindow.document.open('text/html', 'replace');
         newwindow.document.write('<html><body>test page / 1 ...<body/><html/>');
         newwindow.document.write('<script> document.onreadystatechange = function(){   if(document.readyState=="loaded" || document.readyState=="complete") window.print(); } <' + '/script>');
+        newwindow.focus();
+        newwindow.location.replace('http://www.example.com/method/1');
         newwindow.document.close();
       }
-      function method2 () {
-        var newwindow = pointer('', 'result', 'status=1,width=700,height=500,menubar=yes');
-        newwindow.document.open('text/html', 'replace');
-        newwindow.document.write('<html><body>test page / 2...<body/><html/>');
-        newwindow.document.close();
+      function method2() {
+        var newwindow = window.open('javascript:alert("alerting from window.open")');
       }
-      function method3 (url, title, w, h) {
+      function method3(url, title, w, h) {
         var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
         var dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
-        var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-        var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+        var width = window.innerWidth ?
+          window.innerWidth :
+          document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+        var height = window.innerHeight ?
+          window.innerHeight :
+          document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
 
         var left = ((width / 2) - (w / 2)) + dualScreenLeft;
         var top = ((height / 2) - (h / 2)) + dualScreenTop;
@@ -103,56 +125,58 @@
           newWindow.focus();
         }
       }
-      function method7 () {
+      function method7() {
         var c = document.createElement('a');
         var d = document.createEvent('MouseEvents');
         c.href = 'https://example.com/test/7', d.initMouseEvent('click', !1, !0, window, 0, 0, 0, 0, 0, !0, !1, !1, !0, 0, null), c.dispatchEvent(d);
       }
-      function method12_1 () {
-        document.getElementById('id4').dispatchEvent(new MouseEvent('click', {
+      function method12_1() {
+        var e = new MouseEvent('click', {
           button: 0
-        }));
+        });
+        document.getElementById('id4').dispatchEvent(e);
       }
-      function method12_2 () {
+      function method12_2() {
         document.getElementById('id4').dispatchEvent(new MouseEvent('click', {
           button: 1
         }));
       }
-      function method12_3 () {
+      function method12_3() {
         var evt = document.createEvent('MouseEvents');
         evt.initEvent('click', true, false);
         document.getElementById('id4').dispatchEvent(evt);
       }
-      function method12_4 () {
+      function method12_4() {
         document.getElementById('id4').click();
       }
-      function method10 () {
+      function method10() {
         var a = document.createElement('a');
-        a.target="_blank";
-        a.href='https://example.com/test/10';
+        a.target = '_blank';
+        a.href = 'https://example.com/test/10';
         document.body.appendChild(a);
-        var b = new MouseEvent("click", {
+        var b = new MouseEvent('click', {
           view: window,
           bubbles: !1,
           cancelable: !1
         });
         a.dispatchEvent(b);
       }
-      function method13 (event) {
-        var f = document.createElement("form");
-        f.setAttribute("action", "https://example.com/test/13");
-        f.setAttribute("method", "post");
-        f.setAttribute("target", "_blank");
-        document.getElementsByTagName("body").item(0).appendChild(f);
+      function method13() {
+        var f = document.createElement('form');
+        f.setAttribute('action', 'https://example.com/test/13');
+        f.setAttribute('method', 'post');
+        f.setAttribute('target', '_blank');
+        document.getElementsByTagName('body').item(0).appendChild(f);
         f.submit();
-        document.getElementsByTagName("body").item(0).removeChild(f);
+        document.getElementsByTagName('body').item(0).removeChild(f);
         return false;
-      };
-      function method14_1 (e) {
+      }
+      function method14_1(e) {
         function isWindow(obj) {
             if (typeof(window.constructor) === 'undefined') {
                 return obj instanceof window.constructor;
-            } else {
+            }
+            else {
                 return obj.window === obj;
             }
         }
@@ -161,17 +185,18 @@
           e.preventDefault();
           e.stopImmediatePropagation();
           e.stopPropagation();
-          window.setTimeout(function () {
+          window.setTimeout(function() {
             window.location.href = 'https://example.com/test/14';
           }, 500);
         }
       }
-      function method14_2 () {
+      function method14_2() {
         function isWindow(obj) {
             if (typeof(window.constructor) === 'undefined') {
                 return obj instanceof window.constructor;
-            } else {
-                return obj.window === obj;
+            }
+            else {
+              return obj.window === obj;
             }
         }
         var win = window.open('https://example.com/test/14');
@@ -180,40 +205,40 @@
         }
       }
 
-      function method16 () {
+      function method16() {
         window.open('popup-blocker.html');
       }
-      function method17_1 () {
+      function method17_1() {
         var f = document.createElement('iframe');
         f.style = 'display: none;';
         document.body.appendChild(f);
         f.contentWindow.open('https://example.com/test/17/1');
       }
-      function method17_2 () {
+      function method17_2() {
         var f = document.createElement('iframe');
         f.style = 'display: none;';
         document.body.appendChild(f);
-        window.setTimeout(function () {
+        window.setTimeout(function() {
           f.contentWindow.open('https://example.com/test/17/1');
         }, 2000);
       }
-      function method17_3 () {
+      function method17_3() {
         var f = document.createElement('iframe');
         f.style = 'display: none;';
         document.body.appendChild(f);
 
         var a = f.contentDocument.createElement('a');
-        a.target="_blank";
-        a.href='https://example.com/test/17/2';
+        a.target = '_blank';
+        a.href = 'https://example.com/test/17/2';
         a.click();
         document.body.appendChild(a);
       }
 
-      function overwrite1 () {
+      function overwrite1() {
         try {
           Object.defineProperty(window, 'open', {
             writable: false,
-            value: function () {
+            value: function() {
               alert('window.open is bypassed; still your popup-blocker should not allow popups');
             }
           });
@@ -223,9 +248,9 @@
         }
       }
 
-      function overwrite2 () {
+      function overwrite2() {
         try {
-          MouseEvent.prototype.preventDefault = function () {}
+          MouseEvent.prototype.preventDefault = function() {};
         }
         catch (e) {
           alert('Error: ' + e.message);
@@ -235,7 +260,7 @@
     <h1>Test the effectiveness of your popup blocker add-on</h1>
     <ul>
       <li><input type="button" onclick="method1()" value="Method 1/1"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 1</li>
-      <li><input type="button" onclick="method2()" value="Method 1/2"> opening a new about:blank popup window and then fill the content using JavaScript engine; part 2 (test your popup blocker to see if it can differentiate different sources with the "about:blank" origin)</li>
+      <li><input type="button" onclick="method2()" value="Method 1/2"> window.open(javascript:...)</li>
       <li><input type="button" onclick="window.open('https://example.com/test/2/1');" value="Method 2/1"> opening a new popup tab using window.open method</li>
       <li><input type="button" onclick="pointer('https://example.com/test/2/2');" value="Method 2/2"> opening a new popup tab using a predefined pointer to window.open method</li>
       <li><input type="button" onclick="method3('https://example.com/test/3', 'new window', 600, 600)" value="Method 3"> opening a new popup window and passing arguments to it</li>
@@ -246,18 +271,21 @@
       <li><input type="button" onclick="method7()" value="Method 7"> opening a new about:blank popup window using createEvent method</li>
       <li><a id="id1" href='https://example.com/test/8/1' target="_blank">Method 8/1</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
       <script>
-        document.getElementById('id1').addEventListener('click', function (e) {
+        /* eslint no-trailing-spaces: 0, eol-last: 0 */
+        document.getElementById('id1').addEventListener('click', function(e) {
           e.stopPropagation();
         });
       </script>
       <li><a id="id2" href='https://example.com/test/8/2' target="_blank">Method 8/2</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
       <script>
-        document.getElementById('id2').addEventListener('click', function (e) {
+        /* eslint no-trailing-spaces: 0, eol-last: 0 */
+        document.getElementById('id2').addEventListener('click', function(e) {
           e.stopImmediatePropagation();
         });
       </script>
       <li><span id="id3"> click the button to create iframe, then click on the generated link</li>
       <script>
+        /* eslint no-trailing-spaces: 0, eol-last: 0 */
         var f = document.createElement('iframe');
         var elem = document.getElementById('id3');
         elem.parentNode.insertBefore(f, elem);
@@ -297,9 +325,6 @@
 
     <p>It is recommended to use <b>Popup Blocker (strict)</b> add-on for the best experience; <a href="https://chrome.google.com/webstore/detail/aefkmifgmaafnojlojpnekbpbmjiiogg">Chrome</a>, <a href="https://addons.mozilla.org/firefox/addon/popup-blocker/">Firefox</a>, and <a href="https://addons.opera.com/en/extensions/details/popup-blocker-ultimate/">Opera</a>.
     </p>
-    <!--
-    <object data="data:application/pdf;base64, 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"></object>
-    -->
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -309,7 +334,6 @@
 
       ga('create', 'UA-33732869-1', 'auto');
       ga('send', 'pageview');
-
     </script>
   </body>
 </html>
