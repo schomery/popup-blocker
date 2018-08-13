@@ -211,7 +211,6 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   // only accept requests from bg page
   if (request.cmd === 'popup-request' && !sender.tab) {
     onPopupRequest(request);
-    console.log(request);
   }
   else if (request.cmd === 'allow-last-request' || request.cmd === 'deny-last-request') {
     const value = Object.values(urls).sort((a, b) => b.timestamp - a.timestamp).shift();

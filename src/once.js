@@ -6,7 +6,6 @@ config.get(['badge-color']).then(prefs => chrome.browserAction.setBadgeBackgroun
   color: prefs['badge-color']
 }));
 // context menu
-// context menu
 chrome.contextMenus.create({
   id: 'open-test-page',
   title: chrome.i18n.getMessage('context_item1'),
@@ -23,7 +22,7 @@ chrome.contextMenus.create({
   contexts: ['browser_action']
 });
 chrome.contextMenus.create({
-  id: 'allow-shadow',
+  id: 'use-shadow',
   title: chrome.i18n.getMessage('context_item4'),
   contexts: ['browser_action']
 });

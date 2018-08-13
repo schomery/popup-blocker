@@ -326,7 +326,6 @@ script.addEventListener('policy', e => {
       script.setAttribute('eid', id);
       script.setAttribute('block', block);
 
-      console.log(request, block);
       if (block) {
         redirect.block();
         chrome.runtime.sendMessage({
@@ -383,5 +382,8 @@ chrome.runtime.onMessage.addListener(request => {
     document.body.appendChild(script);
     script.remove();
     prefs.enabled = true;
+  }
+  else if (request.cmd === 'use-shadow') {
+    prefs.shadow = true;
   }
 });
