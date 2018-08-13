@@ -1,0 +1,155 @@
+{
+  "app_description": {
+    "message": "Bloquer strictement toutes les pop-up de n'importe quel site web"
+  },
+  "background_msg1": {
+    "message": "tools.add0n.com est utilisé pour les tests pop-up. Ce nom d'hôte ne peut pas être ajouté à la liste blanche."
+  },
+  "context_item1": {
+    "message": "Testez votre bloqueur de pop-up"
+  },
+  "context_item2": {
+    "message": "Autoriser la dernière requête pop-up"
+  },
+  "context_item3": {
+    "message": "Rejeter la dernière requête pop-up"
+  },
+  "context_item4": {
+    "message": "Créer une fenêtre d'ombre sur la requête pop-up"
+  },
+  "context_item5": {
+    "message": "Ouvrir la page d'options"
+  },
+  "options_item1": {
+    "message": "Nombre maximum de requêtes pop-up pour une seule page"
+  },
+  "options_item2": {
+    "message": "Délai pour l'affichage de chaque pop-up (en secondes)"
+  },
+  "options_item3": {
+    "message": "Ne pas bloquer les requêtes pop-up de même origine"
+  },
+  "options_item5": {
+    "message": "Afficher le nombre total de requêtes bloquées dans l'icône de la barre d'outils"
+  },
+  "options_item6": {
+    "message": "Ajoute de destinations à la liste blanche:"
+  },
+  "options_item7": {
+    "message": "Ajoute de sources à la liste blanche:"
+  },
+  "options_item8": {
+    "message": "Pour que cette modification prenne effet, actualisez l'onglet."
+  },
+  "options_item9": {
+    "message": "Compte à rebours pour effectuer la dernière action (en secondes)"
+  },
+  "options_item10": {
+    "message": "Utilisez le nombre zéro pour désactiver le compte à rebours pour effectuer l'action précédente."
+  },
+  "options_item11": {
+    "message": "Séparée par des virgules la liste des domaines qui ne seront pas bloqués (ces domaines peuvent ouvrir des pop-ups sur n'importe quel site web)."
+  },
+  "options_item12": {
+    "message": "Séparé par des virgules la liste des domaines dont le bloqueur de pop-up est complètement désactivé sur eux."
+  },
+  "options_item13": {
+    "message": "Sources de liste noire (mode d'opération inverse):"
+  },
+  "options_item14": {
+    "message": "Séparé par des virgules la liste des domaines dont le bloqueur de pop-up n'est actif que sur eux. Cela signifie que le bloqueur de pop-up est désactivé sur TOUS les autres noms d'hôte. Pour désactiver ce mode, effacez complètement le champ de la liste noire."
+  },
+  "options_item15": {
+    "message": "Empêcher la redirection de page pendant 2 secondes après une requête pop-up"
+  },
+  "options_item16": {
+    "message": "Certains sites web redirigent l'utilisateur vers une page de publicité si la requête pop-up pour afficher une publicité est bloquée. Cette option peut empêcher cela en ne permettant pas la redirection de page pour le temps spécifié."
+  },
+  "options_item17": {
+    "message": "Action par défaut lorsqu'une pop-up est requis"
+  },
+  "options_item18": {
+    "message": "ne fais rien"
+  },
+  "options_item19": {
+    "message": "rejeter la requête"
+  },
+  "options_item20": {
+    "message": "ouverir en arrière-plan"
+  },
+  "options_item21": {
+    "message": "rediriger la page"
+  },
+  "options_item22": {
+    "message": "Couleur de fond du badge"
+  },
+  "options_item23": {
+    "message": "Ignorer la notification pop-up si possible (non recommandé)"
+  },
+  "options_item24": {
+    "message": "Cela va \"ignorer\" ou \"accepter\" une pop-up sans interaction de l'utilisateur (non recommandé)."
+  },
+  "options_item25": {
+    "message": "Les descriptions"
+  },
+  "options_item26": {
+    "message": "Afficher la page FAQ après les mises à jour"
+  },
+  "options_item27": {
+    "message": "Ajoute de protocoles à la liste blanche:"
+  },
+  "options_item28": {
+    "message": "Liste des protocoles peuvent être ouverts dans un nouvel onglet de navigateur. Par exemple, ajoutez 'magnet:' pour permettre aux liens magnet d'être ouverts dans un onglet de navigateur."
+  },
+  "options_item29": {
+    "message": "Utiliser le service Web of Trust (WOT) pour décider si une pop-up provient d'un nom d'hôte de confiance ou non"
+  },
+  "options_item30": {
+    "message": "Simulez le bouton 'Autoriser' pour empêcher le bloqueur de pop-ups interne de votre navigateur de bloquer ces requêtes"
+  },
+  "options_item31": {
+    "message": "Lorsque le bouton 'en confiance' est pressé, ajoutez le nom d'hôte à"
+  },
+  "options_item32": {
+    "message": "Liste blanche destinations"
+  },
+  "options_item33": {
+    "message": "Liste blanche sources"
+  },
+  "options_support": {
+    "message": "Soutenir le développement"
+  },
+  "options_import": {
+    "message": "Importer"
+  },
+  "options_export": {
+    "message": "Exporter"
+  },
+  "options_reset": {
+    "message": "Réinitialiser"
+  },
+  "options_save": {
+    "message": "Sauvegarder"
+  },
+  "options_msg": {
+    "message": "Les options sont enregistrées"
+  },
+  "ui_msg": {
+    "message": "Pop-up requis pour"
+  },
+  "ui_button_allow": {
+    "message": "Autoriser cette pop-up"
+  },
+  "ui_button_redirect": {
+    "message": "Rediriger la page en cours vers la nouvelle destination au lieu de l'ouvrir dans un nouvel onglet ou une nouvelle fenêtre."
+  },
+  "ui_button_background": {
+    "message": "Ouvrez le lien dans un onglet en d'arrière-plan"
+  },
+  "ui_button_deny": {
+    "message": "Rejeter l'ouverture de la pop-up ou l'onglet"
+  },
+  "ui_button_trust": {
+    "message": "Ajouter ce domaine à la liste blanche pour ouvrir des pop-ups"
+  }
+}
