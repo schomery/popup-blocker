@@ -36,23 +36,26 @@ chrome.storage.onChanged.addListener(prefs => {
 var cache = {};
 chrome.tabs.onRemoved.addListener(tabId => delete cache[tabId]);
 
-chrome.runtime.onMessage.addListener(async(request, sender, response) => {
-  console.log(request);
-  // update badge counter
-  const tabId = sender.tab.id;
+// update badge counter
+chrome.runtime.onMessage.addListener((request, sender) => {
   if (request.cmd === 'popup-request') {
-    const badge = (await config.get(['badge'])).badge;
-    if (badge) {
-      chrome.browserAction.getBadgeText({tabId}, text => {
-        text = text ? parseInt(text) : 0;
-        text = String(text + 1);
-        chrome.browserAction.setBadgeText({
-          tabId,
-          text
+    const tabId = sender.tab.id;
+    config.get(['badge']).then(({badge}) => {
+      if (badge) {
+        chrome.browserAction.getBadgeText({tabId}, text => {
+          text = text ? parseInt(text) : 0;
+          text = String(text + 1);
+          chrome.browserAction.setBadgeText({
+            tabId,
+            text
+          });
         });
-      });
-    }
+      }
+    });
   }
+});
+// popup related
+chrome.runtime.onMessage.addListener((request, sender, response) => {
   // bouncing back to ui.js; since ui.js is loaded on its frame, we need to send the message to all frames
   if (request.cmd === 'popup-request') {
     chrome.tabs.sendMessage(sender.tab.id, Object.assign(request, {
@@ -62,13 +65,14 @@ chrome.runtime.onMessage.addListener(async(request, sender, response) => {
   // popup is accepted
   else if (request.cmd === 'popup-accepted') {
     if (request.url.startsWith('http') || request.url.startsWith('ftp')) {
-      const prefs = await config.get(['simulate-allow']);
-      if (prefs['simulate-allow'] && request.sameContext !== true) {
-        return chrome.tabs.create({
-          url: request.url,
-          openerTabId: sender.tab.id
-        });
-      }
+      config.get(['simulate-allow']).then(prefs => {
+        if (prefs['simulate-allow'] && request.sameContext !== true) {
+          return chrome.tabs.create({
+            url: request.url,
+            openerTabId: sender.tab.id
+          });
+        }
+      });
     }
     chrome.tabs.sendMessage(sender.tab.id, request, {
       frameId: request.frameId
@@ -131,28 +135,32 @@ chrome.runtime.onMessage.addListener(async(request, sender, response) => {
     });
   }
   else if (request.cmd === 'white-list') {
-    const prefs = await config.get(['whitelist-mode', 'top-hosts', 'popup-hosts']);
-    const mode = prefs['whitelist-mode'];
-    const {hostname} = new URL(mode === 'popup-hosts' ? request.url : sender.tab.url);
-    if (hostname === 'tools.add0n.com') {
-      return chrome.tabs.executeScript({
-        code: `window.alert("${chrome.i18n.getMessage('background_msg1')}");`
+    config.get(['whitelist-mode', 'top-hosts', 'popup-hosts']).then(prefs => {
+      const mode = prefs['whitelist-mode'];
+      const {hostname} = new URL(mode === 'popup-hosts' ? request.url : sender.tab.url);
+      if (hostname === 'tools.add0n.com') {
+        return chrome.tabs.executeScript({
+          code: `window.alert("${chrome.i18n.getMessage('background_msg1')}");`
+        });
+      }
+      prefs[mode].push(hostname);
+      prefs[mode] = prefs[mode].filter((h, i, l) => l.indexOf(h) === i);
+      chrome.storage.local.set({
+        [mode]: prefs[mode]
       });
-    }
-    prefs[mode].push(hostname);
-    prefs[mode] = prefs[mode].filter((h, i, l) => l.indexOf(h) === i);
-    chrome.storage.local.set({
-      [mode]: prefs[mode]
+      if (mode === 'top-hosts') {
+        cache[sender.tab.id] = true;
+        chrome.tabs.executeScript(sender.tab.id, {
+          allFrames: true,
+          code: 'prefs.enabled = false'
+        });
+      }
     });
-    if (mode === 'top-hosts') {
-      cache[sender.tab.id] = true;
-      chrome.tabs.executeScript(sender.tab.id, {
-        allFrames: true,
-        code: 'prefs.enabled = false'
-      });
-    }
   }
-  else if (request.cmd === 'wot') {
+});
+// wot
+chrome.runtime.onMessage.addListener((request, sender, response) => {
+  if (request.cmd === 'wot') {
     const c = cookie.get(request.hostname);
     if (c) {
       return response(Number(c));
@@ -173,6 +181,7 @@ chrome.runtime.onMessage.addListener(async(request, sender, response) => {
     return true;
   }
 });
+
 // context menu
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'open-test-page') {

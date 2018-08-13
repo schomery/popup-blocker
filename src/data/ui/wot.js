@@ -1,4 +1,5 @@
-'use strict'
+/* globals doTimer */
+'use strict';
 
 var wot = {
   check: (url, hostname) => {
@@ -19,7 +20,7 @@ var wot = {
       }
     }));
   },
-  perform: (div, prefs, url, hostname) => {
+  perform: (div, prefs, url, hostname, countdown) => {
     const sw = document.createElement('span');
     sw.textContent = 'Reputation Check';
     sw.classList.add('ppblocker-wot');
@@ -45,7 +46,7 @@ var wot = {
         const button = div.querySelector(
           prefs['simulate-allow'] ? '[data-cmd="popup-accepted"]' : '[data-cmd="open-tab"]'
         );
-        doTimer(button);
+        doTimer(div, button, countdown);
       }
     }).catch(() => {});
   }

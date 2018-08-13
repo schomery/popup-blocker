@@ -94,7 +94,7 @@ function onClick(e) {
 }
 document.addEventListener('click', onClick);
 
-var doTimer = (div, button, index) => {
+var doTimer = (div, button, countdown) => {
   button.dataset.default = true;
   const label = button.value;
   const id = window.setInterval(() => {
@@ -102,16 +102,16 @@ var doTimer = (div, button, index) => {
     if (div.dataset.hover === 'true') {
       return;
     }
-    index -= 1;
-    if (index) {
-      button.value = label + ` (${index})`;
+    countdown -= 1;
+    if (countdown) {
+      button.value = label + ` (${countdown})`;
     }
     else {
       window.clearInterval(id);
       button.click();
     }
   }, 1000);
-  button.value = label + ` (${index})`;
+  button.value = label + ` (${countdown})`;
 };
 var onPopupRequest = async request => {
   const tag = request.href && request.href !== 'about:blank' ? request.href : request.id;
@@ -160,12 +160,12 @@ var onPopupRequest = async request => {
               doTimer(div, button, prefs.countdown);
             }
             else if (prefs.wot) {
-              wot.perform(div, prefs, request.href, div.dataset.hostname);
+              wot.perform(div, prefs, request.href, div.dataset.hostname, prefs.countdown);
             }
           }
         }
         else if (prefs.wot) {
-          wot.perform(div, prefs, request.href, div.dataset.hostname);
+          wot.perform(div, prefs, request.href, div.dataset.hostname, prefs.countdown);
         }
       }
     }
