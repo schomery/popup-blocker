@@ -143,11 +143,12 @@ script.textContent = `{
     if (e.defaultPrevented || e.button !== 0 || (e.metaKey && e.isTrusted)) {
       return;
     }
+    const a = e.target.closest('[target]') || e.target.closest('a');
     // if this is not a form or anchor element, ignore the click
-    if (e.target.closest('[target]') === null && e.target.closest('a') === null) {
+    if (a === null) {
       return;
     }
-    const {block} = policy('element.click', e.target);
+    const {block} = policy('element.click', a);
     if (block) {
       pointers.mpp.apply(e);
       return true;
@@ -326,6 +327,7 @@ script.addEventListener('policy', e => {
       script.setAttribute('eid', id);
       script.setAttribute('block', block);
 
+      console.log(request, block);
       if (block) {
         redirect.block();
         chrome.runtime.sendMessage({
