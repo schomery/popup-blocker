@@ -39,31 +39,31 @@
     "message": "Whitelist sources:"
   },
   "options_item8": {
-    "message": "Tab refresh is required"
+    "message": "For this change to take effect, refresh the tab."
   },
   "options_item9": {
     "message": "Countdown for performing the last action (in seconds)"
   },
   "options_item10": {
-    "message": "Use zero to disable the countdown "
+    "message": "Use zero number to disable the countdown to perform the previous action."
   },
   "options_item11": {
-    "message": "Comma separated list of domains that are not going to be blocked (these domains can issue popups on any website)"
+    "message": "Comma-separated list of domains that are not going to be blocked (these domains can issue popups on any website)."
   },
   "options_item12": {
-    "message": "Comma separated list of domains that the popup blocker extension is completely disabled on them"
+    "message": "Comma-separated list of domains that the popup blocker extension is completely disabled on them."
   },
   "options_item13": {
-    "message": "Blacklist sources:"
+    "message": "Blacklist sources (reverse operation mode):"
   },
   "options_item14": {
-    "message": "Comma separated list of domains that popup blocker should only be active on them. This means that the popup blocker is disabled on ALL other domains"
+    "message": "Comma-separated list of domains that the popup blocker should only be active on them. This means that the popup blocker is disabled on ALL other hostnames. To disable this mode, clear the blacklist input completely."
   },
   "options_item15": {
     "message": "Prevent page redirection for 2 seconds after a popup is requested"
   },
   "options_item16": {
-    "message": "On some websites, when popup ads are blocked, page redirection to advertisement destination is placed. This option can prevent this by warning you before redirection takes place."
+    "message": "Some websites redirect the user to the advertisement page if the popup request to display an advertisement is blocked. This option can prevent this by not allowing page redirection for the specified time."
   },
   "options_item17": {
     "message": "Default action when a popup is requested"

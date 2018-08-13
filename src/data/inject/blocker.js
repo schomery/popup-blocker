@@ -72,18 +72,22 @@ script.textContent = `{
   // definitions
   const script = document.currentScript;
   const blocker = {};
-  const properties = {}; // temporarily store window.open commands
   // pointers
   const pointers = {
-    'epd': EventTarget.prototype.dispatchEvent,
     'mpp': MouseEvent.prototype.preventDefault,
-    'dce': Document.prototype.createElement,
+    'hpc': HTMLAnchorElement.prototype.click,
+    'hpd': HTMLAnchorElement.prototype.dispatchEvent,
+    'hps': HTMLFormElement.prototype.submit,
     'wop': window.open
   };
   // helper functions
-  const policy = detail => {
+  const policy = (type, e, extra = {}) => {
     script.dispatchEvent(new CustomEvent('policy', {
-      detail
+      detail: Object.assign({
+        type,
+        href: e.action || e.href, // action for form element and href for anchor element
+        target: e.target
+      }, extra)
     }));
     return {
       id: script.getAttribute('eid'),
@@ -119,40 +123,57 @@ script.textContent = `{
   });
   // popup blocker
   blocker.install = () => {
-    // console.log('installing the blocker');
-    // addEventListener with capture; see method 8
-    document.addEventListener('click', blocker.overwrite.click, true);
+    document.addEventListener('click', blocker.overwrite.click, true); // with capture; see method 8
     window.open = blocker.overwrite.open;
-    Document.prototype.createElement = blocker.overwrite.createElement;
-    EventTarget.prototype.dispatchEvent = blocker.overwrite.dispatchEvent;
+    HTMLAnchorElement.prototype.click = blocker.overwrite.a.click;
+    HTMLAnchorElement.prototype.dispatchEvent = blocker.overwrite.a.dispatchEvent;
+    HTMLFormElement.prototype.submit = blocker.overwrite.form.submit;
   };
   blocker.remove = () => {
-    // console.log('removing the blocker');
     document.removeEventListener('click', blocker.overwrite.click);
     window.open = pointers.wop;
-    Document.prototype.createElement = pointers.dce;
-    EventTarget.prototype.dispatchEvent = pointers.epd;
+    HTMLAnchorElement.prototype.click = pointers.hpc;
+    HTMLAnchorElement.prototype.dispatchEvent = pointers.hpd;
+    HTMLFormElement.prototype.submit = pointers.hps;
   };
 
   blocker.overwrite = {};
   blocker.overwrite.click = e => {
+    //
     if (e.defaultPrevented || e.button !== 0 || (e.metaKey && e.isTrusted)) {
       return;
     }
-    const {block} = policy({
-      type: 'element.click',
-      href: e.target.href // always send href since active element might be different from e.target; see method 12/4
-    });
+    // if this is not a form or anchor element, ignore the click
+    if (e.target.closest('[target]') === null && e.target.closest('a') === null) {
+      return;
+    }
+    const {block} = policy('element.click', e.target);
     if (block) {
       pointers.mpp.apply(e);
       return true;
     }
   };
-  blocker.overwrite.open = function(href) {
-    const {id, block} = policy({
-      type: 'window.open',
-      href,
-      args: [...arguments]
+  blocker.overwrite.a = {};
+  blocker.overwrite.a.click = function(...args) {
+    const {block} = policy('dynamic.a.click', this);
+    if (!block) {
+      pointers.hpc.apply(this, args);
+    }
+  };
+  blocker.overwrite.a.dispatchEvent = function(...args) {
+    const {block} = policy('dynamic.a.dispatch', this);
+    return block ? false : pointers.hpd.apply(this, args);
+  };
+  blocker.overwrite.form = {};
+  blocker.overwrite.form.submit = function(...args) {
+    const {block} = policy('dynamic.form.submit', this);
+    return block ? false : pointers.hps.apply(this, args);
+  };
+  blocker.overwrite.open = function(...args) {
+    const {id, block} = policy('window.open', {
+      href: args.length ? args[0] : ''
+    }, {
+      args
     });
     if (block) { // return a window or a window-liked object
       if (script.dataset.shadow === 'true') {
@@ -166,83 +187,23 @@ script.textContent = `{
       }
     }
     else {
-      return pointers.wop.apply(window, arguments);
+      return pointers.wop.apply(window, args);
     }
   };
-  blocker.overwrite.createElement = function(tagName = '') {
-    const target = pointers.dce.apply(document, arguments);
-    const tag = tagName.toString().toLowerCase();
-    if (tag === 'a') {
-      target.addEventListener('click', e => {
-        const {block} = policy({
-          type: 'dynamic.a.click',
-          href: target.href,
-          target: target.target
-        });
-        if (block) {
-          pointers.mpp.apply(e);
-          return true;
-        }
-      }, false);
-      // prevent dispatching click event
-      const dispatchEvent = target.dispatchEvent;
-      target.dispatchEvent = function(e) {
-        if (e.type === 'click') {
-          const {block} = policy({
-            type: 'dynamic.a.dispatch',
-            href: target.href
-          });
-          if (block) {
-            return false;
-          }
-        }
-        return dispatchEvent.apply(this, arguments);
-      };
-    }
-    else if (tag === 'form') {
-      const submit = target.submit;
-      target.submit = function() {
-        const {block} = policy({
-          type: 'dynamic.form.submit',
-          href: target.action || target.href
-        });
-        if (block) {
-          return false;
-        }
-        return submit.apply(this, arguments);
-      };
-    }
-    return target;
-  };
-  blocker.overwrite.dispatchEvent = function(e) {
-    if (e.type === 'click') {
-      const {block} = policy({
-        type: 'dispatchEvent.click',
-        href: this.closest('a').href
-      });
-      if (block) {
-        return false;
-      }
-    }
-    return pointers.epd.apply(this, arguments);
-  };
+  // we always install our blocker
   blocker.install();
   // document.open can wipe all the listeners
-  {
-    let documentElement = document.documentElement;
-    watch(document, 'write', () => {
-      if (documentElement !== document.documentElement) {
-        documentElement = document.documentElement;
-        if (script.dataset.enabled !== 'false') {
-          blocker.install();
-        }
+  let documentElement = document.documentElement;
+  watch(document, 'write', () => {
+    if (documentElement !== document.documentElement) {
+      documentElement = document.documentElement;
+      if (script.dataset.enabled !== 'false') {
+        blocker.install();
       }
-    });
-  }
+    }
+  });
   // configure
-  new MutationObserver(() => {
-    blocker[script.dataset.enabled === 'false' ? 'remove' : 'install']();
-  }).observe(script, {
+  new MutationObserver(() => blocker[script.dataset.enabled === 'false' ? 'remove' : 'install']()).observe(script, {
     attributes: true,
     attributeFilter: ['data-enabled']
   });
@@ -252,18 +213,15 @@ script.remove();
 
 const blocker = {};
 
-blocker.hasBase = a => [...document.querySelectorAll('base'), a]
-  .filter(a => a)
-  .reduce((p, c) => p || ['_tab', '_blank'].includes(c.target.toLowerCase()), false);
+blocker.hasBase = a => {
+  // only check the closest base
+  const base = [a, ...document.querySelectorAll('base')]
+    .map(e => e && e.target ? e.target.toLowerCase() : '')
+    .filter(b => b).shift();
+  return ['_tab', '_blank', '_parent'].indexOf(base) !== -1;
+};
 
 blocker.policy = request => {
-  // this is useful when a new iframe is loaded when the blocker is disabled but the preferences are not yet ported
-  if (prefs.enabled === false) {
-    return {
-      block: false
-    };
-  }
-  //
   const target = document.activeElement;
   const {type} = request;
   let href = request.href;
@@ -273,61 +231,58 @@ blocker.policy = request => {
 
   if (type === 'element.click') {
     const a = 'closest' in target ? (target.closest('[target]') || target.closest('a')) : null;
-
-    if (!href && a) {
-      href = a.href || a.action;
-    }
+    href = href || (a ? a.href || a.action : '');
     // we are blocking either if a is found or href is provided; see method 12/4
     block = Boolean(a) || href;
-    // check base
-    block = block && blocker.hasBase(a);
   }
-  else if (type === 'dynamic.a.click') {
+  // always run window open on the same context
+  if (type === 'window.open') {
+    sameContext = true;
+  }
+  else {
     block = block && blocker.hasBase({
       target: request.target
     });
   }
-  else if (type === 'window.open') {
-    // always run window open on the same context
-    sameContext = true;
-  }
-  // fix relative href
-  if (href && href.indexOf(':') === -1) {
-    const a = document.createElement('a');
-    a.setAttribute('href', href);
-    href = a.href;
-  }
-  // create a unique id when "href" is not usable
-  if (block && (!href || href.startsWith('about:'))) {
-    target.dataset.ppbid = target.dataset.ppbid || Math.random();
-  }
+  if (block) {
+    // fix relative href
+    if (href && href.indexOf(':') === -1) {
+      const a = document.createElement('a');
+      a.setAttribute('href', href);
+      href = a.href;
+    }
+    // create a unique id when "href" is not usable
+    if (!href || href.startsWith('about:')) {
+      target.dataset.ppbid = target.dataset.ppbid || Math.random();
+    }
 
-  if (block && href && href.startsWith('http')) {
-    const loc = new URL(href);
-    hostname = loc.hostname;
-    // allow popups from the same hostname
-    if (prefs.domain) {
-      try { // if they are not in the same origin
-        const h = window.top.location.hostname;
-        if (h && hostname && (h.endsWith(hostname) || hostname.endsWith(h))) {
+    if (href && href.startsWith('http')) {
+      const loc = new URL(href);
+      hostname = loc.hostname;
+      // allow popups from the same hostname
+      if (prefs.domain) {
+        try { // if they are not in the same origin
+          const h = window.top.location.hostname;
+          if (h && hostname && (h.endsWith(hostname) || hostname.endsWith(h))) {
+            block = false;
+          }
+        }
+        catch (e) {}
+      }
+      // protocol matching
+      if (loc.protocol && prefs.protocols.indexOf(loc.protocol) !== -1) {
+        block = false;
+      }
+      // white-list matching
+      for (const h of prefs['popup-hosts']) {
+        if (h.endsWith(hostname) || hostname.endsWith(h)) {
           block = false;
         }
       }
-      catch (e) {}
-    }
-    // protocol matching
-    if (loc.protocol && prefs.protocols.indexOf(loc.protocol) !== -1) {
-      block = false;
-    }
-    // white-list matching
-    for (const h of prefs['popup-hosts']) {
-      if (h.endsWith(hostname) || hostname.endsWith(h)) {
-        block = false;
-      }
     }
   }
-  const id = target.dataset.ppbid || Math.random();
 
+  const id = target.dataset.ppbid || Math.random();
   if (sameContext) {
     records[id] = [{
       name: 'self',
@@ -361,23 +316,32 @@ var redirect = {
     }
   }
 };
-
 // channel
 script.addEventListener('policy', e => {
-  const request = e.detail;
-  const {block, id, href, hostname} = blocker.policy(request);
-  script.setAttribute('eid', id);
-  script.setAttribute('block', block);
+  // make sure the request is from our script; see example 1
+  if (e.target === script) {
+    if (prefs.enabled) {
+      const request = e.detail;
+      const {block, id, href, hostname} = blocker.policy(request);
+      script.setAttribute('eid', id);
+      script.setAttribute('block', block);
 
-  if (block) {
-    redirect.block();
-    chrome.runtime.sendMessage({
-      cmd: 'popup-request',
-      type: request.type,
-      href,
-      hostname,
-      id
-    });
+      console.log(request, block);
+      if (block) {
+        redirect.block();
+        chrome.runtime.sendMessage({
+          cmd: 'popup-request',
+          type: request.type,
+          href,
+          hostname,
+          id
+        });
+      }
+    }
+    // when a new iframe is loaded and the blocker is disabled but the preferences are not yet ported
+    else {
+      script.setAttribute('block', false);
+    }
   }
 });
 
@@ -387,7 +351,7 @@ script.addEventListener('record', e => {
   records[id].push({name, method, args});
 });
 
-// popup-accepted
+// perform popup accepted command on the same context
 chrome.runtime.onMessage.addListener(request => {
   // apply popup-accept on the context where it is originally requested
   if (request.cmd === 'popup-accepted') {

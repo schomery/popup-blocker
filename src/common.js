@@ -53,11 +53,11 @@ chrome.runtime.onMessage.addListener(async(request, sender, response) => {
       });
     }
   }
-  // bouncing back to ui.js which is located on the top frame
+  // bouncing back to ui.js; since ui.js is loaded on its frame, we need to send the message to all frames
   if (request.cmd === 'popup-request') {
     chrome.tabs.sendMessage(sender.tab.id, Object.assign(request, {
       frameId: sender.frameId
-    }), {frameId: 0});
+    }));
   }
   // popup is accepted
   else if (request.cmd === 'popup-accepted') {

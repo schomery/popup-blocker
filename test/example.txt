@@ -1,0 +1,5 @@
+1. https://andrewgillum.com/news/ -> Sharing buttons
+2. https://andrewgillum.com/2018/08/statement-dolores-huerta-labor-civil-rights-womens-icon-endorses-andrew-gillum/
+  -> refresh to get "https://www.facebook.com/tr/" and "https://syndication.twitter.com/i/jot" popup requests; the base is set so the popups are ignored
+3. https://www.virustotal.com/
+  -> Check a text file
