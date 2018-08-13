@@ -145,11 +145,7 @@ script.textContent = `{
     }
     const a = e.target.closest('[target]') || e.target.closest('a');
     // if this is not a form or anchor element, ignore the click
-    if (a === null) {
-      return;
-    }
-    const {block} = policy('element.click', a);
-    if (block) {
+    if (a && policy('element.click', a).block) {
       pointers.mpp.apply(e);
       return true;
     }
@@ -315,6 +311,10 @@ var redirect = {
         window.removeEventListener('beforeunload', redirect.beforeunload);
       }, 2000);
     }
+  },
+  release: () => {
+    window.removeEventListener('beforeunload', redirect.beforeunload);
+    window.clearTimeout(redirect.timeout);
   }
 };
 // channel
@@ -387,5 +387,8 @@ chrome.runtime.onMessage.addListener(request => {
   }
   else if (request.cmd === 'use-shadow') {
     prefs.shadow = true;
+  }
+  else if (request.cmd === 'release-beforeunload') {
+    redirect.release();
   }
 });

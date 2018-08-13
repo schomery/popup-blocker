@@ -80,9 +80,12 @@ chrome.runtime.onMessage.addListener(async(request, sender, response) => {
     // validating request before proceeding
     if (url.startsWith('http') || url.startsWith('ftp') || url === 'about:blank') {
       if (request.cmd === 'popup-redirect') {
+        console.log(1);
         // make sure redirect prevent is off
         chrome.tabs.sendMessage(sender.tab.id, {
           cmd: 'release-beforeunload'
+        }, {
+          frameId: 0
         }, () => {
           chrome.tabs.update(sender.tab.id, {
             url
