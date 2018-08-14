@@ -75,9 +75,10 @@ script.textContent = `{
   // pointers
   const pointers = {
     'mpp': MouseEvent.prototype.preventDefault,
-    'hpc': HTMLAnchorElement.prototype.click,
-    'hpd': HTMLAnchorElement.prototype.dispatchEvent,
-    'hps': HTMLFormElement.prototype.submit,
+    'hac': HTMLAnchorElement.prototype.click,
+    'had': HTMLAnchorElement.prototype.dispatchEvent,
+    'hfs': HTMLFormElement.prototype.submit,
+    'hfd': HTMLFormElement.prototype.dispatchEvent,
     'wop': window.open
   };
   // helper functions
@@ -128,13 +129,15 @@ script.textContent = `{
     HTMLAnchorElement.prototype.click = blocker.overwrite.a.click;
     HTMLAnchorElement.prototype.dispatchEvent = blocker.overwrite.a.dispatchEvent;
     HTMLFormElement.prototype.submit = blocker.overwrite.form.submit;
+    HTMLFormElement.prototype.dispatchEvent = blocker.overwrite.form.dispatchEvent;
   };
   blocker.remove = () => {
     document.removeEventListener('click', blocker.overwrite.click);
     window.open = pointers.wop;
-    HTMLAnchorElement.prototype.click = pointers.hpc;
-    HTMLAnchorElement.prototype.dispatchEvent = pointers.hpd;
-    HTMLFormElement.prototype.submit = pointers.hps;
+    HTMLAnchorElement.prototype.click = pointers.hac;
+    HTMLAnchorElement.prototype.dispatchEvent = pointers.had;
+    HTMLFormElement.prototype.submit = pointers.hfs;
+    HTMLFormElement.prototype.dispatchEvent = pointers.hfd;
   };
 
   blocker.overwrite = {};
@@ -154,17 +157,21 @@ script.textContent = `{
   blocker.overwrite.a.click = function(...args) {
     const {block} = policy('dynamic.a.click', this);
     if (!block) {
-      pointers.hpc.apply(this, args);
+      pointers.hac.apply(this, args);
     }
   };
   blocker.overwrite.a.dispatchEvent = function(...args) {
     const {block} = policy('dynamic.a.dispatch', this);
-    return block ? false : pointers.hpd.apply(this, args);
+    return block ? false : pointers.had.apply(this, args);
   };
   blocker.overwrite.form = {};
   blocker.overwrite.form.submit = function(...args) {
     const {block} = policy('dynamic.form.submit', this);
-    return block ? false : pointers.hps.apply(this, args);
+    return block ? false : pointers.hfs.apply(this, args);
+  };
+  blocker.overwrite.form.dispatchEvent = function(...args) {
+    const {block} = policy('dynamic.form.dispatch', this);
+    return block ? false : pointers.hfd.apply(this, args);
   };
   blocker.overwrite.open = function(...args) {
     const {id, block} = policy('window.open', {
