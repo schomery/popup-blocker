@@ -4,19 +4,15 @@
   <title>Options Page :: Popup Blocker</title>
   <style>
     body {
-      padding: 10px;
-      font-size: 13px;
-      font-family: arial, sans-serif;
-      width: 600px;
+      min-width: 600px;
     }
     input[type=number] {
       width: 50px;
     }
+    textarea,
     input[type=text] {
       width: 100%;
-    }
-    table {
-      width: 100%;
+      box-sizing: border-box;
     }
     hr {
       margin: 10px 0;
@@ -37,11 +33,14 @@
       align-items: center;
       justify-content: center;
     }
+    .rtl td:last-child {
+      text-align: right;
+    }
   </style>
 </head>
 
 <body>
-  <table>
+  <table width=100% class="rtl">
     <colgroup>
       <col>
       <col width="10">
@@ -51,11 +50,11 @@
       <td><input type="number" id="numbers" min=1></td>
     </tr>
     <tr>
-      <td><span data-i18n="options_item2"></span><sup>1</sup></td>
+      <td><span data-i18n="options_item2"></span><sup><a href="#n1">1</a></sup></td>
       <td><input type="number" id="timeout" min=5></td>
     </tr>
     <tr>
-      <td><span data-i18n="options_item9"></span><sup>2</sup></td>
+      <td><span data-i18n="options_item9"></span><sup><a href="#n2">2</a></sup></td>
       <td><input type="number" id="countdown" min=0></td>
     </tr>
     <tr>
@@ -83,36 +82,59 @@
 
     </tr>
   </table>
-  <p>
-    <label><input type="checkbox" id="domain"> <span data-i18n="options_item3"></span><sup><a href="#n1">1</a></sup></label>
-    <br>
-    <label><input type="checkbox" id="badge"> <span data-i18n="options_item5"></span><sup><a href="#n1">1</a></sup></label>
-    <br>
-    <label><input type="checkbox" id="block-page-redirection"> <span data-i18n="options_item15"></span><sup><a href="#n6">6</a></sup></label>
-    <br>
-    <label><input type="checkbox" id="immediate-action"> <span data-i18n="options_item23"></span><sup><a href="#n7">7</a></sup></label>
-    <br>
-    <label><input type="checkbox" id="wot"> <span data-i18n="options_item29"></span></label>
-    <br>
-    <label><input type="checkbox" id="simulate-allow"> <span data-i18n="options_item30"></span></label>
-    <br>
-    <label><input type="checkbox" id="faqs"> <span data-i18n="options_item26"></span></label>
-  </p>
+  <table>
+    <colgroup>
+      <col width="32">
+      <col>
+    </colgroup>
+    <tr>
+      <td><input type="checkbox" id="domain"></td>
+      <td><label for="domain"><span data-i18n="options_item3"></span><sup><a href="#n1">1</a></sup></label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="badge"></td>
+      <td><label for="badge"><span data-i18n="options_item5"></span><sup><a href="#n1">1</a></sup></label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="block-page-redirection"></td>
+      <td><label for="block-page-redirection"><span data-i18n="options_item15"></span><sup><a href="#n6">6</a></sup></label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="immediate-action"></td>
+      <td><label for="immediate-action"><span data-i18n="options_item23"></span><sup><a href="#n7">7</a></sup></label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="wot"></td>
+      <td><label for="wot"><span data-i18n="options_item29"></span></label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="simulate-allow"></td>
+      <td><label for="simulate-allow"><span data-i18n="options_item30"></span></label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="faqs"></td>
+      <td><label for="faqs"><span data-i18n="options_item26"></span></label></td>
+    </tr>
+  </table>
   <p>
     <span data-i18n="options_item6"></span><sup><a href="#n1">1</a>, <a href="#n3">3</a></sup>
-    <input type="text" id="popup-hosts" rows="2">
+    <textarea id="popup-hosts" rows="2"></textarea>
   </p>
   <p>
     <span data-i18n="options_item7"></span><sup><a href="#n1">1</a>, <a href="#n4">4</a></sup>
-    <input type="text" id="top-hosts" rows="2">
+    <textarea id="top-hosts" rows="2"></textarea>
   </p>
   <p>
     <span data-i18n="options_item27"></span><sup><a href="#n1">1</a>, <a href="#n8">8</a></sup>
-    <input type="text" id="protocols" rows="2">
+    <textarea id="protocols" rows="2"></textarea>
   </p>
   <p>
     <span data-i18n="options_item13"></span><sup><a href="#n1">1</a>, <a href="#n5">5</a></sup>
-    <input type="text" id="blacklist" rows="2">
+    <textarea id="blacklist" rows="2"></textarea>
+  </p>
+  <p>
+    <span data-i18n="options_item34"></span><sup><a href="#n1">1</a>, <a href="#n5">9</a></sup>
+    <textarea id="silent" rows="2"></textarea>
   </p>
 
   <div style="display: flex">
@@ -145,6 +167,8 @@
       7: <span data-i18n="options_item24" id="n7"></span>
       <br>
       8: <span data-i18n="options_item28" id="n8"></span>
+      <br>
+      9: <span data-i18n="options_item35" id="n8"></span>
     </p>
   </details>
 

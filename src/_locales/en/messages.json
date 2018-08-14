@@ -51,16 +51,16 @@
     "message": "Use zero number to disable the countdown to perform the previous action."
   },
   "options_item11": {
-    "message": "Comma-separated list of domains that are not going to be blocked (these domains can issue popups on any website)."
+    "message": "Comma-separated list of hostnames that are not going to be blocked (these hostnames can issue popups on any website)."
   },
   "options_item12": {
-    "message": "Comma-separated list of domains that the popup blocker extension is completely disabled on them."
+    "message": "Comma-separated list of hostnames that the popup blocker extension is completely disabled on them."
   },
   "options_item13": {
     "message": "Blacklist sources (reverse operation mode):"
   },
   "options_item14": {
-    "message": "Comma-separated list of domains that the popup blocker should only be active on them. This means that the popup blocker is disabled on ALL other hostnames. To disable this mode, clear the blacklist input completely."
+    "message": "Comma-separated list of hostnames that the popup blocker should only be active on them. This means that the popup blocker is disabled on ALL other hostnames. To disable this mode, clear the blacklist input completely."
   },
   "options_item15": {
     "message": "Prevent page redirection for 2 seconds after a popup is requested"
@@ -118,6 +118,12 @@
   },
   "options_item33": {
     "message": "Whitelist sources"
+  },
+  "options_item34": {
+    "message": "Notification blacklist"
+  },
+  "options_item35": {
+    "message": "Comma-separated list of hostnames that the popup blocker will not display notification if a popup is requested"
   },
   "options_support": {
     "message": "Support Development"
