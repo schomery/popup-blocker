@@ -3,7 +3,7 @@
 
 var cookie = {
   get: host => {
-    const key = document.cookie.split(`${host}=`);
+    const key = document.cookie.split(`${host}-wot=`);
     if (key.length > 1) {
       return key[1].split(';')[0];
     }
@@ -13,7 +13,7 @@ var cookie = {
     const date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
 
-    document.cookie = `${host}=${cmd}; expires=${date.toGMTString()}`;
+    document.cookie = `${host}-wot=${cmd}; expires=${date.toGMTString()}`;
   }
 };
 
@@ -29,6 +29,12 @@ chrome.storage.onChanged.addListener(prefs => {
   if (prefs['badge-color']) {
     chrome.browserAction.setBadgeBackgroundColor({
       color: prefs['badge-color'].newValue
+    });
+  }
+  // update toolbar's checkbox
+  if (prefs['immediate-action']) {
+    chrome.contextMenus.update('immediate-action', {
+      checked: prefs['immediate-action'].newValue
     });
   }
 });
@@ -191,6 +197,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
   else if (info.menuItemId === 'open-options') {
     chrome.runtime.openOptionsPage();
+  }
+  else if (info.menuItemId === 'immediate-action') {
+    chrome.storage.local.set({
+      'immediate-action': info.checked
+    });
   }
   else {
     chrome.tabs.sendMessage(tab.id, {

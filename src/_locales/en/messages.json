@@ -15,10 +15,13 @@
     "message": "Deny the last popup request"
   },
   "context_item4": {
-    "message": "Create shadow window on popup request"
+    "message": "Use shadow window for this tab"
   },
   "context_item5": {
     "message": "Open options page"
+  },
+  "context_item6": {
+    "message": "Ignore popup notification if possible"
   },
   "options_item1": {
     "message": "Maximum number of popup requests for a single page"

@@ -7,7 +7,7 @@ var urls = {};
 
 var cookie = {
   get: host => {
-    const key = document.cookie.split(`${host}=`);
+    const key = document.cookie.split(`${host}-action=`);
     if (key.length > 1) {
       return key[1].split(';')[0];
     }
@@ -17,12 +17,12 @@ var cookie = {
     const date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
 
-    document.cookie = `${host}=${cmd}; expires=${date.toGMTString()}`;
+    document.cookie = `${host}-action=${cmd}; expires=${date.toGMTString()}`;
   },
   remove: host => {
     const cmd = cookie.get(host);
     if (cmd) {
-      document.cookie = `${host}=${cmd}; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+      document.cookie = `${host}-action=${cmd}; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
     }
   }
 };
@@ -146,7 +146,7 @@ var onPopupRequest = async request => {
       // immediate action
       if (action && action !== 'ignore' && prefs['immediate-action']) {
         return onClick({
-          target: document.querySelector(`[data-cmd="${action}"]`)
+          target: div.querySelector(`[data-cmd="${action}"]`)
         });
       }
       // only perform automatic action when there is no native request

@@ -33,6 +33,13 @@ if (navigator.userAgent.indexOf('Firefox') !== -1) {
     contexts: ['browser_action']
   });
 }
+config.get(['immediate-action']).then(prefs => chrome.contextMenus.create({
+  id: 'immediate-action',
+  title: chrome.i18n.getMessage('context_item6'),
+  contexts: ['browser_action'],
+  type: 'checkbox',
+  checked: prefs['immediate-action']
+}));
 // FAQs & Feedback
 config.get(['version', 'faqs', 'last-update']).then(prefs => {
   const version = chrome.runtime.getManifest().version;
