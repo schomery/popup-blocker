@@ -63,7 +63,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 // popup related
 chrome.runtime.onMessage.addListener((request, sender, response) => {
   // bouncing back to ui.js; since ui.js is loaded on its frame, we need to send the message to all frames
-  if (request.cmd === 'popup-request') {
+  if (request.cmd === 'popup-request' && request.silent === false) {
     chrome.tabs.sendMessage(sender.tab.id, Object.assign(request, {
       frameId: sender.frameId
     }));
@@ -113,7 +113,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
   }
   // is this tab (top level url) in the white-list or black-list
   else if (request.cmd === 'exception' && sender.frameId === 0) {
-    config.get(['blacklist', 'top-hosts']).then(prefs => {
+    config.get(['blacklist', 'top-hosts', 'silent']).then(prefs => {
       let enabled = true;
       const {hostname} = request;
       if (hostname) {
@@ -126,18 +126,21 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
           enabled = prefs.blacklist.some(h => h.endsWith(hostname) || hostname.endsWith(h));
         }
         if (hostname === 'tools.add0n.com') {
-          enabled = false;
+          enabled = true;
         }
       }
-      cache[sender.tab.id] = enabled;
-      response({enabled});
+      cache[sender.tab.id] = {
+        enabled,
+        silent: prefs.silent.indexOf(request.hostname) !== -1
+      };
+      response(cache[sender.tab.id]);
     });
     return true;
   }
   // for all sub frame requests
   else if (request.cmd === 'exception') {
-    response({
-      enabled: cache[sender.tab.id] || true
+    response(cache[sender.tab.id] || {
+      enabled: true
     });
   }
   else if (request.cmd === 'white-list') {

@@ -15,6 +15,8 @@ if (/Firefox/.test(navigator.userAgent)) {
 const script = document.createElement('script');
 // record fake window's executed commands
 const records = {};
+// should I display popups
+let silent = false;
 
 const _prefs = { // Firefox issue
   'enabled': true,
@@ -41,6 +43,7 @@ const prefs = new Proxy(_prefs, {
   if (window.parent !== window) {
     try {
       Object.assign(prefs, window.parent.prefs);
+      silent = window.parent.silent;
       loaded = true;
     }
     catch (e) {}
@@ -54,7 +57,9 @@ const prefs = new Proxy(_prefs, {
           href: location.href,
           hostname: location.hostname
         }, response => {
-          if (response && response.enabled === false) {
+          console.log(response);
+          silent = response.silent;
+          if (response.enabled === false) {
             prefs.enabled = false;
           }
         });
@@ -342,7 +347,8 @@ script.addEventListener('policy', e => {
           type: request.type,
           href,
           hostname,
-          id
+          id,
+          silent
         });
       }
     }

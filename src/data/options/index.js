@@ -10,8 +10,8 @@ async function restore(defaults = false) {
   const prefs = defaults ? config : await config.get([
     'numbers', 'timeout', 'countdown', 'badge', 'badge-color', 'domain', 'wot',
     'simulate-allow', 'faqs', 'block-page-redirection', 'popup-hosts',
-    'top-hosts', 'blacklist', 'protocols', 'default-action', 'whitelist-mode',
-    'immediate-action'
+    'top-hosts', 'blacklist', 'protocols', 'silent', 'default-action',
+    'whitelist-mode', 'immediate-action'
   ]);
   document.getElementById('numbers').value = prefs.numbers;
   document.getElementById('timeout').value = prefs.timeout;
@@ -27,6 +27,7 @@ async function restore(defaults = false) {
   document.getElementById('top-hosts').value = prefs['top-hosts'].join(', ');
   document.getElementById('blacklist').value = prefs.blacklist.join(', ');
   document.getElementById('protocols').value = prefs.protocols.join(', ');
+  document.getElementById('silent').value = prefs.silent.join(', ');
   document.getElementById('default-action').value = prefs['default-action'];
   document.getElementById('whitelist-mode').value = prefs['whitelist-mode'];
   document.getElementById('immediate-action').checked = prefs['immediate-action'];
@@ -52,6 +53,7 @@ function save() {
     'popup-hosts': prepare(document.getElementById('popup-hosts').value),
     'top-hosts': prepare(document.getElementById('top-hosts').value),
     'blacklist': prepare(document.getElementById('blacklist').value),
+    'silent': prepare(document.getElementById('silent').value),
     'protocols': document.getElementById('protocols').value
       .split(/\s*,\s*/).filter(s => s && s.endsWith(':')),
     'default-action': document.getElementById('default-action').value,

@@ -20,6 +20,7 @@ var config = {
   // these protocols are accepted
   'protocols': ['magnet:'],
   'blacklist': [],
+  'silent': [],
   'block-page-redirection': false,
   'target': true,
   'version': null,
