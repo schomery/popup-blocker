@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Popup blocking test suite :: tools.add0n.com</title>
-    <base target="_blank">
+    <base target="_self">
   </head>
   <body>
     <h1>Popup Blocker Detection</h1>
@@ -132,9 +132,13 @@
       }
       function method12_1() {
         var e = new MouseEvent('click', {
-          button: 0
+          button: 0,
+          bubbles: true
         });
+        const target = document.head.querySelector('base').target;
+        document.head.querySelector('base').target = 'fake_target';
         document.getElementById('id4').dispatchEvent(e);
+        document.head.querySelector('base').target = target;
       }
       function method12_2() {
         document.getElementById('id4').dispatchEvent(new MouseEvent('click', {
@@ -144,10 +148,23 @@
       function method12_3() {
         var evt = document.createEvent('MouseEvents');
         evt.initEvent('click', true, false);
+        document.getElementById('id4').target = 'fake_target';
         document.getElementById('id4').dispatchEvent(evt);
+        document.getElementById('id4').removeAttribute('target');
       }
       function method12_4() {
         document.getElementById('id4').click();
+      }
+      function method12_5() {
+        var e = new MouseEvent('click', {
+          button: 0,
+          ctrlKey: true,
+          metaKey: true
+        });
+
+        document.getElementById('id4').dispatchEvent(e);
+        e.preventDefault();
+        e.stopPropagation();
       }
       function method10() {
         var a = document.createElement('a');
@@ -165,7 +182,7 @@
         var f = document.createElement('form');
         f.setAttribute('action', 'https://example.com/test/13');
         f.setAttribute('method', 'post');
-        f.setAttribute('target', '_blank');
+        f.setAttribute('target', 'invalid_target_tag');
         document.body.appendChild(f);
         f.submit();
         document.body.removeChild(f);
@@ -278,6 +295,12 @@
         a.click();
         document.body.appendChild(a);
       }
+      function method20() {
+        var a = document.createElement('a');
+        a.href = 'http://example.com/method/20';
+        a.target = 't4kojpe98h';
+        a.click();
+      }
 
       function overwrite1() {
         try {
@@ -312,7 +335,17 @@
       <li><a href='https://example.com/test/4' target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
       <li><iframe src="./popup-blocker-iframe.html?title=Method 5/1"></iframe> redirecting tab using iframe with "base" header set to target="_parent" method</li>
       <li><iframe sandbox="allow-forms allow-popups allow-scripts allow-same-origin" src="./popup-blocker-iframe.html?title=Method 5/2"></iframe> opening a new popup tab using iframe with "base" header set to target="_parent" method when iframe is sandboxed</li>
-      <li><a href='https://example.com/test/6'>Method 6</a> opening a new popup tab using link with "base" header set to target="_blank"</li>
+      <li><a href='https://example.com/test/6' id="method_6">Method 6</a> opening a new popup tab using link with "base" header set to target="_blank"</li>
+      <script>
+        var e = document.getElementById('method_6');
+        e.addEventListener('mousedown', () => {
+          const target = document.head.querySelector('base').target;
+          document.head.querySelector('base').target = '_blank';
+          window.setTimeout(() => {
+            document.head.querySelector('base').target = target;
+          }, 1000);
+        })
+      </script>
       <li><input type="button" onclick="method7()" value="Method 7"> opening a new about:blank popup window using createEvent method</li>
       <li><a id="id1" href='https://example.com/test/8/1' target="_blank">Method 8/1</a> opening new popup window using target="_blank" method over links powered by stop propagation</li>
       <script>
@@ -345,15 +378,16 @@
           <input type=submit value="Method 11">
         </form> using form element to issue a popup
       </li>
-      <div style="display: none;"><a href="https://example.com/test/12" id="id4"></a></div>
+      <div style="display: none;" id="id4-div"><a href="https://example.com/test/12" id="id4"></a></div>
       <li><input onclick="method12_1()" type="button" value="Method 12/1">generating click event (button=0) and dispatching it over a "a" element</li>
       <li><input onclick="method12_2()" type="button" value="Method 12/2">generating click event (button=1) and dispatching it over a "a" element</li>
       <li><input onclick="method12_3()" type="button" value="Method 12/3">generating click event (button=0) and dispatching it over a "a" element</li>
       <li><input onclick="method12_4()" type="button" value="Method 12/4">fire click() over a "a" element</li>
+      <li><input onclick="method12_5()" type="button" value="Method 12/5">generating click event (button=0; ctrlKey = true) and dispatching it over a "a" element</li>
       <li><input onclick="method13_1(event)" type="button" value="Method 13_1">opening link through form submission</li>
-      <li><input onclick="method13_2(event)" type="button" value="Method 13_2">opening link through form submission</li>
+      <li><input onclick="method13_2(event)" type="button" value="Method 13_2">opening link through form submission; Firefox only</li>
       <li><input onclick="method13_3(event)" type="button" value="Method 13_3">opening link through form submission</li>
-      <li><input onclick="method13_4(event)" type="button" value="Method 13_4">opening link through form submission</li>
+      <li><input onclick="method13_4(event)" type="button" value="Method 13_4">opening link through form submission; Firefox only</li>
       <li><input style="color: #f00" onclick="method14_1(event)" type="button" value="Method 14/1">opening a popup and if it was unsuccessful, redirect current page to destination (redirect with delay). To prevent this enable "Prevent page redirection for 5 seconds after a popup is requested" in the options page.</li>
       <li><input style="color: #f00" onclick="method14_2()" type="button" value="Method 14/2">opening a popup and if it was unsuccessful, redirect current page to destination (instant redirect). To prevent this enable "Prevent page redirection for 5 seconds after a popup is requested" in the options page.</li>
       <li><a href='javascript:window.open("https://example.com/test/15");' target="_blank">Method 15</a> open a popup through direct JS execution</li>
@@ -364,6 +398,7 @@
       <li><input type="button" onclick="method17_3()" value="Method 17/3"> open a popup by creating a dynamic iframe (method 3); <b>PB blocks this type even when it is disabled</b></li>
       <li><a href="#" target="_blank">Method 18</a>Same origin tag</li>
       <li><label><a target="_blank" href="http://example.com/method/19">Method 19</a></label></li>
+      <li><input type="button" onclick="method20()" value="Method 20"> invalid target</li>
     </ul>
     <p>
       Click <input type="button" onclick="overwrite1();" value="here"> to overwrite "window.open" and try tests one more time.

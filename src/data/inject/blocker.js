@@ -57,7 +57,6 @@ const prefs = new Proxy(_prefs, {
           href: location.href,
           hostname: location.hostname
         }, response => {
-          console.log(response);
           silent = response.silent;
           if (response.enabled === false) {
             prefs.enabled = false;
@@ -87,12 +86,18 @@ script.textContent = `{
     'wop': window.open
   };
   // helper functions
-  const policy = (type, e, extra = {}) => {
+  const policy = (type, element, event, extra = {}) => {
+    if (event) {
+      extra.defaultPrevented = event.defaultPrevented;
+      extra.metaKey = event.metaKey;
+      extra.button = event.button;
+      extra.isTrusted = event.isTrusted;
+    }
     script.dispatchEvent(new CustomEvent('policy', {
       detail: Object.assign({
         type,
-        href: e.action || e.href, // action for form element and href for anchor element
-        target: e.target
+        href: element.action || element.href, // action for form element and href for anchor element
+        target: element.target
       }, extra)
     }));
     return {
@@ -147,13 +152,9 @@ script.textContent = `{
 
   blocker.overwrite = {};
   blocker.overwrite.click = e => {
-    //
-    if (e.defaultPrevented || e.button !== 0 || (e.metaKey && e.isTrusted)) {
-      return;
-    }
     const a = e.target.closest('[target]') || e.target.closest('a');
     // if this is not a form or anchor element, ignore the click
-    if (a && policy('element.click', a).block) {
+    if (a && policy('element.click', a, e).block) {
       pointers.mpp.apply(e);
       return true;
     }
@@ -166,7 +167,8 @@ script.textContent = `{
     }
   };
   blocker.overwrite.a.dispatchEvent = function(...args) {
-    const {block} = policy('dynamic.a.dispatch', this);
+    const e = args[0];
+    let {block} = policy('dynamic.a.dispatch', this, e);
     return block ? false : pointers.had.apply(this, args);
   };
   blocker.overwrite.form = {};
@@ -181,7 +183,7 @@ script.textContent = `{
   blocker.overwrite.open = function(...args) {
     const {id, block} = policy('window.open', {
       href: args.length ? args[0] : ''
-    }, {
+    }, null, {
       args
     });
     if (block) { // return a window or a window-liked object
@@ -227,7 +229,7 @@ blocker.hasBase = a => {
   const base = [a, ...document.querySelectorAll('base')]
     .map(e => e && e.target ? e.target.toLowerCase() : '')
     .filter(b => b).shift();
-  return ['_tab', '_blank', '_parent'].indexOf(base) !== -1;
+  return base && ['_self'].indexOf(base) === -1;
 };
 
 blocker.policy = request => {
@@ -237,6 +239,11 @@ blocker.policy = request => {
   let hostname = '';
   let block = true;
   let sameContext = false;
+
+  // do not block if
+  if (request.defaultPrevented || (request.metaKey && request.isTrusted)) {
+    block = false;
+  }
 
   if (type === 'element.click') {
     const a = 'closest' in target ? (target.closest('[target]') || target.closest('a')) : null;
@@ -253,6 +260,14 @@ blocker.policy = request => {
       target: request.target
     });
   }
+  // block if
+  if (request.metaKey && request.isTrusted === false) { // see method 12/5
+    block = true;
+  }
+  if ('button' in request && request.button !== 0 && request.isTrusted === false) { // see method 12/2
+    block = true;
+  }
+  // fixing
   if (block) {
     // fix relative href
     if (href && href.indexOf(':') === -1) {
@@ -264,7 +279,6 @@ blocker.policy = request => {
     if (!href || href.startsWith('about:')) {
       target.dataset.ppbid = target.dataset.ppbid || Math.random();
     }
-
     if (href && href.startsWith('http')) {
       const loc = new URL(href);
       hostname = loc.hostname;
