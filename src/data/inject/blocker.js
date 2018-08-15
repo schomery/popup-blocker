@@ -353,7 +353,7 @@ script.addEventListener('policy', e => {
       script.setAttribute('eid', id);
       script.setAttribute('block', block);
 
-      console.log(request, block);
+      // console.log(request, block);
       if (block) {
         redirect.block();
         chrome.runtime.sendMessage({
