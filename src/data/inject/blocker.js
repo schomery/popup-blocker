@@ -240,11 +240,6 @@ blocker.policy = request => {
   let block = true;
   let sameContext = false;
 
-  // do not block if
-  if (request.defaultPrevented || (request.metaKey && request.isTrusted)) {
-    block = false;
-  }
-
   if (type === 'element.click') {
     const a = 'closest' in target ? (target.closest('[target]') || target.closest('a')) : null;
     href = href || (a ? a.href || a.action : '');
@@ -266,6 +261,10 @@ blocker.policy = request => {
   }
   if ('button' in request && request.button !== 0 && request.isTrusted === false) { // see method 12/2
     block = true;
+  }
+  // do not block if
+  if (request.defaultPrevented || (request.metaKey && request.isTrusted)) {
+    block = false;
   }
   // fixing
   if (block) {
