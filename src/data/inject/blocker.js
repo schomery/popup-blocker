@@ -90,7 +90,7 @@ script.textContent = `{
     if (event) {
       extra.defaultPrevented = event.defaultPrevented;
       extra.metaKey = event.metaKey;
-      extra.button = event.button;
+      extra.button = event.button || 0;
       extra.isTrusted = event.isTrusted;
     }
     script.dispatchEvent(new CustomEvent('policy', {
