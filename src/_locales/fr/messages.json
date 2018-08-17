@@ -20,6 +20,9 @@
   "context_item5": {
     "message": "Ouvrir la page d'options"
   },
+    "context_item6": {
+    "message": "Ignorer la notification pop-up si possible"
+  },
   "options_item1": {
     "message": "Nombre maximum de requêtes pop-up pour une seule page"
   },
@@ -108,13 +111,19 @@
     "message": "Simulez le bouton 'Autoriser' pour empêcher le bloqueur de pop-ups interne de votre navigateur de bloquer ces requêtes"
   },
   "options_item31": {
-    "message": "Lorsque le bouton 'en confiance' est pressé, ajoutez le nom d'hôte à"
+    "message": "Lorsque le bouton 'trust' est pressé, ajoutez le nom d'hôte à"
   },
   "options_item32": {
     "message": "Liste blanche destinations"
   },
   "options_item33": {
     "message": "Liste blanche sources"
+  },
+  "options_item34": {
+    "message": "Liste noire de notification"
+  },
+  "options_item35": {
+    "message": "Séparée par des virgules la liste des noms d'hôte que le bloqueur de pop-up n'affichera pas de notification si une pop-up est requis"
   },
   "options_support": {
     "message": "Soutenir le développement"
