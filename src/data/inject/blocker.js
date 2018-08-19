@@ -36,8 +36,11 @@ const prefs = new Proxy(_prefs, {
     return true;
   }
 });
+// make sure we have access to our preferences from the same origin iframes
+window.prefs = prefs;
+window.silent = silent;
 
-// try to get the preferences from the parent element; otherwise get them from chrome.storage
+// try to get the preferences from the top element; otherwise get them from chrome.storage
 {
   let loaded = false;
   if (window.parent !== window) {
@@ -229,7 +232,8 @@ blocker.hasBase = a => {
   const base = [a, ...document.querySelectorAll('base')]
     .map(e => e && e.target ? e.target.toLowerCase() : '')
     .filter(b => b).shift();
-  return base && ['_self'].indexOf(base) === -1;
+  // the linked page opens in the named frame
+  return base ? base !== '_self' && typeof window[base] !== 'object' : false;
 };
 
 blocker.policy = request => {
@@ -352,7 +356,7 @@ script.addEventListener('policy', e => {
       script.setAttribute('eid', id);
       script.setAttribute('block', block);
 
-      // console.log(request, block);
+      // console.log(request, block, silent);
       if (block) {
         redirect.block();
         chrome.runtime.sendMessage({

@@ -19,7 +19,8 @@
           background: transparent;
           border-radius: 0;
         `);
-        document.body.appendChild(iframe);
+        // do not attach to body to make sure the notification is visible
+        document.documentElement.appendChild(iframe);
       }
       // always reattach to make sure the iframe is accessible
       const es = document.elementsFromPoint(iframe.offsetLeft, iframe.offsetTop);

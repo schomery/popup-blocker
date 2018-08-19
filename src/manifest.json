@@ -3,7 +3,7 @@
   "short_name": "ipblocker",
   "description": "__MSG_app_description__",
   "author": "Jeremy Schomery",
-  "version": "0.5.0.2",
+  "version": "0.5.0.3",
   "manifest_version": 2,
   "default_locale": "en",
   "permissions": [
@@ -41,7 +41,7 @@
   },
   {
     "matches": ["<all_urls>"],
-    "js": ["data/iframe.js"],
+    "js": ["data/inject/iframe.js"],
     "run_at": "document_start",
     "all_frames": false
   }],

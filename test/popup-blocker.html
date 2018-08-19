@@ -301,6 +301,12 @@
         a.target = 't4kojpe98h';
         a.click();
       }
+      function method21() {
+        var a = document.createElement('a');
+        a.href = 'http://example.com/method/20';
+        a.target = 'sub_frame';
+        a.click();
+      }
 
       function overwrite1() {
         try {
@@ -351,7 +357,7 @@
       <li><input type="button" onclick="pointer('https://example.com/test/2/2');" value="Method 2/2"> opening a new popup tab using a predefined pointer to window.open method</li>
       <li><input type="button" onclick="method3('https://example.com/test/3', 'new window', 600, 600)" value="Method 3"> opening a new popup window and passing arguments to it</li>
       <li><a href='https://example.com/test/4' target="_blank">Method 4</a> opening new popup window using target="_blank" method over links</li>
-      <li><iframe src="./popup-blocker-iframe.html?title=Method 5/1"></iframe> redirecting tab using iframe with "base" header set to target="_parent" method</li>
+      <li><iframe name="sub_frame" src="./popup-blocker-iframe.html?title=Method 5/1"></iframe> redirecting tab using iframe with "base" header set to target="_parent" method</li>
       <li><iframe sandbox="allow-forms allow-popups allow-scripts allow-same-origin" src="./popup-blocker-iframe.html?title=Method 5/2"></iframe> opening a new popup tab using iframe with "base" header set to target="_parent" method when iframe is sandboxed</li>
       <li><a href='https://example.com/test/6' id="method_6">Method 6</a> opening a new popup tab using link with "base" header set to target="_blank"</li>
       <script>
@@ -417,6 +423,8 @@
       <li><a href="#" target="_blank">Method 18</a>Same origin tag</li>
       <li><label><a target="_blank" href="http://example.com/method/19">Method 19</a></label></li>
       <li><input type="button" onclick="method20()" value="Method 20"> invalid target</li>
+      <hr/>
+      <li><input type="button" onclick="method21()" value="Method 21"> named target (should allow)</li>
     </ul>
     <p>
       Click <input type="button" onclick="overwrite1();" value="here"> to overwrite "window.open" and try tests one more time.

@@ -3,3 +3,5 @@
   -> refresh to get "https://www.facebook.com/tr/" and "https://syndication.twitter.com/i/jot" popup requests; the base is set so the popups are ignored
 3. https://www.virustotal.com/
   -> Check a text file
+4. https://apps.facebook.com/criminalcase -> should allow target
+5. http://www.tagindex.net/html/frame/example_t04.html -> should allow target
