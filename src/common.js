@@ -62,6 +62,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 });
 // popup related
 chrome.runtime.onMessage.addListener((request, sender, response) => {
+  // console.log(request, sender);
   // bouncing back to ui.js; since ui.js is loaded on its frame, we need to send the message to all frames
   if (request.cmd === 'popup-request' && request.silent === false) {
     chrome.tabs.sendMessage(sender.tab.id, Object.assign(request, {
@@ -90,11 +91,9 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     // validating request before proceeding
     if (url.startsWith('http') || url.startsWith('ftp') || url === 'about:blank') {
       if (request.cmd === 'popup-redirect') {
-        // make sure redirect prevent is off
+        // make sure redirect prevent is off (this needs {frameId: 1} when Edge supports it)
         chrome.tabs.sendMessage(sender.tab.id, {
           cmd: 'release-beforeunload'
-        }, {
-          frameId: 0
         }, () => {
           chrome.tabs.update(sender.tab.id, {
             url
@@ -111,7 +110,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     }
   }
   // is this tab (top level url) in the white-list or black-list
-  else if (request.cmd === 'exception' && sender.frameId === 0) {
+  else if (request.cmd === 'exception' && request.top) {
     config.get(['blacklist', 'top-hosts', 'silent']).then(prefs => {
       let enabled = true;
       const {hostname} = request;

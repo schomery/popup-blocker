@@ -2,9 +2,7 @@
 'use strict';
 
 var entry = document.getElementById('entry');
-//
 var urls = {};
-
 var cookie = {
   get: host => {
     const key = document.cookie.split(`${host}-action=`);
@@ -29,7 +27,8 @@ var cookie = {
 
 var resize = () => window.top.postMessage({
   method: 'ppp-resize',
-  height: document.documentElement.clientHeight,
+  // Edge issue with document.documentElement.clientHeight
+  height: document.documentElement.getBoundingClientRect().height,
   hide: Object.keys(urls).length === 0
 }, '*');
 

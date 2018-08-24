@@ -23,11 +23,13 @@
         document.documentElement.appendChild(iframe);
       }
       // always reattach to make sure the iframe is accessible
-      const es = document.elementsFromPoint(iframe.offsetLeft, iframe.offsetTop);
-      const index = es.indexOf(iframe);
-      if (index !== 0) {
-        // this is going to refresh the iframe
-        document.body.appendChild(iframe);
+      if (document.elementsFromPoint) { // Edge does not support elementsFromPoint
+        const es = document.elementsFromPoint(iframe.offsetLeft, iframe.offsetTop);
+        const index = es.indexOf(iframe);
+        if (index !== 0) {
+          // this is going to refresh the iframe
+          document.body.appendChild(iframe);
+        }
       }
     }
   });
@@ -46,4 +48,3 @@
     }
   });
 }
-

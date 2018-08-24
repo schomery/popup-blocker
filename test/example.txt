@@ -5,3 +5,4 @@
   -> Check a text file
 4. https://apps.facebook.com/criminalcase -> should allow target
 5. http://www.tagindex.net/html/frame/example_t04.html -> should allow target
+6. https://sadd.io/
