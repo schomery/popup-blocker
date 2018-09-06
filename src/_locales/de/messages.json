@@ -12,7 +12,7 @@
     "message": "Letztes Pop-up erlauben"
   },
   "context_item3": {
-    "message": "Letztes Pop-up verweigern"
+    "message": "Letztes Pop-up blockieren"
   },
   "context_item4": {
     "message": "Schattenfenster für diesen Tab verwenden"
@@ -21,19 +21,19 @@
     "message": "Einstellungen öffnen"
   },
   "context_item6": {
-    "message": "Ignoriere, falls möglich, die Pop-up Benachrichtung"
+    "message": "Pop-up Benachrichtungen möglichst unterbinden"
   },
   "options_item1": {
-    "message": "Maximale Anzahl von Pop-ups für eine einzelne Seite"
+    "message": "Maximale Anzahl von Pop-ups für eine einzelne Webseite"
   },
   "options_item2": {
     "message": "Zeitüberschreitung für das Anzeigen von Pop-ups (in Sekunden)"
   },
   "options_item3": {
-    "message": "Keine Pop-ups von der gleichen Quelle blockieren."
+    "message": "Keine Pop-ups von der gleichen Quelle blockieren"
   },
   "options_item5": {
-    "message": "Zeige die Gesamtanzahl der geblockten Pop-ups in der Symbolleiste"
+    "message": "Gesamtanzahl der geblockten Pop-ups in der Symbolleiste anzeigen"
   },
   "options_item6": {
     "message": "Whitelist Ziele:"
@@ -42,13 +42,13 @@
     "message": "Whitelist Quellen:"
   },
   "options_item8": {
-    "message": "Aktualisiere den Tab um die Änderungen anzuwenden."
+    "message": "Aktualisiere den Tab, um die Änderungen anzuwenden."
   },
   "options_item9": {
     "message": "Countdown für das automatische Ausführen der letzten Aktion (in Sekunden)"
   },
   "options_item10": {
-    "message": "Verwende die Zahl 0 um den Countdown für die vorherige Aktion zu deaktivieren."
+    "message": "Verwende die Zahl 0, um den Countdown für die vorherige Aktion zu deaktivieren."
   },
   "options_item11": {
     "message": "Kommagetrennte Liste von Domains, die nicht blockiert werden (Diese Domains können auf jeder Webseite Pop-ups anzeigen)"
@@ -63,10 +63,10 @@
     "message": "Kommagetrennte Liste von Domains, auf denen der Pop-up Blocker ausschließlich aktiv sein soll. Dies bedeutet, dass der Pop-up Blocker auf ALLEN anderen Domains deaktiviert ist. Um diesen Modus zu deaktivieren, muss die Blacklist vollständig leer sein."
   },
   "options_item15": {
-    "message": "Verhindere Weiterleitungen für 2 Sekunden nachdem ein Pop-up aufgerufen wurde"
+    "message": "Weiterleitungen für 2 Sekunden verhindern nachdem ein Pop-up aufgerufen wurde"
   },
   "options_item16": {
-    "message": "Einige Webseiten leiten den Benutzer auf eine Werbeseite weiter, falls ein Pop-up blockiert wurde. Diese Einstellung verhindert dies, indem Weiterleitungen für eine bestimmte Zeit verhindert werden."
+    "message": "Einige Webseiten leiten den Benutzer auf eine Werbeseite weiter falls ein Pop-up blockiert wurde. Diese Einstellung verhindert dies, indem Weiterleitungen für eine kurze Zeit verhindert werden."
   },
   "options_item17": {
     "message": "Standardaktion bei neuem Pop-up"
@@ -75,13 +75,13 @@
     "message": "Keine Aktion"
   },
   "options_item19": {
-    "message": "Ablehnen"
+    "message": "Blockieren"
   },
   "options_item20": {
     "message": "Im Hintergrund öffnen"
   },
   "options_item21": {
-    "message": "Seite weiterleiten"
+    "message": "Webseite weiterleiten"
   },
   "options_item22": {
     "message": "Hintergrundfarbe"
@@ -105,13 +105,13 @@
     "message": "Die aufgelisteten Protokolle können in einem neuen Tab im Browser geöffnet werden. Füge zum Beispiel 'magnet:' hinzu, um das Öffnen von magnet Links in einem Tab zu erlauben."
   },
   "options_item29": {
-    "message": "Verwende den Web of Trust (WOT) Service um zu Entscheiden, ob ein Pop-up von einer vertrauenswürdigen oder nicht vertrauenswürdigen Domain stammt."
+    "message": "Web of Trust (WOT) Service verwenden, um ein Pop-up als vertrauenswürdig oder nicht vertrauenswürdig einzustufen"
   },
   "options_item30": {
     "message": "Simuliere den 'Erlauben' Button, um zu verhindern, dass der integrierte Pop-up Blocker des Browsers diese Anfragen blockiert"
   },
   "options_item31": {
-    "message": "Bei einem Klick auf 'Vertrauen' wird die Domain hinzugefügt zu"
+    "message": "Mit Klick auf 'Vertrauen' wird die Domain hinzugefügt zu"
   },
   "options_item32": {
     "message": "Whitelist Ziele"
@@ -144,7 +144,7 @@
     "message": "Einstellungen wurden gespeichert."
   },
   "ui_msg": {
-    "message": "Pop-up auf folgender Seite angefragt"
+    "message": "Pop-up von nachfolgender Webseite angefragt"
   },
   "ui_button_allow": {
     "message": "Dieses Pop-up erlauben"
@@ -156,9 +156,9 @@
     "message": "Öffne den Link in einem Tab im Hintergrund"
   },
   "ui_button_deny": {
-    "message": "Pop-up oder neuen Tab verweigern"
+    "message": "Pop-up oder neuen Tab blockieren"
   },
   "ui_button_trust": {
-    "message": "Füge diese Domain zu der Whitelist hinzu, um Pop-ups zu öffnen"
+    "message": "Füge diese Domain zu der Whitelist hinzu, um Pop-ups künftig immer zu erlauben."
   }
 }
