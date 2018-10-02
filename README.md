@@ -1,4 +1,4 @@
-## ![img](https://github.com/schomery/popup-blocker/blob/master/src/data/icons/32.png) Popup Blocker (strict)
+## ![img](https://raw.githubusercontent.com/schomery/popup-blocker/master/src/data/icons/32.png) Popup Blocker (strict)
 
 Popup Blocker is a lightweight extension to prevent websites from opening popups (whereas other popup blockers this extension does not block popups after their creation, but blocked them once they are requested). The extension pauses all sort of window opening requests for user attention. You can either accept or deny a request. Multiple unique requests are shown in an array. If a websites requests a single URL more than once, a badge number will be shown indicating the total number of requests to this particular URL.
 
@@ -33,7 +33,7 @@ Install the latest version from your web browser Add-ons web site.
 
 ## FAQs
 
-Please go to 
+Please go to
 
 * https://add0n.com/popup-blocker.html
 
@@ -55,11 +55,18 @@ If this project help you, you can give the developer a cup of coffee :)
 
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=inbasic%2ecorp%40gmail%2ecom&lc=CA&item_name=support%20extension%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted)
 
-* Bitcoin Address: 
+* Bitcoin Address:
 
-**1sM2BrTH8BRgt3quiASK8TmYSafutNvDo**
+1sM2BrTH8BRgt3quiASK8TmYSafutNvDo
 
-* Ether Address: 
+* Ether Address:
 
-**0xCf9eaAc56992e12EB61fD46342172d4EEff5C8e4**
+0xCf9eaAc56992e12EB61fD46342172d4EEff5C8e4
 
+## Help with Translation
+
+You can now translate Popup Blocker (strict) into your language; https://www.transifex.com/github-7/popup-blocker-strict/
+
+## License
+
+Popup Blocker (strict) is an open-source project released under [MPL-2.0](https://github.com/schomery/popup-blocker/blob/master/LICENSE)
