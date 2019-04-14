@@ -97,7 +97,6 @@ if (document.contentType === 'text/html') {
     };
     // helper functions
     const policy = (type, element, event, extra = {}) => {
-      // console.log(type, element, event, extra);
       if (event) {
         extra.defaultPrevented = event.defaultPrevented;
         extra.metaKey = event.metaKey;
@@ -298,7 +297,7 @@ if (document.contentType === 'text/html') {
           if (prefs.domain) {
             try { // if they are not in the same origin
               const h = window.top.location.hostname;
-              if (h && hostname && (h.endsWith(hostname) || hostname.endsWith(h))) {
+              if (h && hostname && (h.endsWith('.' + hostname) || hostname.endsWith('.' + h))) {
                 block = false;
               }
             }
@@ -310,12 +309,12 @@ if (document.contentType === 'text/html') {
           }
           // white-list matching
           for (const h of prefs['popup-hosts']) {
-            if (h.endsWith(hostname) || hostname.endsWith(h)) {
+            if (h.endsWith('.' + hostname) || hostname.endsWith('.' + h)) {
               block = false;
             }
           }
         }
-        catch(e) {}
+        catch (e) {}
       }
     }
 
