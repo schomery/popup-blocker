@@ -45,7 +45,7 @@
     "run_at": "document_start",
     "all_frames": false
   }],
-  "homepage_url": "http://add0n.com/popup-blocker.html",
+  "homepage_url": "https://add0n.com/popup-blocker.html",
   "icons": {
     "16": "data/icons/16.png",
     "19": "data/icons/19.png",

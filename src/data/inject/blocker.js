@@ -297,7 +297,7 @@ if (document.contentType === 'text/html') {
           if (prefs.domain) {
             try { // if they are not in the same origin
               const h = window.top.location.hostname;
-              if (h && hostname && (h.endsWith('.' + hostname) || hostname.endsWith('.' + h))) {
+              if (h && hostname && (h.endsWith('.' + hostname) || hostname.endsWith('.' + h) || hostname === h)) {
                 block = false;
               }
             }
@@ -308,9 +308,11 @@ if (document.contentType === 'text/html') {
             block = false;
           }
           // white-list matching
-          for (const h of prefs['popup-hosts']) {
-            if (h.endsWith('.' + hostname) || hostname.endsWith('.' + h)) {
-              block = false;
+          if (hostname) {
+            for (const h of prefs['popup-hosts']) {
+              if (h.endsWith('.' + hostname) || hostname.endsWith('.' + h) || hostname === h) {
+                block = false;
+              }
             }
           }
         }
