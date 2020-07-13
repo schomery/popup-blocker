@@ -1,6 +1,6 @@
 'use strict';
 
-var config = {
+const config = {
   'enabled': true,
   'numbers': 5,
   'timeout': 30,
@@ -24,9 +24,10 @@ var config = {
   'block-page-redirection': false,
   'target': true,
   'version': null,
-  'faqs': false,
+  'faqs': true,
   'last-update': 0
 };
+window.config = config;
 
 config.get = arr => new Promise(resolve => {
   const ps = arr.reduce((p, c) => {

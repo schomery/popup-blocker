@@ -1,8 +1,6 @@
+/* global script */
 'use strict';
 
-const edge = {
-  isEdge: /Edge/.test(navigator.userAgent)
-};
 if (document.contentType === 'text/html') {
   // Firefox issue; document.activeElement is always <body/>
   if (/Firefox/.test(navigator.userAgent)) {
@@ -14,8 +12,6 @@ if (document.contentType === 'text/html') {
       }
     });
   }
-
-  const script = document.createElement('script');
   // record fake window's executed commands
   const records = {};
   // should I display popups
@@ -64,8 +60,7 @@ if (document.contentType === 'text/html') {
           chrome.runtime.sendMessage({
             cmd: 'exception',
             href: location.href,
-            hostname: location.hostname,
-            top: window.top === window // Edge does not support sender.frameId === 0
+            hostname: location.hostname
           }, response => {
             silent = response.silent;
             if (response.enabled === false) {
@@ -82,163 +77,13 @@ if (document.contentType === 'text/html') {
     Object.keys(ps).filter(key => key in _prefs).forEach(key => prefs[key] = ps[key].newValue);
   });
 
-  script.textContent = `{
-    // definitions
-    const script = document.currentScript;
-    const blocker = {};
-    // pointers
-    const pointers = {
-      'mpp': MouseEvent.prototype.preventDefault,
-      'hac': HTMLAnchorElement.prototype.click,
-      'had': HTMLAnchorElement.prototype.dispatchEvent,
-      'hfs': HTMLFormElement.prototype.submit,
-      'hfd': HTMLFormElement.prototype.dispatchEvent,
-      'wop': window.open
-    };
-    // helper functions
-    const policy = (type, element, event, extra = {}) => {
-      if (event) {
-        extra.defaultPrevented = event.defaultPrevented;
-        extra.metaKey = event.metaKey;
-        extra.button = event.button || 0;
-        extra.isTrusted = event.isTrusted;
-      }
-      script.dispatchEvent(new CustomEvent('policy', {
-        detail: Object.assign({
-          type,
-          href: element.action || element.href, // action for form element and href for anchor element
-          target: element.target
-        }, extra)
-      }));
-      return {
-        id: script.getAttribute('eid'),
-        block: script.getAttribute('block') === 'true'
-      };
-    };
-    const watch = (parent, name, callback) => {
-      let original = parent[name];
-      Object.defineProperty(parent, name, {
-        configurable: true,
-        get() {
-          callback();
-          return original;
-        },
-        set(v) {
-          original = v;
-        }
-      });
-    };
-    const simulate = (name, root, id) => new Proxy({}, { // window.location.replace
-      get(obj, key) {
-        return typeof root[key] === 'function' ? function(...args) {
-          script.dispatchEvent(new CustomEvent('record', {
-            detail: {
-              id,
-              name,
-              method: root[key].name || key, // window.focus
-              args
-            }
-          }));
-        } : simulate(key, root[key], id);
-      }
-    });
-    // popup blocker
-    blocker.install = () => {
-      document.addEventListener('click', blocker.overwrite.click, true); // with capture; see method 8
-      window.open = blocker.overwrite.open;
-      HTMLAnchorElement.prototype.click = blocker.overwrite.a.click;
-      HTMLAnchorElement.prototype.dispatchEvent = blocker.overwrite.a.dispatchEvent;
-      HTMLFormElement.prototype.submit = blocker.overwrite.form.submit;
-      HTMLFormElement.prototype.dispatchEvent = blocker.overwrite.form.dispatchEvent;
-    };
-    blocker.remove = () => {
-      document.removeEventListener('click', blocker.overwrite.click);
-      window.open = pointers.wop;
-      HTMLAnchorElement.prototype.click = pointers.hac;
-      HTMLAnchorElement.prototype.dispatchEvent = pointers.had;
-      HTMLFormElement.prototype.submit = pointers.hfs;
-      HTMLFormElement.prototype.dispatchEvent = pointers.hfd;
-    };
-
-    blocker.overwrite = {};
-    blocker.overwrite.click = e => {
-      const a = e.target.closest('[target]') || e.target.closest('a');
-      // if this is not a form or anchor element, ignore the click
-      if (a && policy('element.click', a, e).block) {
-        pointers.mpp.apply(e);
-        return true;
-      }
-    };
-    blocker.overwrite.a = {};
-    blocker.overwrite.a.click = function(...args) {
-      const {block} = policy('dynamic.a.click', this);
-      if (!block) {
-        pointers.hac.apply(this, args);
-      }
-    };
-    blocker.overwrite.a.dispatchEvent = function(...args) {
-      const e = args[0];
-      let {block} = policy('dynamic.a.dispatch', this, e);
-      return block ? false : pointers.had.apply(this, args);
-    };
-    blocker.overwrite.form = {};
-    blocker.overwrite.form.submit = function(...args) {
-      const {block} = policy('dynamic.form.submit', this);
-      return block ? false : pointers.hfs.apply(this, args);
-    };
-    blocker.overwrite.form.dispatchEvent = function(...args) {
-      const {block} = policy('dynamic.form.dispatch', this);
-      return block ? false : pointers.hfd.apply(this, args);
-    };
-    blocker.overwrite.open = function(...args) {
-      const {id, block} = policy('window.open', {
-        href: args.length ? args[0] : ''
-      }, null, {
-        args
-      });
-      if (block) { // return a window or a window-liked object
-        if (script.dataset.shadow === 'true') {
-          const iframe = document.createElement('iframe');
-          iframe.style.display = 'none';
-          document.body.appendChild(iframe);
-          return iframe.contentWindow;
-        }
-        else {
-          return simulate('self', window, id);
-        }
-      }
-      else {
-        return pointers.wop.apply(window, args);
-      }
-    };
-    // we always install our blocker
-    blocker.install();
-    // document.open can wipe all the listeners
-    let documentElement = document.documentElement;
-    watch(document, 'write', () => {
-      if (documentElement !== document.documentElement) {
-        documentElement = document.documentElement;
-        if (script.dataset.enabled !== 'false') {
-          blocker.install();
-        }
-      }
-    });
-    // configure
-    new MutationObserver(() => blocker[script.dataset.enabled === 'false' ? 'remove' : 'install']()).observe(script, {
-      attributes: true,
-      attributeFilter: ['data-enabled']
-    });
-  }`;
-  (document.head || document.documentElement).appendChild(script);
-  script.remove();
-
   const blocker = {};
 
   blocker.hasBase = a => {
     // only check the closest base
     const base = [a, ...document.querySelectorAll('base')]
-    .map(e => e && e.target ? e.target.toLowerCase() : '')
-    .filter(b => b).shift();
+      .map(e => e && e.target ? e.target.toLowerCase() : '')
+      .filter(b => b).shift();
     // the linked page opens in the named frame
     return base ? base !== '_self' && typeof window[base] !== 'object' : false;
   };
@@ -339,7 +184,7 @@ if (document.contentType === 'text/html') {
   };
 
   // page redirection; prevent the page redirection when popup opening is unsuccessful for 2 seconds
-  var redirect = {
+  const redirect = {
     timeout: null,
     beforeunload: e => {
       e.returnValue = 'false';
@@ -371,10 +216,6 @@ if (document.contentType === 'text/html') {
         // console.log(request, block);
         if (block) {
           redirect.block();
-          // Edge does not support frameId; we need to keep reference manaully to accept popups on the same frame
-          if (edge.isEdge) {
-            edge[id] = true;
-          }
           chrome.runtime.sendMessage({
             cmd: 'popup-request',
             type: request.type,
@@ -402,9 +243,6 @@ if (document.contentType === 'text/html') {
   chrome.runtime.onMessage.addListener((request, sender, response) => {
     // apply popup-accept on the context where it is originally requested
     if (request.cmd === 'popup-accepted') {
-      if (edge.isEdge && edge[request.id] !== true) { // reject the request if it is not issued from the same context
-        return;
-      }
       prefs.enabled = false;
       const script = document.createElement('script');
       if (records[request.id]) {

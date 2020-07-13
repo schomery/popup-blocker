@@ -1,7 +1,7 @@
 /* globals config */
 'use strict';
 
-var cookie = {
+const cookie = {
   get: host => {
     const key = document.cookie.split(`${host}-wot=`);
     if (key.length > 1) {
@@ -39,7 +39,7 @@ chrome.storage.onChanged.addListener(prefs => {
   }
 });
 
-var cache = {};
+const cache = {};
 chrome.tabs.onRemoved.addListener(tabId => delete cache[tabId]);
 
 // update badge counter
@@ -193,11 +193,8 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'open-test-page') {
     chrome.tabs.create({
-      url: 'http://tools.add0n.com/popup-blocker.html'
+      url: 'https://webbrowsertools.com/popup-blocker/'
     });
-  }
-  else if (info.menuItemId === 'open-options') {
-    chrome.runtime.openOptionsPage();
   }
   else if (info.menuItemId === 'immediate-action') {
     chrome.storage.local.set({
@@ -217,7 +214,7 @@ chrome.commands.onCommand.addListener(cmd => chrome.tabs.query({
   cmd
 })));
 // browser action
-var onClicked = async toggle => {
+const onClicked = async toggle => {
   const prefs = await config.get(['enabled']);
   if (toggle) {
     prefs.enabled = !prefs.enabled;
@@ -229,10 +226,6 @@ var onClicked = async toggle => {
     32: 'data/icons/' + (prefs.enabled ? '' : 'disabled/') + '32.png',
     38: 'data/icons/' + (prefs.enabled ? '' : 'disabled/') + '38.png'
   };
-  if (window.navigator.userAgent.indexOf('Edge') > -1) {
-    delete path['16'];
-    delete path['32'];
-  }
   chrome.browserAction.setIcon({
     path
   });
@@ -249,29 +242,29 @@ onClicked();
   chrome.runtime.onStartup.addListener(start);
 }
 
-// FAQs
+/* FAQs & Feedback */
 {
-  const {onInstalled, setUninstallURL, getManifest} = chrome.runtime;
-  const {name, version} = getManifest();
-  const page = getManifest().homepage_url;
-  onInstalled.addListener(({reason, previousVersion}) => {
-    chrome.storage.local.get({
-      'faqs': true,
-      'last-update': 0
-    }, prefs => {
-      if (reason === 'install' || (prefs.faqs && reason === 'update')) {
-        const doUpdate = (Date.now() - prefs['last-update']) / 1000 / 60 / 60 / 24 > 45;
-        if (doUpdate && previousVersion !== version) {
-          chrome.tabs.create({
-            url: page + '?version=' + version +
-              (previousVersion ? '&p=' + previousVersion : '') +
-              '&type=' + reason,
-            active: reason === 'install'
-          });
-          chrome.storage.local.set({'last-update': Date.now()});
+  const {management, runtime: {onInstalled, setUninstallURL, getManifest}, storage, tabs} = chrome;
+  if (navigator.webdriver !== true) {
+    const page = getManifest().homepage_url;
+    const {name, version} = getManifest();
+    onInstalled.addListener(({reason, previousVersion}) => {
+      management.getSelf(({installType}) => installType === 'normal' && storage.local.get({
+        'faqs': true,
+        'last-update': 0
+      }, prefs => {
+        if (reason === 'install' || (prefs.faqs && reason === 'update')) {
+          const doUpdate = (Date.now() - prefs['last-update']) / 1000 / 60 / 60 / 24 > 45;
+          if (doUpdate && previousVersion !== version) {
+            tabs.create({
+              url: page + '?version=' + version + (previousVersion ? '&p=' + previousVersion : '') + '&type=' + reason,
+              active: reason === 'install'
+            });
+            storage.local.set({'last-update': Date.now()});
+          }
         }
-      }
+      }));
     });
-  });
-  setUninstallURL(page + '?rd=feedback&name=' + encodeURIComponent(name) + '&version=' + version);
+    setUninstallURL(page + '?rd=feedback&name=' + encodeURIComponent(name) + '&version=' + version);
+  }
 }

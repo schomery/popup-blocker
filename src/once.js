@@ -26,13 +26,6 @@ chrome.contextMenus.create({
   title: chrome.i18n.getMessage('context_item4'),
   contexts: ['browser_action']
 });
-if (navigator.userAgent.indexOf('Firefox') !== -1) {
-  chrome.contextMenus.create({
-    id: 'open-options',
-    title: chrome.i18n.getMessage('context_item5'),
-    contexts: ['browser_action']
-  });
-}
 config.get(['immediate-action']).then(prefs => chrome.contextMenus.create({
   id: 'immediate-action',
   title: chrome.i18n.getMessage('context_item6'),
