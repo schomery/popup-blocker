@@ -1,178 +1,218 @@
 {
-    "options_export": {
-        "message": "Exportar",
+    "app_description": {
+        "message": "Estritamente bloquear todos pedidos de pop-up de qualquer site",
         "description": ""
     },
-    "options_item12": {
-        "message": "Lista de domínios separada por vírgula que a extensão está completamente desabilitada",
-        "description": ""
-    },
-    "options_msg": {
-        "message": "As opções foram salvas",
-        "description": ""
-    },
-    "options_item23": {
-        "message": "Ignore a notificação pop-up quando possível (não recomendado)",
-        "description": ""
-    },
-    "options_item10": {
-        "message": "Use zero para desativar a contagem regressiva",
+    "background_msg1": {
+        "message": "tools.add0n.com é usado para teste de pop-up. Este hostname não pode ser adicionado à lista de permissões.",
         "description": ""
     },
     "context_item1": {
         "message": "Testar seu bloqueador de pop-up",
         "description": ""
     },
-    "options_item3": {
-        "message": "Não bloqueie solicitações pop-up da mesma origem",
-        "description": ""
-    },
-    "options_item16": {
-        "message": "Em alguns sites, quando os anúncios pop-up são bloqueados, o redirecionamento de página para o site do anúncio é feito. Esta opção pode impedir isso, te alertando antes do redirecionamento.",
-        "description": ""
-    },
-    "options_item4": {
-        "message": "Bloquear a abertura de links em novas abas",
-        "description": ""
-    },
-    "options_item24": {
-        "message": "Isso irá \"ignorar\" ou \"aceitar\" um pop-up sem a interação do usuário (não recomendado)",
-        "description": ""
-    },
-    "context_item5": {
-        "message": "Abrir página de opções",
-        "description": ""
-    },
-    "options_item25": {
-        "message": "Descrições",
-        "description": ""
-    },
-    "options_item15": {
-        "message": "Previne o redirecionamento de página por 2 segundos após a solicitação de um pop-up",
-        "description": ""
-    },
-    "app_description": {
-        "message": "Bloquear estritamente todos os pedidos de pop-up de qualquer site",
-        "description": ""
-    },
-    "options_item19": {
-        "message": "Negar solicitação",
-        "description": ""
-    },
-    "options_item9": {
-        "message": "Contagem regressiva para executar a última ação (em segundos)",
-        "description": ""
-    },
-    "options_item33": {
-        "message": "Fontes da lista branca:",
-        "description": ""
-    },
-    "options_item2": {
-        "message": "Tempo limite para exibição de cada pop-up (em segundos)",
-        "description": ""
-    },
-    "options_item7": {
-        "message": "Fontes da lista branca:",
-        "description": ""
-    },
-    "options_item28": {
-        "message": "Os protocolos listados a seguir podem ser abertos em uma nova aba do navegador. Para permitir a abertura de links magnéticos em uma nova aba adicione 'magnet:' na lista.",
-        "description": ""
-    },
-    "options_save": {
-        "message": "Salvar",
-        "description": ""
-    },
-    "options_item31": {
-        "message": "Quando o botão \"Confiar\" é apertado, adicione o hostname para",
-        "description": ""
-    },
-    "options_item26": {
-        "message": "Exibir página de FAQs nas atualizações",
-        "description": ""
-    },
-    "options_item22": {
-        "message": "Cor do emblema de contagem",
-        "description": ""
-    },
-    "context_item4": {
-        "message": "Criar uma janela sombreada no pedido pop-up",
-        "description": ""
-    },
-    "options_item1": {
-        "message": "Número máximo de solicitações de pop-up para uma única página",
-        "description": ""
-    },
-    "options_item30": {
-        "message": "Simular o botão 'Permitir' para previnir que o bloqueador interno de pop-up do seu navegador bloqueie esses pedidos",
-        "description": ""
-    },
-    "options_item17": {
-        "message": "Ação padrão quando um pop-up é solicitado",
-        "description": ""
-    },
-    "options_item27": {
-        "message": "Protocolos na lista branca:",
-        "description": ""
-    },
-    "options_item14": {
-        "message": "Lista de domínios separados por vírgulas que o Popup blocker estará´ativo. Isso significa que o bloqueador de pop-up está desativado em TODOS os outros domínios",
-        "description": ""
-    },
-    "options_item11": {
-        "message": "Lista de domínios separados por vírgulas que não serão bloqueados (esses domínios podem emitir pop-ups em qualquer site)",
-        "description": ""
-    },
-    "options_item18": {
-        "message": "Não fazer nada",
-        "description": ""
-    },
-    "options_item29": {
-        "message": "Usar o serviço Web of Trust (WOT) pra decidir se as pop-ups são de um site confiável ou não",
-        "description": ""
-    },
-    "options_item21": {
-        "message": "Página de redirecionamento",
-        "description": ""
-    },
-    "options_item8": {
-        "message": "É necessário recarregar a aba",
-        "description": ""
-    },
-    "options_item13": {
-        "message": "Fontes da lista negra:",
-        "description": ""
-    },
-    "options_item5": {
-        "message": "Exibir o número total de solicitações bloqueadas no ícone da barra de ferramentas",
-        "description": ""
-    },
-    "options_import": {
-        "message": "Importar",
-        "description": ""
-    },
-    "options_item6": {
-        "message": "Destinos da lista branca:",
+    "context_item2": {
+        "message": "Permitir o último pedido de pop-up",
         "description": ""
     },
     "context_item3": {
         "message": "Negar o último pedido de pop-up",
         "description": ""
     },
-    "options_reset": {
-        "message": "Resetar ao padrão",
+    "context_item4": {
+        "message": "Use a sombra de janela para esta guia",
         "description": ""
     },
-    "options_item32": {
+    "context_item5": {
+        "message": "Abrir página de opções",
+        "description": ""
+    },
+    "context_item6": {
+        "message": "Ignorar notificação pop-up se possível",
+        "description": ""
+    },
+    "options_item1": {
+        "message": "Número máximo de solicitações de pop-up para uma única página",
+        "description": ""
+    },
+    "options_item2": {
+        "message": "Tempo limite para exibição de cada pop-up (em segundos)",
+        "description": ""
+    },
+    "options_item3": {
+        "message": "Não bloqueie solicitações pop-up da mesma origem",
+        "description": ""
+    },
+    "options_item5": {
+        "message": "Exibir o número total de solicitações bloqueadas no ícone da barra de ferramentas",
+        "description": ""
+    },
+    "options_item6": {
         "message": "Destinos da lista branca:",
+        "description": ""
+    },
+    "options_item7": {
+        "message": "Fontes da lista branca:",
+        "description": ""
+    },
+    "options_item8": {
+        "message": "Pra essa mudança fazer efeito, atualize a aba.",
+        "description": ""
+    },
+    "options_item9": {
+        "message": "Contagem regressiva para executar a última ação (em segundos)",
+        "description": ""
+    },
+    "options_item10": {
+        "message": "Use o número zero para desativar a contagem regressiva para executar a ação anterior.",
+        "description": ""
+    },
+    "options_item11": {
+        "message": "Listas de hostnames separados por vírgula que não serão bloqueados (esses hostnames podem emitir pop-ups em qualquer site).",
+        "description": ""
+    },
+    "options_item12": {
+        "message": "Lista de hostnames separadas por vírgula que a extensão do bloqueador de pop-ups está completamente desativada.",
+        "description": ""
+    },
+    "options_item13": {
+        "message": "Fontes da lista negra (modo de operação reversa):",
+        "description": ""
+    },
+    "options_item14": {
+        "message": "Lista de hostnames separada por vírgula que o bloqueador de pop-ups apenas deve estar ativo. Isso significa que o bloqueador de pop-ups está desativado em TODOS os outros hostnames. Para desativar este modo, limpe completamente a entrada da lista negra.",
+        "description": ""
+    },
+    "options_item15": {
+        "message": "Previne o redirecionamento de página por 2 segundos após a solicitação de um pop-up",
+        "description": ""
+    },
+    "options_item16": {
+        "message": "Alguns sites redirecionam o usuário para a página de anúncio se a solicitação pop-up para exibir um anúncio estiver bloqueada. Essa opção pode evitar isso, não permitindo o redirecionamento da página pelo tempo especificado.",
+        "description": ""
+    },
+    "options_item17": {
+        "message": "Ação padrão quando um pop-up é solicitado",
+        "description": ""
+    },
+    "options_item18": {
+        "message": "Não fazer nada",
+        "description": ""
+    },
+    "options_item19": {
+        "message": "Negar solicitação",
         "description": ""
     },
     "options_item20": {
         "message": "Abrir em segundo plano",
         "description": ""
     },
-    "context_item2": {
-        "message": "Permitir o último pedido de pop-up",
+    "options_item21": {
+        "message": "Página de redirecionamento",
+        "description": ""
+    },
+    "options_item22": {
+        "message": "Cor do emblema de contagem",
+        "description": ""
+    },
+    "options_item23": {
+        "message": "Ignore a notificação pop-up quando possível (não recomendado)",
+        "description": ""
+    },
+    "options_item24": {
+        "message": "Isso irá \"ignorar\" ou \"aceitar\" um pop-up sem a interação do usuário (não recomendado)",
+        "description": ""
+    },
+    "options_item25": {
+        "message": "Descrições",
+        "description": ""
+    },
+    "options_item26": {
+        "message": "Exibir página de FAQs nas atualizações",
+        "description": ""
+    },
+    "options_item27": {
+        "message": "Protocolos na lista branca:",
+        "description": ""
+    },
+    "options_item28": {
+        "message": "Os protocolos listados a seguir podem ser abertos em uma nova aba do navegador. Para permitir a abertura de links magnéticos em uma nova aba adicione 'magnet:' na lista.",
+        "description": ""
+    },
+    "options_item29": {
+        "message": "Usar o serviço Web of Trust (WOT) pra decidir se as pop-ups são de um site confiável ou não",
+        "description": ""
+    },
+    "options_item30": {
+        "message": "Simular o botão 'Permitir' para previnir que o bloqueador interno de pop-up do seu navegador bloqueie esses pedidos",
+        "description": ""
+    },
+    "options_item31": {
+        "message": "Quando o botão \"Confiar\" é apertado, adicione o hostname para",
+        "description": ""
+    },
+    "options_item32": {
+        "message": "Destinos da lista branca:",
+        "description": ""
+    },
+    "options_item33": {
+        "message": "Fontes da lista branca:",
+        "description": ""
+    },
+    "options_item34": {
+        "message": "Lista negra de notificação",
+        "description": ""
+    },
+    "options_item35": {
+        "message": "Lista de hostnames separada por vírgula que o bloqueador de pop-ups não exibirá notificação se um pop-up for solicitado",
+        "description": ""
+    },
+    "options_support": {
+        "message": "Apoie o desinvolvimento",
+        "description": ""
+    },
+    "options_import": {
+        "message": "Importar",
+        "description": ""
+    },
+    "options_export": {
+        "message": "Exportar",
+        "description": ""
+    },
+    "options_reset": {
+        "message": "Resetar ao padrão",
+        "description": ""
+    },
+    "options_save": {
+        "message": "Salvar",
+        "description": ""
+    },
+    "options_msg": {
+        "message": "As opções foram salvas",
+        "description": ""
+    },
+    "ui_msg": {
+        "message": "O pop-up foi solicitado por",
+        "description": ""
+    },
+    "ui_button_allow": {
+        "message": "Permitir este pop-up",
+        "description": ""
+    },
+    "ui_button_redirect": {
+        "message": "Redirecione a página atual para o novo destino em vez de abri-la em uma nova guia ou pop-up",
+        "description": ""
+    },
+    "ui_button_background": {
+        "message": "Abra o link em uma guia em segundo plano",
+        "description": ""
+    },
+    "ui_button_deny": {
+        "message": "Recusar a abertura do pop-up ou da guia",
+        "description": ""
+    },
+    "ui_button_trust": {
+        "message": "Permitir este domínio abrir pop-ups",
         "description": ""
     }
 }

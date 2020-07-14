@@ -92,6 +92,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 });
 // popup related
 chrome.runtime.onMessage.addListener((request, sender, response) => {
+  console.log(request);
   // bouncing back to ui.js; since ui.js is loaded on its frame, we need to send the message to all frames
   if (request.cmd === 'popup-request' && request.silent === false) {
     chrome.tabs.sendMessage(sender.tab.id, Object.assign(request, {

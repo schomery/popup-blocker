@@ -76,10 +76,16 @@ function onClick(e) {
       remove(div, url, id, cmd);
       if (cmd !== 'popup-denied' && cmd !== 'popup-close') {
         // on user-action use native method
-        chrome.runtime.sendMessage({cmd, id, url,
+        const msg = {cmd, id, url,
           frameId: Number(frameId),
           sameContext: sameContext === 'true' || (e.isTrusted && navigator.userAgent.indexOf('Firefox') === -1)
-        });
+        };
+        chrome.runtime.sendMessage(msg);
+        // https://github.com/schomery/popup-blocker/issues/90
+        if (cmd === 'white-list') {
+          msg.cmd = 'popup-accepted';
+          chrome.runtime.sendMessage(msg);
+        }
       }
       // remember user action
       if (cmd === 'popup-close') {

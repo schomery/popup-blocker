@@ -163,7 +163,6 @@ if (document.contentType === 'text/html') {
         script.dispatchEvent(new CustomEvent('state', {
           detail: 'install'
         }));
-        console.log('IN');
       }
     };
     blocker.remove = () => {
@@ -178,7 +177,6 @@ if (document.contentType === 'text/html') {
         script.dispatchEvent(new CustomEvent('state', {
           detail: 'remove'
         }));
-        console.log('RM');
       }
     };
 
@@ -422,12 +420,12 @@ if (document.contentType === 'text/html') {
   chrome.runtime.onMessage.addListener((request, sender, response) => {
     // apply popup-accept on the context where it is originally requested
     if (request.cmd === 'popup-accepted') {
-      prefs.enabled = false;
-      const script = document.createElement('script');
+      script.dataset.enabled = false;
+      const s = document.createElement('script');
       if (records[request.id]) {
-        script.dataset.commands = JSON.stringify(records[request.id]);
+        s.dataset.commands = JSON.stringify(records[request.id]);
         delete records[request.id];
-        script.textContent = `{
+        s.textContent = `{
           const [{method, args}, ...commands] = JSON.parse(document.currentScript.dataset.commands);
           const loaded = [window[method].apply(window, args)];
           commands.forEach(({name, method, args}) => {
@@ -440,16 +438,16 @@ if (document.contentType === 'text/html') {
         }`;
       }
       else {
-        script.textContent = `{
+        s.textContent = `{
           const a = document.createElement('a');
           a.target = '_blank';
           a.href = '${request.url}';
           a.click();
         }`;
       }
-      document.body.appendChild(script);
-      script.remove();
-      prefs.enabled = true;
+      document.body.appendChild(s);
+      s.remove();
+      script.dataset.enabled = prefs.enabled;
     }
     else if (request.cmd === 'use-shadow') {
       prefs.shadow = true;
