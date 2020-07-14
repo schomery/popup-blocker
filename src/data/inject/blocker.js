@@ -163,6 +163,7 @@ if (document.contentType === 'text/html') {
         script.dispatchEvent(new CustomEvent('state', {
           detail: 'install'
         }));
+        console.log('IN');
       }
     };
     blocker.remove = () => {
@@ -177,6 +178,7 @@ if (document.contentType === 'text/html') {
         script.dispatchEvent(new CustomEvent('state', {
           detail: 'remove'
         }));
+        console.log('RM');
       }
     };
 
@@ -384,7 +386,7 @@ if (document.contentType === 'text/html') {
     e.stopPropagation();
     // make sure the request is from our script; see example 1
     if (e.target === script) {
-      if (prefs.enabled) {
+      if (script.dataset.enabled !== 'false' && window.disableByPolicy !== true) {
         const request = e.detail;
         const {block, id, href, hostname} = blocker.policy(request);
         script.setAttribute('eid', id);

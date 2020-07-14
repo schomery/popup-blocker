@@ -1,9 +1,9 @@
 /* global prefs */
 'use strict';
 
-if (typeof prefs === 'undefined') {
-  window.disableByPolicy = true;
-}
-else {
+console.log('stop.js');
+
+window.disableByPolicy = true;
+if (typeof prefs !== 'undefined') {
   prefs.enabled = false;
 }
