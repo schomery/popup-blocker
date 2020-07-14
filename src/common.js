@@ -140,6 +140,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
   }
   // is this tab (top level url) in the white-list or black-list
   else if (request.cmd === 'exception' && sender.frameId === 0) {
+    console.log(request, sender.tab);
     config.get(['blacklist', 'top-hosts', 'silent', 'enabled']).then(prefs => {
       let enabled = prefs.enabled;
       const {hostname, href} = request;

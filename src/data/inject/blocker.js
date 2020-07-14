@@ -1,8 +1,9 @@
 'use strict';
 
 if (document.contentType === 'text/html') {
+  const isFirefox = /Firefox/.test(navigator.userAgent);
   // Firefox issue; document.activeElement is always <body/>
-  if (/Firefox/.test(navigator.userAgent)) {
+  if (isFirefox) {
     let activeElement = document.documentElement;
     document.addEventListener('click', e => activeElement = e.target, true);
     Object.defineProperty(document, 'activeElement', {
@@ -261,8 +262,22 @@ if (document.contentType === 'text/html') {
     const base = [a, ...document.querySelectorAll('base')]
       .map(e => e && e.target ? e.target : '')
       .filter(b => b).shift();
-    // the linked page opens in the named frame
-    return base ? base.toLowerCase() !== '_self' && typeof window[base] !== 'object' : false;
+    if (!base || base.toLowerCase() === '_self') {
+      return false;
+    }
+    else if (typeof window[base] === 'object') {
+      // the linked page opens in the named frame
+      return false;
+    }
+    else if (isFirefox) {
+      try {
+        const e = document.querySelector(`[name="${base}"]`);
+        return e ? false : true;
+      }
+      catch (e) {
+        return true;
+      }
+    }
   };
 
   blocker.policy = request => {
