@@ -271,13 +271,13 @@ if (document.contentType === 'text/html') {
     }
     else if (isFirefox) {
       try {
-        const e = document.querySelector(`[name="${base}"]`);
-        return e ? false : true;
+        if (document.querySelector(`[name="${base}"]`)) {
+          return false;
+        }
       }
-      catch (e) {
-        return true;
-      }
+      catch (e) {}
     }
+    return true;
   };
 
   blocker.policy = request => {
