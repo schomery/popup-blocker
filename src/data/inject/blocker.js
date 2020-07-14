@@ -256,12 +256,13 @@ if (document.contentType === 'text/html') {
   const blocker = {};
 
   blocker.hasBase = a => {
+    // https://github.com/schomery/popup-blocker/issues/86
     // only check the closest base
     const base = [a, ...document.querySelectorAll('base')]
-      .map(e => e && e.target ? e.target.toLowerCase() : '')
+      .map(e => e && e.target ? e.target : '')
       .filter(b => b).shift();
     // the linked page opens in the named frame
-    return base ? base !== '_self' && typeof window[base] !== 'object' : false;
+    return base ? base.toLowerCase() !== '_self' && typeof window[base] !== 'object' : false;
   };
 
   blocker.policy = request => {
