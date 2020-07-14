@@ -1,6 +1,6 @@
 'use strict';
 
-const config = {
+var config = {
   'enabled': true,
   'numbers': 5,
   'timeout': 30,
@@ -27,7 +27,6 @@ const config = {
   'faqs': true,
   'last-update': 0
 };
-window.config = config;
 
 config.get = arr => new Promise(resolve => {
   const ps = arr.reduce((p, c) => {

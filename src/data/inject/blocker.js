@@ -1,4 +1,3 @@
-/* global script */
 'use strict';
 
 if (document.contentType === 'text/html') {
@@ -12,6 +11,8 @@ if (document.contentType === 'text/html') {
       }
     });
   }
+
+  const script = document.createElement('script');
   // record fake window's executed commands
   const records = {};
   // should I display popups
@@ -29,8 +30,18 @@ if (document.contentType === 'text/html') {
     set(obj, key, value) {
       obj[key] = value;
       // allow the unprotected code to get relevant preferences
-      if (key === 'enabled' || key === 'shadow') {
+      if (key === 'shadow') {
         script.dataset[key] = value;
+      }
+      else if (key === 'enabled') {
+        chrome.runtime.sendMessage({
+          cmd: 'exception',
+          href: location.href,
+          hostname: location.hostname
+        }, response => {
+          silent = response.silent;
+          script.dataset.enabled = response.enabled;
+        });
       }
       return true;
     }
@@ -56,26 +67,191 @@ if (document.contentType === 'text/html') {
     if (loaded === false) {
       chrome.storage.local.get(_prefs, ps => {
         Object.assign(prefs, ps);
-        if (prefs.enabled) {
-          chrome.runtime.sendMessage({
-            cmd: 'exception',
-            href: location.href,
-            hostname: location.hostname
-          }, response => {
-            silent = response.silent;
-            if (response.enabled === false) {
-              prefs.enabled = false;
-            }
-          });
-        }
       });
     }
+  }
+  if (window.disableByPolicy) {
+    prefs.enabled = false;
   }
 
   // listen for enabled preference changes
   chrome.storage.onChanged.addListener(ps => {
     Object.keys(ps).filter(key => key in _prefs).forEach(key => prefs[key] = ps[key].newValue);
   });
+
+  // state
+  script.addEventListener('state', e => {
+    e.stopPropagation();
+    if (window.top === window) {
+      chrome.runtime.sendMessage({
+        'cmd': 'state',
+        'active': e.detail === 'install'
+      });
+    }
+  });
+
+  script.textContent = `{
+    // definitions
+    const script = document.currentScript;
+    const blocker = {};
+    // pointers
+    const pointers = {
+      'mpp': MouseEvent.prototype.preventDefault,
+      'hac': HTMLAnchorElement.prototype.click,
+      'had': HTMLAnchorElement.prototype.dispatchEvent,
+      'hfs': HTMLFormElement.prototype.submit,
+      'hfd': HTMLFormElement.prototype.dispatchEvent,
+      'wop': window.open
+    };
+    // helper functions
+    const policy = (type, element, event, extra = {}) => {
+      if (event) {
+        extra.defaultPrevented = event.defaultPrevented;
+        extra.metaKey = event.metaKey;
+        extra.button = event.button || 0;
+        extra.isTrusted = event.isTrusted;
+      }
+      script.dispatchEvent(new CustomEvent('policy', {
+        detail: Object.assign({
+          type,
+          href: element.action || element.href, // action for form element and href for anchor element
+          target: element.target
+        }, extra)
+      }));
+      return {
+        id: script.getAttribute('eid'),
+        block: script.getAttribute('block') === 'true'
+      };
+    };
+    const watch = (parent, name, callback) => {
+      let original = parent[name];
+      Object.defineProperty(parent, name, {
+        configurable: true,
+        get() {
+          callback();
+          return original;
+        },
+        set(v) {
+          original = v;
+        }
+      });
+    };
+    const simulate = (name, root, id) => new Proxy({}, { // window.location.replace
+      get(obj, key) {
+        return typeof root[key] === 'function' ? function(...args) {
+          script.dispatchEvent(new CustomEvent('record', {
+            detail: {
+              id,
+              name,
+              method: root[key].name || key, // window.focus
+              args
+            }
+          }));
+        } : simulate(key, root[key], id);
+      }
+    });
+    // popup blocker
+    blocker.install = () => {
+      if (script.dataset.enabled !== 'false') {
+        document.addEventListener('click', blocker.overwrite.click, true); // with capture; see method 8
+        window.open = blocker.overwrite.open;
+        HTMLAnchorElement.prototype.click = blocker.overwrite.a.click;
+        HTMLAnchorElement.prototype.dispatchEvent = blocker.overwrite.a.dispatchEvent;
+        HTMLFormElement.prototype.submit = blocker.overwrite.form.submit;
+        HTMLFormElement.prototype.dispatchEvent = blocker.overwrite.form.dispatchEvent;
+
+        script.dispatchEvent(new CustomEvent('state', {
+          detail: 'install'
+        }));
+      }
+    };
+    blocker.remove = () => {
+      if (script.dataset.enabled === 'false') {
+        document.removeEventListener('click', blocker.overwrite.click);
+        window.open = pointers.wop;
+        HTMLAnchorElement.prototype.click = pointers.hac;
+        HTMLAnchorElement.prototype.dispatchEvent = pointers.had;
+        HTMLFormElement.prototype.submit = pointers.hfs;
+        HTMLFormElement.prototype.dispatchEvent = pointers.hfd;
+
+        script.dispatchEvent(new CustomEvent('state', {
+          detail: 'remove'
+        }));
+      }
+    };
+
+    blocker.overwrite = {};
+    blocker.overwrite.click = e => {
+      const a = e.target.closest('[target]') || e.target.closest('a');
+      // if this is not a form or anchor element, ignore the click
+      if (a && policy('element.click', a, e).block) {
+        pointers.mpp.apply(e);
+        return true;
+      }
+    };
+    blocker.overwrite.a = {};
+    blocker.overwrite.a.click = function(...args) {
+      const {block} = policy('dynamic.a.click', this);
+      if (!block) {
+        pointers.hac.apply(this, args);
+      }
+    };
+    blocker.overwrite.a.dispatchEvent = function(...args) {
+      const e = args[0];
+      let {block} = policy('dynamic.a.dispatch', this, e);
+      return block ? false : pointers.had.apply(this, args);
+    };
+    blocker.overwrite.form = {};
+    blocker.overwrite.form.submit = function(...args) {
+      const {block} = policy('dynamic.form.submit', this);
+      return block ? false : pointers.hfs.apply(this, args);
+    };
+    blocker.overwrite.form.dispatchEvent = function(...args) {
+      const {block} = policy('dynamic.form.dispatch', this);
+      return block ? false : pointers.hfd.apply(this, args);
+    };
+    blocker.overwrite.open = function(...args) {
+      const {id, block} = policy('window.open', {
+        href: args.length ? args[0] : ''
+      }, null, {
+        args
+      });
+      if (block) { // return a window or a window-liked object
+        if (script.dataset.shadow === 'true') {
+          const iframe = document.createElement('iframe');
+          iframe.style.display = 'none';
+          document.body.appendChild(iframe);
+          return iframe.contentWindow;
+        }
+        else {
+          return simulate('self', window, id);
+        }
+      }
+      else {
+        return pointers.wop.apply(window, args);
+      }
+    };
+    blocker.install();
+    // document.open can wipe all the listeners
+    let documentElement = document.documentElement;
+    watch(document, 'write', () => {
+      if (documentElement !== document.documentElement) {
+        documentElement = document.documentElement;
+        blocker.install();
+      }
+    });
+    // configure
+    new MutationObserver(ms => {
+      if (ms.some(m => m.attributeName === 'data-enabled')) {
+        blocker[script.dataset.enabled === 'false' ? 'remove' : 'install']()
+      }
+    }).observe(script, {
+      attributes: true,
+      attributeFilter: ['data-enabled']
+    });
+  }`;
+  (document.head || document.documentElement).appendChild(script);
+  script.remove();
 
   const blocker = {};
 
@@ -205,6 +381,7 @@ if (document.contentType === 'text/html') {
   };
   // channel
   script.addEventListener('policy', e => {
+    e.stopPropagation();
     // make sure the request is from our script; see example 1
     if (e.target === script) {
       if (prefs.enabled) {
@@ -213,7 +390,6 @@ if (document.contentType === 'text/html') {
         script.setAttribute('eid', id);
         script.setAttribute('block', block);
 
-        // console.log(request, block);
         if (block) {
           redirect.block();
           chrome.runtime.sendMessage({
@@ -235,6 +411,7 @@ if (document.contentType === 'text/html') {
 
   // record
   script.addEventListener('record', e => {
+    e.stopPropagation();
     const {id, name, method, args} = e.detail;
     records[id].push({name, method, args});
   });

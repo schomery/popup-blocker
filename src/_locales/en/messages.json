@@ -2,9 +2,6 @@
   "app_description": {
     "message": "Strictly block all popup requests from any website"
   },
-  "background_msg1": {
-    "message": "tools.add0n.com is used for popup testing. This hostname cannot be added to the whitelist."
-  },
   "context_item1": {
     "message": "Test your popup blocker"
   },
@@ -160,5 +157,17 @@
   },
   "ui_button_trust": {
     "message": "White-list this domain to open popups"
+  },
+  "bg_msg_state_1": {
+    "message": "Popup Blocker (strict) is globally enabled and protects this tab"
+  },
+  "bg_msg_state_2": {
+    "message": "Popup Blocker (strict) is globally enabled but does not protect this tab"
+  },
+  "bg_msg_state_3": {
+    "message": "Popup Blocker (strict) is globally disabled and does not protect this tab"
+  },
+  "bg_msg_state_4": {
+    "message": "Popup Blocker (strict) is globally disabled but protects this tab"
   }
 }

@@ -1,6 +1,8 @@
 /* globals config */
 'use strict';
 
+const TEST_SUITE = 'https://webbrowsertools.com/popup-blocker/';
+
 const cookie = {
   get: host => {
     const key = document.cookie.split(`${host}-wot=`);
@@ -42,8 +44,8 @@ chrome.storage.onChanged.addListener(prefs => {
 const cache = {};
 chrome.tabs.onRemoved.addListener(tabId => delete cache[tabId]);
 
-// update badge counter
 chrome.runtime.onMessage.addListener((request, sender) => {
+  // update badge counter
   if (request.cmd === 'popup-request') {
     const tabId = sender.tab.id;
     config.get(['badge']).then(({badge}) => {
@@ -59,10 +61,37 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       }
     });
   }
+  else if (request.cmd === 'state') {
+    config.get(['enabled']).then(({enabled}) => {
+      let state = 4;
+      if (enabled && request.active) {
+        state = 1;
+      }
+      else if (enabled && request.active === false) {
+        state = 2;
+      }
+      else if (enabled === false && request.active === false) {
+        state = 3;
+      }
+      const path = {
+        16: 'data/icons/state/' + state + '/16.png',
+        19: 'data/icons/state/' + state + '/19.png',
+        32: 'data/icons/state/' + state + '/32.png',
+        38: 'data/icons/state/' + state + '/38.png'
+      };
+      chrome.browserAction.setIcon({
+        tabId: sender.tab.id,
+        path
+      });
+      chrome.browserAction.setTitle({
+        tabId: sender.tab.id,
+        title: chrome.i18n.getMessage('bg_msg_state_' + state)
+      });
+    });
+  }
 });
 // popup related
 chrome.runtime.onMessage.addListener((request, sender, response) => {
-  // console.log(request, sender);
   // bouncing back to ui.js; since ui.js is loaded on its frame, we need to send the message to all frames
   if (request.cmd === 'popup-request' && request.silent === false) {
     chrome.tabs.sendMessage(sender.tab.id, Object.assign(request, {
@@ -110,11 +139,15 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     }
   }
   // is this tab (top level url) in the white-list or black-list
-  else if (request.cmd === 'exception' && request.top) {
-    config.get(['blacklist', 'top-hosts', 'silent']).then(prefs => {
-      let enabled = true;
-      const {hostname} = request;
-      if (hostname) {
+  else if (request.cmd === 'exception' && sender.frameId === 0) {
+    config.get(['blacklist', 'top-hosts', 'silent', 'enabled']).then(prefs => {
+      let enabled = prefs.enabled;
+      const {hostname, href} = request;
+
+      if (href === TEST_SUITE) {
+        enabled = true;
+      }
+      else if (hostname && prefs.enabled) {
         // white-list
         if (prefs.blacklist.length === 0) {
           enabled = prefs['top-hosts'].some(h => h.endsWith(hostname) || hostname.endsWith(h)) === false;
@@ -123,10 +156,8 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
         else {
           enabled = prefs.blacklist.some(h => h.endsWith(hostname) || hostname.endsWith(h));
         }
-        if (hostname === 'tools.add0n.com') {
-          enabled = true;
-        }
       }
+
       cache[sender.tab.id] = {
         enabled,
         silent: prefs.silent.indexOf(request.hostname) !== -1
@@ -145,11 +176,6 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     config.get(['whitelist-mode', 'top-hosts', 'popup-hosts']).then(prefs => {
       const mode = prefs['whitelist-mode'];
       const {hostname} = new URL(mode === 'popup-hosts' ? request.url : sender.tab.url);
-      if (hostname === 'tools.add0n.com') {
-        return chrome.tabs.executeScript({
-          code: `window.alert("${chrome.i18n.getMessage('background_msg1')}");`
-        });
-      }
       prefs[mode].push(hostname);
       prefs[mode] = prefs[mode].filter((h, i, l) => l.indexOf(h) === i);
       chrome.storage.local.set({
@@ -193,8 +219,11 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'open-test-page') {
     chrome.tabs.create({
-      url: 'https://webbrowsertools.com/popup-blocker/'
+      url: TEST_SUITE
     });
+  }
+  else if (info.menuItemId === 'open-options') {
+    chrome.runtime.openOptionsPage();
   }
   else if (info.menuItemId === 'immediate-action') {
     chrome.storage.local.set({
@@ -242,29 +271,29 @@ onClicked();
   chrome.runtime.onStartup.addListener(start);
 }
 
-/* FAQs & Feedback */
+// FAQs
 {
-  const {management, runtime: {onInstalled, setUninstallURL, getManifest}, storage, tabs} = chrome;
-  if (navigator.webdriver !== true) {
-    const page = getManifest().homepage_url;
-    const {name, version} = getManifest();
-    onInstalled.addListener(({reason, previousVersion}) => {
-      management.getSelf(({installType}) => installType === 'normal' && storage.local.get({
-        'faqs': true,
-        'last-update': 0
-      }, prefs => {
-        if (reason === 'install' || (prefs.faqs && reason === 'update')) {
-          const doUpdate = (Date.now() - prefs['last-update']) / 1000 / 60 / 60 / 24 > 45;
-          if (doUpdate && previousVersion !== version) {
-            tabs.create({
-              url: page + '?version=' + version + (previousVersion ? '&p=' + previousVersion : '') + '&type=' + reason,
-              active: reason === 'install'
-            });
-            storage.local.set({'last-update': Date.now()});
-          }
+  const {onInstalled, setUninstallURL, getManifest} = chrome.runtime;
+  const {name, version} = getManifest();
+  const page = getManifest().homepage_url;
+  onInstalled.addListener(({reason, previousVersion}) => {
+    chrome.storage.local.get({
+      'faqs': true,
+      'last-update': 0
+    }, prefs => {
+      if (reason === 'install' || (prefs.faqs && reason === 'update')) {
+        const doUpdate = (Date.now() - prefs['last-update']) / 1000 / 60 / 60 / 24 > 45;
+        if (doUpdate && previousVersion !== version) {
+          chrome.tabs.create({
+            url: page + '?version=' + version +
+              (previousVersion ? '&p=' + previousVersion : '') +
+              '&type=' + reason,
+            active: reason === 'install'
+          });
+          chrome.storage.local.set({'last-update': Date.now()});
         }
-      }));
+      }
     });
-    setUninstallURL(page + '?rd=feedback&name=' + encodeURIComponent(name) + '&version=' + version);
-  }
+  });
+  setUninstallURL(page + '?rd=feedback&name=' + encodeURIComponent(name) + '&version=' + version);
 }
