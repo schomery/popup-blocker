@@ -146,17 +146,32 @@
   "ui_button_allow": {
     "message": "Allow this popup"
   },
+  "ui_button_allow_value": {
+    "message": "allow"
+  },
   "ui_button_redirect": {
     "message": "Redirect current page to the new destination instead of opening it in a new tab or popup"
+  },
+  "ui_button_redirect_value": {
+    "message": "redirect"
   },
   "ui_button_background": {
     "message": "Open the link in a background tab"
   },
+  "ui_button_background_value": {
+    "message": "background"
+  },
   "ui_button_deny": {
     "message": "Decline the popup or tab opening"
   },
+  "ui_button_deny_value": {
+    "message": "deny"
+  },
   "ui_button_trust": {
     "message": "White-list this domain to open popups"
+  },
+  "ui_button_trust_value": {
+    "message": "trust"
   },
   "bg_msg_state_1": {
     "message": "Popup Blocker (strict) is globally enabled and protects this tab"

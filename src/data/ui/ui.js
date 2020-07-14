@@ -1,9 +1,9 @@
 /* globals config, wot */
 'use strict';
 
-var entry = document.getElementById('entry');
-var urls = {};
-var cookie = {
+const entry = document.getElementById('entry');
+const urls = {};
+const cookie = {
   get: host => {
     const key = document.cookie.split(`${host}-action=`);
     if (key.length > 1) {
@@ -25,7 +25,7 @@ var cookie = {
   }
 };
 
-var resize = () => window.top.postMessage({
+const resize = () => window.top.postMessage({
   method: 'ppp-resize',
   // Edge issue with document.documentElement.clientHeight
   height: document.documentElement.getBoundingClientRect().height,
@@ -93,7 +93,7 @@ function onClick(e) {
 }
 document.addEventListener('click', onClick);
 
-var doTimer = (div, button, countdown) => {
+const doTimer = (div, button, countdown) => {
   button.dataset.default = true;
   const label = button.value;
   const id = window.setInterval(() => {
@@ -112,7 +112,7 @@ var doTimer = (div, button, countdown) => {
   }, 1000);
   button.value = label + ` (${countdown})`;
 };
-var onPopupRequest = async request => {
+const onPopupRequest = async request => {
   const tag = request.href && request.href !== 'about:blank' ? request.href : request.id;
   // already listed
   if (urls[tag]) {
@@ -171,6 +171,9 @@ var onPopupRequest = async request => {
     // localization
     [...clone.querySelectorAll('[data-i18n]')].forEach(e => {
       e[e.dataset.i18nValue || 'title'] = chrome.i18n.getMessage(e.dataset.i18n);
+      if (e.type === 'button') {
+        e.value = chrome.i18n.getMessage(e.dataset.i18n + '_value');
+      }
     });
     document.body.appendChild(clone);
     // hide on timeout

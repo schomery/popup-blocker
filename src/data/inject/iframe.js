@@ -12,7 +12,7 @@
           position: fixed;
           right: 10px;
           top: 10px;
-          width: 350px;
+          width: 420px;
           max-width: 80vw;
           height: 85px;
           border: none;
