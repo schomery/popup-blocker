@@ -18,8 +18,12 @@ if (document.contentType === 'text/html') {
   const records = {};
   // should I display popups
   let silent = false;
+  window.silent = silent;
+  // access to the parent frame
+  let access = false;
 
-  const _prefs = { // Firefox issue
+  // default preferences
+  const _prefs = {
     'enabled': true,
     'shadow': false,
     'domain': false,
@@ -27,52 +31,48 @@ if (document.contentType === 'text/html') {
     'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com', 'disqus.com'],
     'block-page-redirection': false
   };
+  const verify = () => access === false && chrome.runtime.sendMessage({
+    cmd: 'exception',
+    href: location.href,
+    hostname: location.hostname
+  }, response => {
+    silent = response.silent;
+    _prefs.enabled = response.enabled;
+    script.dataset.enabled = response.enabled;
+  });
+
   const prefs = new Proxy(_prefs, {
     set(obj, key, value) {
       obj[key] = value;
       // allow the unprotected code to get relevant preferences
       if (key === 'shadow') {
-        script.dataset[key] = value;
+        script.dataset.shadow = value;
       }
-      else if (key === 'enabled') {
-        chrome.runtime.sendMessage({
-          cmd: 'exception',
-          href: location.href,
-          hostname: location.hostname
-        }, response => {
-          silent = response.silent;
-          script.dataset.enabled = response.enabled;
-        });
+      // double check the prefs.enabled with the bg page for top and cross-origin frames
+      if (key === 'enabled') {
+        script.dataset.enabled = value;
+        verify();
       }
       return true;
     }
   });
-  // make sure we have access to our preferences from the same origin iframes
   window.prefs = prefs;
-  window.silent = silent;
 
   // try to get the preferences from the top element; otherwise get them from chrome.storage
-  {
-    let loaded = false;
-    if (window.parent !== window) {
-      // console.log(window.parent.prefs, self.parent.prefs, this.parent.prefs, parent.prefs);
-      try {
-        if (window.parent.prefs !== undefined) { // Firefox issue
-          Object.assign(prefs, window.parent.prefs);
-          silent = window.parent.silent;
-          loaded = true;
-        }
+  if (window.parent !== window) {
+    try {
+      if (window.parent.prefs !== undefined) { // Firefox issue
+        access = true;
+        Object.assign(prefs, window.parent.prefs);
+        silent = window.parent.silent;
       }
-      catch (e) {}
     }
-    if (loaded === false) {
-      chrome.storage.local.get(_prefs, ps => {
-        Object.assign(prefs, ps);
-      });
-    }
+    catch (e) {}
   }
-  if (window.disableByPolicy) {
-    prefs.enabled = false;
+  if (access === false) {
+    chrome.storage.local.get(_prefs, ps => {
+      Object.assign(prefs, ps);
+    });
   }
 
   // listen for enabled preference changes
@@ -91,6 +91,7 @@ if (document.contentType === 'text/html') {
     }
   });
 
+  script.dataset.enabled = prefs.enabled;
   script.textContent = `{
     // definitions
     const script = document.currentScript;
@@ -281,7 +282,7 @@ if (document.contentType === 'text/html') {
   };
 
   blocker.policy = request => {
-    const target = document.activeElement;
+    const target = document.activeElement || document.documentElement;
     const {type} = request;
     let href = request.href;
     let hostname = '';
@@ -365,7 +366,6 @@ if (document.contentType === 'text/html') {
         args: request.args
       }];
     }
-
     return {
       id,
       href,
@@ -400,7 +400,7 @@ if (document.contentType === 'text/html') {
     e.stopPropagation();
     // make sure the request is from our script; see example 1
     if (e.target === script) {
-      if (script.dataset.enabled !== 'false' && window.disableByPolicy !== true) {
+      if (script.dataset.enabled !== 'false') {
         const request = e.detail;
         const {block, id, href, hostname} = blocker.policy(request);
         script.setAttribute('eid', id);

@@ -33,9 +33,8 @@ async function restore(defaults = false) {
   document.getElementById('immediate-action').checked = prefs['immediate-action'];
 }
 
-var prepare = str => str.split(/\s*,\s*/)
-  .map(s => s.replace('http://', '')
-  .replace('https://', '').split('/')[0].trim())
+const prepare = str => str.split(/\s*,\s*/)
+  .map(s => s.replace('http://', '').replace('https://', '').split('/')[0].trim())
   .filter((h, i, l) => h && l.indexOf(h) === i);
 
 function save() {
