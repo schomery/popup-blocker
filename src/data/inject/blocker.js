@@ -307,16 +307,23 @@ if (document.contentType === 'text/html') {
     const base = [a, ...document.querySelectorAll('base')]
       .map(e => e && e.target ? e.target : '')
       .filter(b => b).shift();
+
     if (!base || base.toLowerCase() === '_self') {
       return false;
     }
-    else if (typeof window[base] === 'object') {
+    else if (typeof window[base] === 'object' || typeof parent[base] === 'object') {
       // the linked page opens in the named frame
       return false;
     }
     else if (isFirefox) {
       try {
         if (document.querySelector(`[name="${base}"]`)) {
+          return false;
+        }
+      }
+      catch (e) {}
+      try {
+        if (parent.document.querySelector(`[name="${base}"]`)) {
           return false;
         }
       }
