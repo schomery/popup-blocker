@@ -1,0 +1,250 @@
+{
+    "app_description": {
+        "message": "Blocca tutti i popup di ogni sito",
+        "description": ""
+    },
+    "context_item1": {
+        "message": "Verifica il tuo blocco di popup",
+        "description": ""
+    },
+    "context_item2": {
+        "message": "Permetti l'ultima richiesta di popup",
+        "description": ""
+    },
+    "context_item3": {
+        "message": "Rifiuta l'ultima richiesta di popup",
+        "description": ""
+    },
+    "context_item4": {
+        "message": "Utilizza una finestra shadow per questo tab",
+        "description": ""
+    },
+    "context_item5": {
+        "message": "Apri la pagina delle impostazioni",
+        "description": ""
+    },
+    "context_item6": {
+        "message": "Ignora le notifiche di popup se possibile",
+        "description": ""
+    },
+    "options_item1": {
+        "message": "Numero massimo di richieste di popup per una singola pagina",
+        "description": ""
+    },
+    "options_item2": {
+        "message": "Tempo per mostrare ogni popup (in secondi)",
+        "description": ""
+    },
+    "options_item3": {
+        "message": "Non bloccare i popup che hanno la stessa origine",
+        "description": ""
+    },
+    "options_item5": {
+        "message": "Mostra il numero di richieste bloccate nell'icona nella barra degli strumenti",
+        "description": ""
+    },
+    "options_item6": {
+        "message": "Destinazioni in whitelist:",
+        "description": ""
+    },
+    "options_item7": {
+        "message": "Fonti in whitelist:",
+        "description": ""
+    },
+    "options_item8": {
+        "message": "Perché questi cambiamenti abbiano effetto, aggiornare il tab.",
+        "description": ""
+    },
+    "options_item9": {
+        "message": "Countdown per eseguire l'ultima azione (in secondi)",
+        "description": ""
+    },
+    "options_item10": {
+        "message": "Usa il numero zero per disabilitare il countdown per eseguire l'azione precedente.",
+        "description": ""
+    },
+    "options_item11": {
+        "message": "Elenco separato da virgola dei domini che non saranno bloccati (questi domini potranno causare popup su ogni sito).",
+        "description": ""
+    },
+    "options_item12": {
+        "message": "Elenco separato da virgola dei domini in cui l'estensione per bloccare i popup sarà completamente disabilitata.",
+        "description": ""
+    },
+    "options_item13": {
+        "message": "Fonti in blacklist (modalità di funzionamento inverso):",
+        "description": ""
+    },
+    "options_item14": {
+        "message": "Elenco separato da virgola dei soli domini in cui il blocco dei popup sarà attivo. Questo significa che il blocco dei popup sarà disabilitato in TUTTI gli altri domini. Per disabilitare questa modalità, svuotare completamente il campo della blacklist.",
+        "description": ""
+    },
+    "options_item15": {
+        "message": "Impedire il redirect di una pagina per 2 secondi dopo che viene richiesto un popup",
+        "description": ""
+    },
+    "options_item16": {
+        "message": "Alcuni siti redirezionano l'utente a una pagina pubblicitaria se il popup che mostra una pubblicità viene bloccato. Questa opzioni evita questo non permettendo il redirect per un certo periodo di tempo.",
+        "description": ""
+    },
+    "options_item17": {
+        "message": "Azione di default quando viene richiesto un popup",
+        "description": ""
+    },
+    "options_item18": {
+        "message": "non fare niente",
+        "description": ""
+    },
+    "options_item19": {
+        "message": "nega richiesta",
+        "description": ""
+    },
+    "options_item20": {
+        "message": "apri in background",
+        "description": ""
+    },
+    "options_item21": {
+        "message": "pagina di redirect",
+        "description": ""
+    },
+    "options_item22": {
+        "message": "Colore di sfondo del badge",
+        "description": ""
+    },
+    "options_item23": {
+        "message": "Ignora le notifiche di popup quando possibile (non raccomandato)",
+        "description": ""
+    },
+    "options_item24": {
+        "message": "Questo \"ignorerà\" o \"accetterà\" un popup senza l'interazione dell'utente (non raccomandato)",
+        "description": ""
+    },
+    "options_item25": {
+        "message": "Descrizioni",
+        "description": ""
+    },
+    "options_item26": {
+        "message": "Mostra la pagina delle FAQ dopo l'aggiornamento",
+        "description": ""
+    },
+    "options_item27": {
+        "message": "Protocolli in whitelist:",
+        "description": ""
+    },
+    "options_item28": {
+        "message": "I protocolli elencati possono essere aperti un nuovo tab del browser. Per esempio,  aggiungi \"magnet:\" per permettere ai link magnet di essere aperti un un tab del browser.",
+        "description": ""
+    },
+    "options_item29": {
+        "message": "Usa il servizio di Web of Trust (WOT) per decidere se un popup arriva da un dominio fidato o meno.",
+        "description": ""
+    },
+    "options_item30": {
+        "message": "Simulare il bottone di \"permesso\" per prevenire al blocco dei popup del browser di bloccare queste richieste.",
+        "description": ""
+    },
+    "options_item31": {
+        "message": "Quando il bottone \"fidati\" viene premuto, aggiungere il dominio a",
+        "description": ""
+    },
+    "options_item32": {
+        "message": "Destinazioni in whitelist",
+        "description": ""
+    },
+    "options_item33": {
+        "message": "Fonti in whitelist",
+        "description": ""
+    },
+    "options_item34": {
+        "message": "Blacklist delle notifiche",
+        "description": ""
+    },
+    "options_item35": {
+        "message": "Elenco separato da virgola dei domini per cui il blocco dei popup non mostrerà notifiche quando ne verrà richiesto uno.",
+        "description": ""
+    },
+    "options_support": {
+        "message": "Supporto per lo sviluppo",
+        "description": ""
+    },
+    "options_import": {
+        "message": "Importa",
+        "description": ""
+    },
+    "options_export": {
+        "message": "Esporta",
+        "description": ""
+    },
+    "options_reset": {
+        "message": "Resetta alle impostazioni iniziali",
+        "description": ""
+    },
+    "options_save": {
+        "message": "Salva",
+        "description": ""
+    },
+    "options_msg": {
+        "message": "Le opzioni sono salvate",
+        "description": ""
+    },
+    "ui_msg": {
+        "message": "Il popup è richiesto per",
+        "description": ""
+    },
+    "ui_button_allow": {
+        "message": "Permetti questo popup",
+        "description": ""
+    },
+    "ui_button_allow_value": {
+        "message": "permetti",
+        "description": ""
+    },
+    "ui_button_redirect": {
+        "message": "Redireziona la pagina corrente alla nuova destinazione invece di aprirla in un nuovo tab o in un popup",
+        "description": ""
+    },
+    "ui_button_redirect_value": {
+        "message": "redirect",
+        "description": ""
+    },
+    "ui_button_background": {
+        "message": "Apri il link in un tab in background",
+        "description": ""
+    },
+    "ui_button_background_value": {
+        "message": "background",
+        "description": ""
+    },
+    "ui_button_deny": {
+        "message": "Rifiuta il popup o l'apertura del tab",
+        "description": ""
+    },
+    "ui_button_deny_value": {
+        "message": "rifiuta",
+        "description": ""
+    },
+    "ui_button_trust": {
+        "message": "Metti in whitelist questo dominio in modo che possa aprire i popup",
+        "description": ""
+    },
+    "ui_button_trust_value": {
+        "message": "fidati",
+        "description": ""
+    },
+    "bg_msg_state_1": {
+        "message": "Popup Blocker (strict) è abilitato globalmente e protegge questo tab",
+        "description": ""
+    },
+    "bg_msg_state_2": {
+        "message": "Popup Blocker (strict) è abilitato globalmente, ma non protegge questo tab",
+        "description": ""
+    },
+    "bg_msg_state_3": {
+        "message": "Popup Blocker (strict) è disabilitato globalmente e non protegge questo tab",
+        "description": ""
+    },
+    "bg_msg_state_4": {
+        "message": "Popup Blocker (strict) è disabilitato globalmente, ma protegge questo tab",
+        "description": ""
+    }
+}

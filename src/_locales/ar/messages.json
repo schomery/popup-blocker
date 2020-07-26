@@ -1,10 +1,6 @@
 {
     "app_description": {
-        "message": "حظر جميع النوافذ المنبثقه من اي موقع",
-        "description": ""
-    },
-    "background_msg1": {
-        "message": "tools.add0n.com هذا الرابط يستخدم يستخدم لاختبار وظائف الاضافه لا يمكن اضافته لقائمه المواقع المسموح لها",
+        "message": "حظر جميع النوافذ المنبثقه من أي موقع",
         "description": ""
     },
     "context_item1": {
@@ -12,11 +8,11 @@
         "description": ""
     },
     "context_item2": {
-        "message": "السماح لاخر طلب نافذه منبثقه بالظهور",
+        "message": "السماح لآخر طلب نافذه منبثقه بالظهور",
         "description": ""
     },
     "context_item3": {
-        "message": "حظر اخر طلب للنافذه المنبثقه",
+        "message": "حظر آخر طلب للنافذه المنبثقه",
         "description": ""
     },
     "context_item4": {
@@ -199,20 +195,56 @@
         "message": "السماح لهذا",
         "description": ""
     },
+    "ui_button_allow_value": {
+        "message": "اسمح",
+        "description": ""
+    },
     "ui_button_redirect": {
         "message": "توجيه هذه الصفحه الحاليه الي وجهة جديده بدلا من فتها في نافذه تصفح جديده",
+        "description": ""
+    },
+    "ui_button_redirect_value": {
+        "message": "إعادة توجيه",
         "description": ""
     },
     "ui_button_background": {
         "message": "فتح الرابط في نافذه جديده في الخلفيه",
         "description": ""
     },
+    "ui_button_background_value": {
+        "message": "في الخلفية",
+        "description": ""
+    },
     "ui_button_deny": {
         "message": "حظر النافذه المنبثقه او الصفحه الجديده من الفتح",
         "description": ""
     },
+    "ui_button_deny_value": {
+        "message": "رفض",
+        "description": ""
+    },
     "ui_button_trust": {
         "message": "اضافه هذا النطاق الي قائمه النوافذ المنبثقه المسموح بها",
+        "description": ""
+    },
+    "ui_button_trust_value": {
+        "message": "وثوق",
+        "description": ""
+    },
+    "bg_msg_state_1": {
+        "message": "مانع النوافذ المنبثقة مفعل بشكل عام ويحمي هذا التبويب",
+        "description": ""
+    },
+    "bg_msg_state_2": {
+        "message": "مانع النوافذ المنبثقة مفعل بشكل عام ولكن لا يحمي هذا التبويب",
+        "description": ""
+    },
+    "bg_msg_state_3": {
+        "message": "مانع النوافذ المنبثقة معطل بشكل عام ولا يحمي هذا التبويب",
+        "description": ""
+    },
+    "bg_msg_state_4": {
+        "message": "مانع النوافذ المنبثقة معطل بشكل عام ولكن يحمي هذا التبويب",
         "description": ""
     }
 }
