@@ -103,16 +103,23 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     if (request.url.startsWith('http') || request.url.startsWith('ftp')) {
       config.get(['simulate-allow']).then(prefs => {
         if (prefs['simulate-allow'] && request.sameContext !== true) {
-          return chrome.tabs.create({
+          chrome.tabs.create({
             url: request.url,
             openerTabId: sender.tab.id
           });
         }
+        else {
+          chrome.tabs.sendMessage(sender.tab.id, request, {
+            frameId: request.frameId
+          });
+        }
       });
     }
-    chrome.tabs.sendMessage(sender.tab.id, request, {
-      frameId: request.frameId
-    });
+    else {
+      chrome.tabs.sendMessage(sender.tab.id, request, {
+        frameId: request.frameId
+      });
+    }
   }
   // open a new tab or redirect current tab
   else if (request.cmd === 'popup-redirect' || request.cmd === 'open-tab') {
