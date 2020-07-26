@@ -307,6 +307,21 @@
         a.target = 'sub_frame';
         a.click();
       }
+      function method22() {
+        const iframe = document.createElement("iframe");
+        iframe.src = "javascript:true";
+        document.body.appendChild(iframe);
+        const iframewin = iframe.contentWindow || iframe;
+        iframewin.open("", "", "top=9999,left=9999,width=100,height=100");
+      }
+      function method23() {
+        const iframe = document.createElement("iframe");
+        iframe.src = 'data:text/html;charset=utf-8,' + encodeURI(`<p></p>`);
+        document.body.appendChild(iframe);
+        const iframewin = iframe.contentWindow || iframe;
+        console.log('fire');
+        iframewin.open("", "", "top=9999,left=9999,width=100,height=100");
+      }
 
       function overwrite1() {
         try {
@@ -423,8 +438,9 @@
       <li><a href="#" target="_blank">Method 18</a>Same origin tag</li>
       <li><label><a target="_blank" href="http://example.com/method/19">Method 19</a></label></li>
       <li><input type="button" onclick="method20()" value="Method 20"> invalid target</li>
-      <hr/>
       <li><input type="button" onclick="method21()" value="Method 21"> named target (should allow)</li>
+      <li><input type="button" onclick="method22()" value="Method 22"> iframe.src = "javascript:false"</li>
+      <li><input type="button" onclick="method23()" value="Method 23"> iframe.src = "data:text/html;..."</li>
     </ul>
     <p>
       Click <input type="button" onclick="overwrite1();" value="here"> to overwrite "window.open" and try tests one more time.

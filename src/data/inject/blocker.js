@@ -93,9 +93,7 @@ if (document.contentType === 'text/html') {
 
   script.dataset.enabled = prefs.enabled;
   script.textContent = `{
-    // definitions
     const script = document.currentScript;
-    const blocker = {};
     // pointers
     const pointers = {
       'mpp': MouseEvent.prototype.preventDefault,
@@ -103,8 +101,15 @@ if (document.contentType === 'text/html') {
       'had': HTMLAnchorElement.prototype.dispatchEvent,
       'hfs': HTMLFormElement.prototype.submit,
       'hfd': HTMLFormElement.prototype.dispatchEvent,
-      'wop': window.open
+      'wop': window.open,
+      'hps': Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'src'),
+      'hpd': Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentDocument'),
+      'hpw': Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentWindow')
     };
+    pointers.hpss = Function.prototype.call.bind(pointers.hps.set);
+    pointers.hpdg = Function.prototype.call.bind(pointers.hpd.get);
+    pointers.hpwg = Function.prototype.call.bind(pointers.hpw.get);
+
     // helper functions
     const policy = (type, element, event, extra = {}) => {
       if (event) {
@@ -152,36 +157,74 @@ if (document.contentType === 'text/html') {
         } : simulate(key, root[key], id);
       }
     });
-    // popup blocker
-    blocker.install = () => {
-      if (script.dataset.enabled !== 'false') {
-        document.addEventListener('click', blocker.overwrite.click, true); // with capture; see method 8
-        window.open = blocker.overwrite.open;
-        HTMLAnchorElement.prototype.click = blocker.overwrite.a.click;
-        HTMLAnchorElement.prototype.dispatchEvent = blocker.overwrite.a.dispatchEvent;
-        HTMLFormElement.prototype.submit = blocker.overwrite.form.submit;
-        HTMLFormElement.prototype.dispatchEvent = blocker.overwrite.form.dispatchEvent;
+    // blocker
+    const blocker = {
+      install(w = window, d = document) {
+        if (script.dataset.enabled !== 'false') {
+          d.addEventListener('click', blocker.overwrite.click, true); // with capture; see method 8
+          w.open = blocker.overwrite.open;
+          const {HTMLAnchorElement, HTMLFormElement, HTMLIFrameElement} = w;
+          HTMLAnchorElement.prototype.click = blocker.overwrite.a.click;
+          HTMLAnchorElement.prototype.dispatchEvent = blocker.overwrite.a.dispatchEvent;
+          HTMLFormElement.prototype.submit = blocker.overwrite.form.submit;
+          HTMLFormElement.prototype.dispatchEvent = blocker.overwrite.form.dispatchEvent;
 
-        script.dispatchEvent(new CustomEvent('state', {
-          detail: 'install'
-        }));
+          // TO-DO; remove when "match_data_urls" is supported
+          // make sure our blocking script is injected in "javascript:" and "data:" type IFRAMES
+          Object.defineProperty(HTMLIFrameElement.prototype, 'src', {
+            set(v) {
+              const src = v.toLowerCase();
+              if (src.startsWith('data:') || src.startsWith('javascript')) {
+                // before contentDocument or contentWindow is accessed, install the installer script
+                const inject = () => {
+                  const w = pointers.hpwg(this);
+                  const d = pointers.hpdg(this);
+                  if (w && d) {
+                    blocker.install(w, d);
+                    Object.defineProperty(this, 'contentDocument', pointers.hpd);
+                    Object.defineProperty(this, 'contentWindow', pointers.hpw);
+                  }
+                };
+                Object.defineProperty(HTMLIFrameElement.prototype, 'contentDocument', {
+                  get() {
+                    inject();
+                    return pointers.hpdg(this);
+                  }
+                });
+                Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', {
+                  get() {
+                    inject();
+                    return pointers.hpwg(this);
+                  }
+                });
+              }
+              pointers.hpss(this, v);
+            }
+          });
+
+          script.dispatchEvent(new CustomEvent('state', {
+            detail: 'install'
+          }));
+        }
+      },
+      remove() {
+        if (script.dataset.enabled === 'false') {
+          document.removeEventListener('click', blocker.overwrite.click);
+          window.open = pointers.wop;
+          HTMLAnchorElement.prototype.click = pointers.hac;
+          HTMLAnchorElement.prototype.dispatchEvent = pointers.had;
+          HTMLFormElement.prototype.submit = pointers.hfs;
+          HTMLFormElement.prototype.dispatchEvent = pointers.hfd;
+          Object.defineProperty(HTMLIFrameElement.prototype, 'contentDocument', pointers.hpd);
+          Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', pointers.hpw);
+
+          script.dispatchEvent(new CustomEvent('state', {
+            detail: 'remove'
+          }));
+        }
       }
     };
-    blocker.remove = () => {
-      if (script.dataset.enabled === 'false') {
-        document.removeEventListener('click', blocker.overwrite.click);
-        window.open = pointers.wop;
-        HTMLAnchorElement.prototype.click = pointers.hac;
-        HTMLAnchorElement.prototype.dispatchEvent = pointers.had;
-        HTMLFormElement.prototype.submit = pointers.hfs;
-        HTMLFormElement.prototype.dispatchEvent = pointers.hfd;
-
-        script.dispatchEvent(new CustomEvent('state', {
-          detail: 'remove'
-        }));
-      }
-    };
-
+    // overwrites
     blocker.overwrite = {};
     blocker.overwrite.click = e => {
       const a = e.target.closest('[target]') || e.target.closest('a');
@@ -200,7 +243,7 @@ if (document.contentType === 'text/html') {
     };
     blocker.overwrite.a.dispatchEvent = function(...args) {
       const e = args[0];
-      let {block} = policy('dynamic.a.dispatch', this, e);
+      const {block} = policy('dynamic.a.dispatch', this, e);
       return block ? false : pointers.had.apply(this, args);
     };
     blocker.overwrite.form = {};
@@ -233,6 +276,7 @@ if (document.contentType === 'text/html') {
         return pointers.wop.apply(window, args);
       }
     };
+    // always install since we do not know the enabling status right now
     blocker.install();
     // document.open can wipe all the listeners
     let documentElement = document.documentElement;
@@ -242,10 +286,10 @@ if (document.contentType === 'text/html') {
         blocker.install();
       }
     });
-    // configure
+    // receive configure
     new MutationObserver(ms => {
       if (ms.some(m => m.attributeName === 'data-enabled')) {
-        blocker[script.dataset.enabled === 'false' ? 'remove' : 'install']()
+        blocker[script.dataset.enabled === 'false' ? 'remove' : 'install']();
       }
     }).observe(script, {
       attributes: true,
