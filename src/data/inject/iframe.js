@@ -2,11 +2,26 @@
 
 {
   let iframe;
-  chrome.runtime.onMessage.addListener(request => {
+  const requests = [];
+  requests.ready = false;
+  chrome.runtime.onMessage.addListener((request, sender) => {
     if (request.cmd === 'popup-request') {
+      if (requests.ready === false) {
+        // only accept requests from bg page
+        if (request.cmd === 'popup-request' && !sender.tab) {
+          requests.push(request);
+        }
+      }
       if (!iframe) {
         iframe = document.createElement('iframe');
-        iframe.src = chrome.runtime.getURL('data/ui/ui.html?request=' + encodeURIComponent(JSON.stringify(request)));
+        iframe.src = chrome.runtime.getURL('data/ui/ui.html');
+        iframe.onload = () => {
+          iframe.contentWindow.postMessage({
+            method: 'popup-caches',
+            requests
+          }, '*');
+          requests.ready = true;
+        };
         iframe.setAttribute('style', `
           z-index: 2147483649;
           position: fixed;

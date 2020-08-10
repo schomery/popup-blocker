@@ -59,11 +59,9 @@ function Timer(callback, delay, ...args) {
 
 function remove(div, url) {
   delete urls[url || div.dataset.url];
-  try {
-    document.body.removeChild(div);
-  }
-  catch (e) {}
+  div.remove();
   resize();
+  console.log('REMOVE');
 }
 
 function onClick(e) {
@@ -124,15 +122,12 @@ const onPopupRequest = async request => {
   if (urls[tag]) {
     const obj = urls[tag];
     const div = obj.div;
-    div.dataset.badge = Number(div.dataset.badge) + 1;
+    div.dataset.badge = Number(div.dataset.badge || '1') + 1;
     obj.timer.reset();
     obj.timestamp = Date.now();
   }
   // new popup
   else {
-    const prefs = await config.get([
-      'numbers', 'timeout', 'countdown', 'default-action', 'immediate-action', 'simulate-allow', 'wot'
-    ]);
     const clone = document.importNode(entry.content, true);
     const div = clone.querySelector('div');
     div.dataset.id = request.id;
@@ -146,6 +141,11 @@ const onPopupRequest = async request => {
     const p = clone.querySelector('[data-id=info]');
     div.title = p.textContent = '↝ ' + (request.href || 'about:blank');
     // do we have an action for this popup
+
+    const prefs = await config.get([
+      'numbers', 'timeout', 'countdown', 'default-action', 'immediate-action', 'simulate-allow', 'wot'
+    ]);
+
     if (page) {
       const action = cookie.get(div.dataset.hostname) || prefs['default-action'];
       // immediate action
@@ -208,14 +208,8 @@ const onPopupRequest = async request => {
     resize();
   }
 };
-// parse the request
-{
-  const args = new URLSearchParams(location.search);
-  const request = JSON.parse(args.get('request'));
-  onPopupRequest(request);
-}
 
-chrome.runtime.onMessage.addListener((request, sender) => {
+const message = (request, sender) => {
   // only accept requests from bg page
   if (request.cmd === 'popup-request' && !sender.tab) {
     onPopupRequest(request);
@@ -232,4 +226,21 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       }
     }
   }
-});
+};
+chrome.runtime.onMessage.addListener(message);
+
+// initial requests from top
+{
+  const c = e => {
+    const request = e.data;
+    if (request && request.method === 'popup-caches') {
+      window.removeEventListener('message', c);
+      for (const o of request.requests) {
+        message(o, {
+          tab: false
+        });
+      }
+    }
+  };
+  window.addEventListener('message', c);
+}
