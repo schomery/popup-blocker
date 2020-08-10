@@ -61,7 +61,6 @@ function remove(div, url) {
   delete urls[url || div.dataset.url];
   div.remove();
   resize();
-  console.log('REMOVE');
 }
 
 function onClick(e) {
