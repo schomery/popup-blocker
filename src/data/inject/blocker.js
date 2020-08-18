@@ -159,8 +159,8 @@ if (document.contentType === 'text/html') {
     });
     // blocker
     const blocker = {
-      install(w = window, d = document) {
-        if (script.dataset.enabled !== 'false') {
+      install(w = window, d = document, forced = false) {
+        if (script.dataset.enabled !== 'false' && (w.open !== blocker.overwrite.open || forced)) {
           d.addEventListener('click', blocker.overwrite.click, true); // with capture; see method 8
           w.open = blocker.overwrite.open;
           const {HTMLAnchorElement, HTMLFormElement, HTMLIFrameElement} = w;
@@ -174,7 +174,14 @@ if (document.contentType === 'text/html') {
           Object.defineProperty(HTMLIFrameElement.prototype, 'src', {
             set(v) {
               const src = v.toLowerCase();
-              if (src.startsWith('data:') || src.startsWith('javascript')) {
+              if (src.startsWith('javascript:')) {
+                window.ppb = (w, d) => { // a temporary function to install the blocker before the URL script is executed
+                  blocker.install(w, d);
+                  delete window.ppb;
+                };
+                v = 'javascript:window.parent.ppb(window, document);' + src.substr(11);
+              }
+              if (src.startsWith('javascript:') || src.startsWith('data:')) {
                 // before contentDocument or contentWindow is accessed, install the installer script
                 const inject = () => {
                   const w = pointers.hpwg(this);
@@ -278,12 +285,12 @@ if (document.contentType === 'text/html') {
     };
     // always install since we do not know the enabling status right now
     blocker.install();
-    // document.open can wipe all the listeners
+    // document.open removes all the DOM listeners
     let documentElement = document.documentElement;
     watch(document, 'write', () => {
       if (documentElement !== document.documentElement) {
         documentElement = document.documentElement;
-        blocker.install();
+        blocker.install(window, document, true);
       }
     });
     // receive configure
