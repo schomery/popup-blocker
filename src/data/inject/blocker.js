@@ -174,7 +174,6 @@ if (document.contentType === 'text/html') {
           Object.defineProperty(HTMLIFrameElement.prototype, 'src', {
             set(v) {
               const src = v.toLowerCase();
-              console.log(src);
               if (src.startsWith('javascript:')) {
                 window.ppb = (w, d) => { // a temporary function to install the blocker before the URL script is executed
                   blocker.install(w, d);
@@ -286,6 +285,17 @@ if (document.contentType === 'text/html') {
     };
     // always install since we do not know the enabling status right now
     blocker.install();
+    // protect static data: and javascript: frames
+    document.addEventListener('DOMContentLoaded', () => {
+      for (const iframe of [...document.querySelectorAll('iframe[src^="javascript:" i], iframe[src^="data:" i]')]) {
+        try {
+          blocker.install(iframe.contentWindow, iframe.contentDocument);
+        }
+        catch (e) {}
+      }
+    })
+
+
     // document.open removes all the DOM listeners
     let documentElement = document.documentElement;
     watch(document, 'write', () => {
