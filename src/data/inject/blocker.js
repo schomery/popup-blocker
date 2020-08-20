@@ -174,6 +174,7 @@ if (document.contentType === 'text/html') {
           Object.defineProperty(HTMLIFrameElement.prototype, 'src', {
             set(v) {
               const src = v.toLowerCase();
+              console.log(src);
               if (src.startsWith('javascript:')) {
                 window.ppb = (w, d) => { // a temporary function to install the blocker before the URL script is executed
                   blocker.install(w, d);
@@ -318,11 +319,17 @@ if (document.contentType === 'text/html') {
     if (!base || base.toLowerCase() === '_self') {
       return false;
     }
-    else if (typeof window[base] === 'object' || typeof parent[base] === 'object') {
-      // the linked page opens in the named frame
+    // the linked page opens in a named frame
+    if (typeof window[base] === 'object') {
       return false;
     }
-    else if (isFirefox) {
+    try { // might be cross-origin
+      if (typeof parent[base] === 'object') {
+        return false;
+      }
+    }
+    catch (e) {}
+    if (isFirefox) {
       try {
         if (document.querySelector(`[name="${base}"]`)) {
           return false;
