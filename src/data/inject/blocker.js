@@ -170,17 +170,9 @@ if (document.contentType === 'text/html') {
           HTMLFormElement.prototype.dispatchEvent = blocker.overwrite.form.dispatchEvent;
 
           // TO-DO; remove when "match_data_urls" is supported
-          // make sure our blocking script is injected in "javascript:" and "data:" type IFRAMES
           Object.defineProperty(HTMLIFrameElement.prototype, 'src', {
             set(v) {
               const src = v.toLowerCase();
-              if (src.startsWith('javascript:')) {
-                window.ppb = (w, d) => { // a temporary function to install the blocker before the URL script is executed
-                  blocker.install(w, d);
-                  delete window.ppb;
-                };
-                v = 'javascript:window.parent.ppb(window, document);' + src.substr(11);
-              }
               if (src.startsWith('javascript:') || src.startsWith('data:')) {
                 // before contentDocument or contentWindow is accessed, install the installer script
                 const inject = () => {
@@ -224,6 +216,7 @@ if (document.contentType === 'text/html') {
           HTMLFormElement.prototype.dispatchEvent = pointers.hfd;
           Object.defineProperty(HTMLIFrameElement.prototype, 'contentDocument', pointers.hpd);
           Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', pointers.hpw);
+          Object.defineProperty(HTMLIFrameElement.prototype, 'src', pointers.hps);
 
           script.dispatchEvent(new CustomEvent('state', {
             detail: 'remove'
@@ -285,17 +278,10 @@ if (document.contentType === 'text/html') {
     };
     // always install since we do not know the enabling status right now
     blocker.install();
-    // protect static data: and javascript: frames
-    document.addEventListener('DOMContentLoaded', () => {
-      for (const iframe of [...document.querySelectorAll('iframe[src^="javascript:" i], iframe[src^="data:" i]')]) {
-        try {
-          blocker.install(iframe.contentWindow, iframe.contentDocument);
-        }
-        catch (e) {}
-      }
-    })
-
-
+    document.addEventListener('ppb-protection-needed', e => {
+      e.stopPropagation();
+      blocker.install(e.target.contentWindow, e.target.contentDocument);
+    });
     // document.open removes all the DOM listeners
     let documentElement = document.documentElement;
     watch(document, 'write', () => {
@@ -548,4 +534,17 @@ if (document.contentType === 'text/html') {
       response(true); // Edge thing!
     }
   });
+
+  // TO-DO; remove when "match_data_urls" is supported
+  document.addEventListener('load', e => {
+    const {src} = e.target;
+    if (prefs.enabled && src) {
+      const v = src.toLowerCase();
+      if (v.startsWith('javascript:')) {
+        e.target.dispatchEvent(new Event('ppb-protection-needed', {
+          bubbles: true
+        }));
+      }
+    }
+  }, true);
 }
