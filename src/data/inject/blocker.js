@@ -278,10 +278,19 @@ if (document.contentType === 'text/html') {
     };
     // always install since we do not know the enabling status right now
     blocker.install();
-    document.addEventListener('ppb-protection-needed', e => {
-      e.stopPropagation();
-      blocker.install(e.target.contentWindow, e.target.contentDocument);
-    });
+    // TO-DO; remove when "match_data_urls" is supported
+    document.addEventListener('load', e => {
+      const {src} = e.target;
+      if (src) {
+        const v = src.toLowerCase();
+        if (v.startsWith('javascript:') || v.startsWith('data:')) {
+          try {
+            blocker.install(e.target.contentWindow, e.target.contentDocument);
+          }
+          catch (e) {}
+        }
+      }
+    }, true);
     // document.open removes all the DOM listeners
     let documentElement = document.documentElement;
     watch(document, 'write', () => {
@@ -534,17 +543,4 @@ if (document.contentType === 'text/html') {
       response(true); // Edge thing!
     }
   });
-
-  // TO-DO; remove when "match_data_urls" is supported
-  document.addEventListener('load', e => {
-    const {src} = e.target;
-    if (prefs.enabled && src) {
-      const v = src.toLowerCase();
-      if (v.startsWith('javascript:')) {
-        e.target.dispatchEvent(new Event('ppb-protection-needed', {
-          bubbles: true
-        }));
-      }
-    }
-  }, true);
 }
