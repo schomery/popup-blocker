@@ -2,11 +2,11 @@
 
 {
   let iframe;
-  const requests = [];
-  requests.ready = false;
+  let requests = [];
+  let ready = false;
   chrome.runtime.onMessage.addListener((request, sender) => {
     if (request.cmd === 'popup-request') {
-      if (requests.ready === false) {
+      if (ready === false || !iframe) {
         // only accept requests from bg page
         if (request.cmd === 'popup-request' && !sender.tab) {
           requests.push(request);
@@ -20,7 +20,8 @@
             method: 'popup-caches',
             requests
           }, '*');
-          requests.ready = true;
+          requests = [];
+          ready = true;
         };
         iframe.setAttribute('style', `
           z-index: 2147483649;
