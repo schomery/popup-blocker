@@ -14,7 +14,7 @@
       }
       if (!iframe) {
         iframe = document.createElement('iframe');
-        iframe.src = chrome.runtime.getURL('data/ui/ui.html');
+        iframe.src = chrome.runtime.getURL('data/ui/ui.html?parent=' + encodeURIComponent(location.href));
         iframe.onload = () => {
           iframe.contentWindow.postMessage({
             method: 'popup-caches',

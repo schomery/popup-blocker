@@ -1,6 +1,7 @@
 /* globals config, wot */
 'use strict';
 
+const args = new URLSearchParams(location.search);
 let prefs = '';
 
 const entry = document.getElementById('entry');
@@ -79,6 +80,7 @@ function onClick(e) {
           frameId: Number(frameId),
           sameContext: sameContext === 'true' || (e.isTrusted && navigator.userAgent.indexOf('Firefox') === -1)
         };
+        msg.parent = args.get('parent');
         chrome.runtime.sendMessage(msg);
         // https://github.com/schomery/popup-blocker/issues/90
         if (cmd === 'white-list') {

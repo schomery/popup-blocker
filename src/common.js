@@ -75,9 +75,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       }
       const path = {
         16: 'data/icons/state/' + state + '/16.png',
-        19: 'data/icons/state/' + state + '/19.png',
-        32: 'data/icons/state/' + state + '/32.png',
-        38: 'data/icons/state/' + state + '/38.png'
+        32: 'data/icons/state/' + state + '/32.png'
       };
       chrome.browserAction.setIcon({
         tabId: sender.tab.id,
@@ -182,7 +180,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
   else if (request.cmd === 'white-list') {
     config.get(['whitelist-mode', 'top-hosts', 'popup-hosts']).then(prefs => {
       const mode = prefs['whitelist-mode'];
-      const {hostname} = new URL(mode === 'popup-hosts' ? request.url : sender.tab.url);
+      const {hostname} = new URL(mode === 'popup-hosts' ? request.url : request.parent);
       prefs[mode].push(hostname);
       prefs[mode] = prefs[mode].filter((h, i, l) => l.indexOf(h) === i);
       chrome.storage.local.set({
@@ -258,9 +256,7 @@ const onClicked = async toggle => {
   }
   const path = {
     16: 'data/icons/' + (prefs.enabled ? '' : 'disabled/') + '16.png',
-    19: 'data/icons/' + (prefs.enabled ? '' : 'disabled/') + '19.png',
-    32: 'data/icons/' + (prefs.enabled ? '' : 'disabled/') + '32.png',
-    38: 'data/icons/' + (prefs.enabled ? '' : 'disabled/') + '38.png'
+    32: 'data/icons/' + (prefs.enabled ? '' : 'disabled/') + '32.png'
   };
   chrome.browserAction.setIcon({
     path
