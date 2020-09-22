@@ -1,6 +1,8 @@
 /* globals config, wot */
 'use strict';
 
+let prefs = '';
+
 const entry = document.getElementById('entry');
 const urls = {};
 const cookie = {
@@ -115,7 +117,7 @@ const doTimer = (div, button, countdown) => {
   }, 1000);
   button.value = label + ` (${countdown})`;
 };
-const onPopupRequest = async request => {
+const onPopupRequest = request => {
   const tag = request.href && request.href !== 'about:blank' ? request.href : request.id;
   // already listed
   if (urls[tag]) {
@@ -140,10 +142,6 @@ const onPopupRequest = async request => {
     const p = clone.querySelector('[data-id=info]');
     div.title = p.textContent = '↝ ' + (request.href || 'about:blank');
     // do we have an action for this popup
-
-    const prefs = await config.get([
-      'numbers', 'timeout', 'countdown', 'default-action', 'immediate-action', 'simulate-allow', 'wot'
-    ]);
 
     if (page) {
       const action = cookie.get(div.dataset.hostname) || prefs['default-action'];
@@ -208,7 +206,11 @@ const onPopupRequest = async request => {
   }
 };
 
-const message = (request, sender) => {
+const message = async (request, sender) => {
+  prefs = prefs || await config.get([
+    'numbers', 'timeout', 'countdown', 'default-action', 'immediate-action', 'simulate-allow', 'wot'
+  ]);
+
   // only accept requests from bg page
   if (request.cmd === 'popup-request' && !sender.tab) {
     onPopupRequest(request);

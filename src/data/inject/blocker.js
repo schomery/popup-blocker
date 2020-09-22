@@ -112,7 +112,6 @@ if (document.contentType === 'text/html') {
 
     // helper functions
     const policy = (type, element, event, extra = {}) => {
-      console.log(type, element, event, extra = {});
       if (event) {
         extra.defaultPrevented = event.defaultPrevented;
         extra.metaKey = event.metaKey;
