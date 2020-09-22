@@ -112,6 +112,7 @@ if (document.contentType === 'text/html') {
 
     // helper functions
     const policy = (type, element, event, extra = {}) => {
+      console.log(type, element, event, extra = {});
       if (event) {
         extra.defaultPrevented = event.defaultPrevented;
         extra.metaKey = event.metaKey;
@@ -321,7 +322,7 @@ if (document.contentType === 'text/html') {
       .map(e => e && e.target ? e.target : '')
       .filter(b => b).shift();
 
-    if (!base || base.toLowerCase() === '_self') {
+    if (!base || base.toLowerCase() === '_self' || base.toLowerCase() === '_top') {
       return false;
     }
     // the linked page opens in a named frame
