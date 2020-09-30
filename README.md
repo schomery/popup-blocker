@@ -2,6 +2,11 @@
 
 Popup Blocker is a lightweight extension to prevent websites from opening popups (whereas other popup blockers this extension does not block popups after their creation, but blocked them once they are requested). The extension pauses all sort of window opening requests for user attention. You can either accept or deny a request. Multiple unique requests are shown in an array. If a websites requests a single URL more than once, a badge number will be shown indicating the total number of requests to this particular URL.
 
+## Preview
+
+[![Preview](https://img.youtube.com/vi/Jp-RaiTHzCQ/0.jpg)](https://www.youtube.com/watch?v=Jp-RaiTHzCQ)
+
+
 ## Features
 
 - Popup blocking originated by window.open method
