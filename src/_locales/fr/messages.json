@@ -3,10 +3,6 @@
         "message": "Bloquer strictement toutes les demandes de popup provenant de n'importe quel site web",
         "description": ""
     },
-    "background_msg1": {
-        "message": "tools.add0n.com est utilisé pour les tests de popup. Ce nom d'hôte ne peut pas être ajouté à la liste blanche.",
-        "description": ""
-    },
     "context_item1": {
         "message": "Testez votre bloqueur de popups",
         "description": ""
@@ -199,20 +195,56 @@
         "message": "Autoriser cette popup",
         "description": ""
     },
+    "ui_button_allow_value": {
+        "message": "Autoriser",
+        "description": ""
+    },
     "ui_button_redirect": {
         "message": "Rediriger la page actuelle vers la nouvelle destination au lieu de l'ouvrir dans un nouvel onglet ou une popup",
+        "description": ""
+    },
+    "ui_button_redirect_value": {
+        "message": "rediriger",
         "description": ""
     },
     "ui_button_background": {
         "message": "Ouvrir le lien dans un onglet de fond",
         "description": ""
     },
+    "ui_button_background_value": {
+        "message": "en arrière-plan",
+        "description": ""
+    },
     "ui_button_deny": {
         "message": "Refuser l'ouverture de la fenêtre popup ou de l'onglet",
         "description": ""
     },
+    "ui_button_deny_value": {
+        "message": "interdire",
+        "description": ""
+    },
     "ui_button_trust": {
         "message": "Inscrivez ce domaine sur la liste blanche pour l'affichage des popups",
+        "description": ""
+    },
+    "ui_button_trust_value": {
+        "message": "de confiance",
+        "description": ""
+    },
+    "bg_msg_state_1": {
+        "message": "Popup Blocker (strict) est entièrement activé et protège cet onglet",
+        "description": ""
+    },
+    "bg_msg_state_2": {
+        "message": "Popup Blocker (strict) est entièrement activé mais ne protège pas cet onglet",
+        "description": ""
+    },
+    "bg_msg_state_3": {
+        "message": "Popup Blocker (strict) est entièrement désactivé et ne protège pas cet onglet",
+        "description": ""
+    },
+    "bg_msg_state_4": {
+        "message": "Popup Blocker (strict) est entièrement désactivé mais protège cet onglet",
         "description": ""
     }
 }

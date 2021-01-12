@@ -3,10 +3,6 @@
         "message": "Strikt blockera alla poppupp-förfrågningar från alla webbplatser",
         "description": ""
     },
-    "background_msg1": {
-        "message": "tools.add0n.com används för poppupp-testning. Det här värdnamnet kan inte läggas till i vitlistan.",
-        "description": ""
-    },
     "context_item1": {
         "message": "Testa din popup-blockerare",
         "description": ""
@@ -199,20 +195,56 @@
         "message": "Tillåt den här poppuppen",
         "description": ""
     },
+    "ui_button_allow_value": {
+        "message": "tillåt",
+        "description": ""
+    },
     "ui_button_redirect": {
         "message": "Omdirigera aktuell webbplats till den nya destinationen istället för att öppna den i en ny flik eller poppupp",
+        "description": ""
+    },
+    "ui_button_redirect_value": {
+        "message": "omdirigera",
         "description": ""
     },
     "ui_button_background": {
         "message": "Öppna länken i en bakgrundsflik",
         "description": ""
     },
+    "ui_button_background_value": {
+        "message": "bakgrund",
+        "description": ""
+    },
     "ui_button_deny": {
         "message": "Avvisa poppuppen eller fliköppningen",
         "description": ""
     },
+    "ui_button_deny_value": {
+        "message": "neka",
+        "description": ""
+    },
     "ui_button_trust": {
         "message": "Vitlista den här domänen för att öppna poppupp-fönster",
+        "description": ""
+    },
+    "ui_button_trust_value": {
+        "message": "lita på",
+        "description": ""
+    },
+    "bg_msg_state_1": {
+        "message": "Popup Blocker (strikt) är globalt aktiverad och skyddar denna flik",
+        "description": ""
+    },
+    "bg_msg_state_2": {
+        "message": "Popup Blocker (strikt) är globalt aktiverad men skyddar inte denna flik",
+        "description": ""
+    },
+    "bg_msg_state_3": {
+        "message": "Popup Blocker (strikt) är globalt inaktiverad och skyddar inte denna flik",
+        "description": ""
+    },
+    "bg_msg_state_4": {
+        "message": "Popup Blocker (strikt) är globalt inaktiverad men skyddar denna flik",
         "description": ""
     }
 }

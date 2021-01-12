@@ -3,10 +3,6 @@
         "message": "Estritamente bloquear todos pedidos de pop-up de qualquer site",
         "description": ""
     },
-    "background_msg1": {
-        "message": "tools.add0n.com é usado para teste de pop-up. Este hostname não pode ser adicionado à lista de permissões.",
-        "description": ""
-    },
     "context_item1": {
         "message": "Testar seu bloqueador de pop-up",
         "description": ""
@@ -199,20 +195,56 @@
         "message": "Permitir este pop-up",
         "description": ""
     },
+    "ui_button_allow_value": {
+        "message": "Permitir",
+        "description": ""
+    },
     "ui_button_redirect": {
         "message": "Redirecione a página atual para o novo destino em vez de abri-la em uma nova guia ou pop-up",
+        "description": ""
+    },
+    "ui_button_redirect_value": {
+        "message": "Redirecionar",
         "description": ""
     },
     "ui_button_background": {
         "message": "Abra o link em uma guia em segundo plano",
         "description": ""
     },
+    "ui_button_background_value": {
+        "message": "Segundo plano",
+        "description": ""
+    },
     "ui_button_deny": {
         "message": "Recusar a abertura do pop-up ou da guia",
         "description": ""
     },
+    "ui_button_deny_value": {
+        "message": "Negar",
+        "description": ""
+    },
     "ui_button_trust": {
         "message": "Permitir este domínio abrir pop-ups",
+        "description": ""
+    },
+    "ui_button_trust_value": {
+        "message": "Confiar",
+        "description": ""
+    },
+    "bg_msg_state_1": {
+        "message": "Popup Blocker (strict) está globalmente habilitado e protege esta aba",
+        "description": ""
+    },
+    "bg_msg_state_2": {
+        "message": "Popup Blocker (strict) está ativado globalmente, mas não protege esta aba",
+        "description": ""
+    },
+    "bg_msg_state_3": {
+        "message": "Popup Blocker (strict) está desabilitado globalmente e não protege esta aba",
+        "description": ""
+    },
+    "bg_msg_state_4": {
+        "message": "Popup Blocker (strict) está globalmente desativado, mas protege esta aba",
         "description": ""
     }
 }
