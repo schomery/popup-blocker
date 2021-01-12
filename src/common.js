@@ -165,7 +165,8 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
 
       cache[sender.tab.id] = {
         enabled,
-        silent: prefs.silent.indexOf(request.hostname) !== -1
+        silent: prefs.silent.indexOf(request.hostname) !== -1,
+        state: prefs.enabled
       };
       response(cache[sender.tab.id]);
     });
@@ -288,10 +289,11 @@ onClicked();
         if (reason === 'install' || (prefs.faqs && reason === 'update')) {
           const doUpdate = (Date.now() - prefs['last-update']) / 1000 / 60 / 60 / 24 > 45;
           if (doUpdate && previousVersion !== version) {
-            tabs.create({
+            tabs.query({active: true, currentWindow: true}, tbs => tabs.create({
               url: page + '?version=' + version + (previousVersion ? '&p=' + previousVersion : '') + '&type=' + reason,
-              active: reason === 'install'
-            });
+              active: reason === 'install',
+              ...(tbs && tbs.length && {index: tbs[0].index + 1})
+            }));
             storage.local.set({'last-update': Date.now()});
           }
         }

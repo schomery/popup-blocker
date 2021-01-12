@@ -39,6 +39,7 @@ if (document.contentType === 'text/html') {
     silent = response.silent;
     _prefs.enabled = response.enabled;
     script.dataset.enabled = response.enabled;
+    script.dataset.state = response.state; // global state
   });
 
   const prefs = new Proxy(_prefs, {
@@ -84,6 +85,7 @@ if (document.contentType === 'text/html') {
   script.addEventListener('state', e => {
     e.stopPropagation();
     if (window.top === window) {
+      console.log(e.detail);
       chrome.runtime.sendMessage({
         'cmd': 'state',
         'active': e.detail === 'install'
@@ -106,9 +108,6 @@ if (document.contentType === 'text/html') {
       'hpd': Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentDocument'),
       'hpw': Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentWindow')
     };
-    pointers.hpss = Function.prototype.call.bind(pointers.hps.set);
-    pointers.hpdg = Function.prototype.call.bind(pointers.hpd.get);
-    pointers.hpwg = Function.prototype.call.bind(pointers.hpw.get);
 
     // helper functions
     const policy = (type, element, event, extra = {}) => {
@@ -158,9 +157,11 @@ if (document.contentType === 'text/html') {
       }
     });
     // blocker
+    let currentState = false;
     const blocker = {
       install(w = window, d = document, forced = false) {
-        if (script.dataset.enabled !== 'false' && (w.open !== blocker.overwrite.open || forced)) {
+        if (script.dataset.enabled !== 'false' && (currentState === false || forced)) {
+          currentState = true;
           d.addEventListener('click', blocker.overwrite.click, true); // with capture; see method 8
           w.open = blocker.overwrite.open;
           const {HTMLAnchorElement, HTMLFormElement, HTMLIFrameElement} = w;
@@ -176,8 +177,8 @@ if (document.contentType === 'text/html') {
               if (src.startsWith('javascript:') || src.startsWith('data:')) {
                 // before contentDocument or contentWindow is accessed, install the installer script
                 const inject = () => {
-                  const w = pointers.hpwg(this);
-                  const d = pointers.hpdg(this);
+                  const w = pointers.hpw.get.call(this);
+                  const d = pointers.hpd.get.call(this);
                   if (w && d) {
                     blocker.install(w, d);
                     Object.defineProperty(this, 'contentDocument', pointers.hpd);
@@ -187,27 +188,27 @@ if (document.contentType === 'text/html') {
                 Object.defineProperty(HTMLIFrameElement.prototype, 'contentDocument', {
                   get() {
                     inject();
-                    return pointers.hpdg(this);
+                    return pointers.hpd.get.call(this);
                   }
                 });
                 Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', {
                   get() {
                     inject();
-                    return pointers.hpwg(this);
+                    return pointers.hpw.get.call(this);
                   }
                 });
               }
-              pointers.hpss(this, v);
+              pointers.hps.set.call(this, v);
             }
           });
-
           script.dispatchEvent(new CustomEvent('state', {
             detail: 'install'
           }));
         }
       },
       remove() {
-        if (script.dataset.enabled === 'false') {
+        if (script.dataset.enabled === 'false' && currentState === true) {
+          currentState = false;
           document.removeEventListener('click', blocker.overwrite.click);
           window.open = pointers.wop;
           HTMLAnchorElement.prototype.click = pointers.hac;
@@ -218,6 +219,11 @@ if (document.contentType === 'text/html') {
           Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', pointers.hpw);
           Object.defineProperty(HTMLIFrameElement.prototype, 'src', pointers.hps);
 
+          script.dispatchEvent(new CustomEvent('state', {
+            detail: 'remove'
+          }));
+        }
+        else if (script.dataset.state !== script.dataset.enabled) {
           script.dispatchEvent(new CustomEvent('state', {
             detail: 'remove'
           }));
@@ -301,7 +307,8 @@ if (document.contentType === 'text/html') {
     });
     // receive configure
     new MutationObserver(ms => {
-      if (ms.some(m => m.attributeName === 'data-enabled')) {
+      const m = ms.filter(m => m.attributeName === 'data-enabled').shift();
+      if (m) {
         blocker[script.dataset.enabled === 'false' ? 'remove' : 'install']();
       }
     }).observe(script, {
