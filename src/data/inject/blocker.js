@@ -160,7 +160,7 @@ if (document.contentType === 'text/html') {
     let currentState = false;
     const blocker = {
       install(w = window, d = document, forced = false) {
-        if (script.dataset.enabled !== 'false' && (currentState === false || forced)) {
+        if (script.dataset.enabled !== 'false' && (w.open !== blocker.overwrite.open || forced)) {
           currentState = true;
           d.addEventListener('click', blocker.overwrite.click, true); // with capture; see method 8
           w.open = blocker.overwrite.open;
@@ -286,8 +286,8 @@ if (document.contentType === 'text/html') {
     blocker.install();
     // TO-DO; remove when "match_data_urls" is supported
     document.addEventListener('load', e => {
-      const {src} = e.target;
-      if (src) {
+      const {src, tagName} = e.target;
+      if (src && tagName === 'IFRAME') {
         const v = src.toLowerCase();
         if (v.startsWith('javascript:') || v.startsWith('data:')) {
           try {
