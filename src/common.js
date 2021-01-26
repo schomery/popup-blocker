@@ -155,11 +155,11 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       else if (hostname && prefs.enabled) {
         // white-list
         if (prefs.blacklist.length === 0) {
-          enabled = prefs['top-hosts'].some(h => h.endsWith(hostname) || hostname.endsWith(h)) === false;
+          enabled = prefs['top-hosts'].some(h => h.endsWith(hostname) || hostname.endsWith(h)  || hostname.match(h) !== null) === false;
         }
         // black-list
         else {
-          enabled = prefs.blacklist.some(h => h.endsWith(hostname) || hostname.endsWith(h));
+          enabled = prefs.blacklist.some(h => h.endsWith(hostname) || hostname.endsWith(h) || hostname.match(h) !== null);
         }
       }
 
