@@ -21,6 +21,7 @@
     "match_about_blank": true,
     "matches": ["<all_urls>"],
     "js": [
+      "data/inject/uncode.js",
       "data/inject/blocker.js"
     ],
     "run_at": "document_start",
