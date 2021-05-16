@@ -85,7 +85,6 @@ if (document.contentType === 'text/html') {
   script.addEventListener('state', e => {
     e.stopPropagation();
     if (window.top === window) {
-      console.log(e.detail);
       chrome.runtime.sendMessage({
         'cmd': 'state',
         'active': e.detail === 'install'
@@ -93,8 +92,7 @@ if (document.contentType === 'text/html') {
     }
   });
 
-  script.dataset.enabled = prefs.enabled;
-  script.textContent = `{
+  const code = () => {
     const script = document.currentScript;
     // pointers
     const pointers = {
@@ -315,7 +313,10 @@ if (document.contentType === 'text/html') {
       attributes: true,
       attributeFilter: ['data-enabled']
     });
-  }`;
+  };
+
+  script.dataset.enabled = prefs.enabled;
+  script.textContent = `(${code.toString()})()`;
   (document.head || document.documentElement).appendChild(script);
   script.remove();
 
