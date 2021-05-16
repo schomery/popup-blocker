@@ -1,6 +1,7 @@
+/* this is the entire unprotected code */
+
 const uncode = () => {
   const script = document.currentScript;
-  // post
   const post = (name, detail) => script.dispatchEvent(new CustomEvent(name, {
     detail
   }));
@@ -45,8 +46,8 @@ const uncode = () => {
   // blocker
   const blocker = {
     install(w = window) {
-      const d = w.document;
       if (script.dataset.enabled !== 'false' && protected.has(w) === false) {
+        const d = w.document;
         protected.set(w);
         // protect clicks
         d.addEventListener('click', blocker.onclick, true); // with capture; see method 8
@@ -72,33 +73,45 @@ const uncode = () => {
             return Reflect.apply(target, self, args);
           }
         });
-        // TO-DO; remove when javascript: and data: injections are supported with "match_data_urls"
-        const {HTMLIFrameElement} = w;
+        // TO-DO; remove when "javascript:" injections are supported with "match_data_urls"
         const prepare = (target, win) => {
           Object.defineProperties(target, {
-            contentDocument: {
-              value: win.document
-            },
-            contentWindow: {
-              value: win
-            }
+            contentDocument: {value: win.document},
+            contentWindow: {value: win}
           });
           blocker.install(win);
         };
-        const hpd = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentDocument');
-        Object.defineProperty(HTMLIFrameElement.prototype, 'contentDocument', {
-          get() {
-            const doc = hpd.get.call(this);
-            prepare(this, doc.defaultView);
-            return doc;
-          }
-        });
-        const hpw = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentWindow');
-        Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', {
-          get() {
-            const win = hpw.get.call(this);
-            prepare(this, win);
-            return win;
+        const {HTMLIFrameElement} = w;
+        const hps = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'src');
+        Object.defineProperty(HTMLIFrameElement.prototype, 'src', {
+          set(v) {
+            hps.set.call(this, v);
+            if (v.toLowerCase().startsWith('javascript:') || v.toLowerCase().startsWith('data:')) {
+              const hpd = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentDocument');
+              const hpw = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentWindow');
+              Object.defineProperties(this, {
+                'contentDocument': {
+                  configurable: true,
+                  get() {
+                    const doc = hpd.get.call(this);
+                    if (doc) {
+                      prepare(this, doc.defaultView);
+                    }
+                    return doc;
+                  }
+                },
+                'contentWindow': {
+                  configurable: true,
+                  get() {
+                    const win = hpw.get.call(this);
+                    if (win) {
+                      prepare(this, win);
+                    }
+                    return win;
+                  }
+                }
+              });
+            }
           }
         });
         post('state', 'install');
@@ -111,7 +124,7 @@ const uncode = () => {
         post('state', 'remove');
       }
       else if (script.dataset.state !== script.dataset.enabled) {
-        post('state', 'install');
+        post('state', 'remove');
       }
     }
   };
@@ -158,7 +171,10 @@ const uncode = () => {
   document.addEventListener('load', ({target}) => {
     const {src, tagName} = target;
     if (src && tagName === 'IFRAME' && src.toLowerCase().startsWith('javascript:')) {
-      blocker.install(target.contentWindow);
+      try {
+        blocker.install(target.contentWindow);
+      }
+      catch (e) {}
     }
   }, true);
   // document.open removes all the DOM listeners
@@ -174,11 +190,8 @@ const uncode = () => {
     }
   });
   // receive configure
-  new MutationObserver(ms => {
-    const m = ms.filter(m => m.attributeName === 'data-enabled').shift();
-    if (m) {
-      blocker[script.dataset.enabled === 'false' ? 'remove' : 'install']();
-    }
+  new MutationObserver(() => {
+    blocker[script.dataset.enabled === 'false' ? 'remove' : 'install']();
   }).observe(script, {
     attributes: true,
     attributeFilter: ['data-enabled']

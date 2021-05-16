@@ -1,6 +1,6 @@
 {
     "app_description": {
-        "message": "Strikt blockera alla poppupp-förfrågningar från alla webbplatser",
+        "message": "Strikt blockera alla popup-förfrågningar från alla webbplatser",
         "description": ""
     },
     "context_item1": {
@@ -24,7 +24,7 @@
         "description": ""
     },
     "context_item6": {
-        "message": "Ignorera poppupp-meddelanden om möjligt",
+        "message": "Ignorera popup-aviseringar om möjligt",
         "description": ""
     },
     "options_item1": {
@@ -64,11 +64,11 @@
         "description": ""
     },
     "options_item11": {
-        "message": "Kommaseparerad lista över värdnamn som inte kommer att blockeras (dessa värdnamn kan utfärda poppupp-fönster på vilken webbplats som helst).",
+        "message": "Kommaseparerad lista över värdnamn som inte kommer att blockeras (dessa värdnamn kan utfärda popup-fönster på vilken webbplats som helst).",
         "description": ""
     },
     "options_item12": {
-        "message": "Kommaseparerad lista över värdnamn som poppupp-blockeraren förlängning är helt inaktiverad på dem.",
+        "message": "Kommaseparerad lista över värdnamn som popup-blockeraren förlängning är helt inaktiverad på dem.",
         "description": ""
     },
     "options_item13": {
@@ -76,7 +76,7 @@
         "description": ""
     },
     "options_item14": {
-        "message": "Kommaseparerad lista över värdnamn som poppupp-blockeraren bara ska vara aktiv på. Detta innebär att poppupp-blockeraren är inaktiverad på alla andra värdnamn. För att inaktivera det här läget, rensa den svartlistans inmatning helt.",
+        "message": "Kommaseparerad lista över värdnamn som popup-blockeraren bara ska vara aktiv på. Detta innebär att popup-blockeraren är inaktiverad på alla andra värdnamn. För att inaktivera det här läget, rensa den svartlistans inmatning helt.",
         "description": ""
     },
     "options_item15": {
@@ -84,7 +84,7 @@
         "description": ""
     },
     "options_item16": {
-        "message": "Vissa webbplatser omdirigera användaren till annonssidan om poppupp-begäran om att visa en annons blockeras. Det här alternativet kan förhindra detta genom att inte tillåta sidomdirigering för den angivna tiden.",
+        "message": "Vissa webbplatser omdirigera användaren till annonssidan om popup-begäran om att visa en annons blockeras. Det här alternativet kan förhindra detta genom att inte tillåta sidomdirigering för den angivna tiden.",
         "description": ""
     },
     "options_item17": {
@@ -156,11 +156,11 @@
         "description": ""
     },
     "options_item34": {
-        "message": "Svartlista för meddelanden",
+        "message": "Svartlista för aviseringar",
         "description": ""
     },
     "options_item35": {
-        "message": "Kommaseparerad lista över värdnamn som poppupp-blockeraren inte kommer att visa meddelande om en poppupp begärs",
+        "message": "Kommaseparerad lista över värdnamn som popup-blockeraren inte kommer att visa aviseringar om en popup begärs",
         "description": ""
     },
     "options_support": {
@@ -188,11 +188,11 @@
         "description": ""
     },
     "ui_msg": {
-        "message": "Poppupp begärs för",
+        "message": "Popup begärs för",
         "description": ""
     },
     "ui_button_allow": {
-        "message": "Tillåt den här poppuppen",
+        "message": "Tillåt den här popupen",
         "description": ""
     },
     "ui_button_allow_value": {
@@ -200,7 +200,7 @@
         "description": ""
     },
     "ui_button_redirect": {
-        "message": "Omdirigera aktuell webbplats till den nya destinationen istället för att öppna den i en ny flik eller poppupp",
+        "message": "Omdirigera aktuell webbplats till den nya destinationen istället för att öppna den i en ny flik eller popup",
         "description": ""
     },
     "ui_button_redirect_value": {
@@ -216,7 +216,7 @@
         "description": ""
     },
     "ui_button_deny": {
-        "message": "Avvisa poppuppen eller fliköppningen",
+        "message": "Avvisa popupen eller fliköppningen",
         "description": ""
     },
     "ui_button_deny_value": {
@@ -224,7 +224,7 @@
         "description": ""
     },
     "ui_button_trust": {
-        "message": "Vitlista den här domänen för att öppna poppupp-fönster",
+        "message": "Vitlista den här domänen för att öppna popup-fönster",
         "description": ""
     },
     "ui_button_trust_value": {

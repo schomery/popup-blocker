@@ -25,6 +25,7 @@
         };
         iframe.setAttribute('style', `
           z-index: 2147483649;
+          color-scheme: light;
           position: fixed;
           right: 10px;
           top: 10px;

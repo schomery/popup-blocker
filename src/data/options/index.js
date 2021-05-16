@@ -122,3 +122,11 @@ document.getElementById('import').addEventListener('click', () => {
 document.getElementById('support').addEventListener('click', () => chrome.tabs.create({
   url: chrome.runtime.getManifest().homepage_url + '?rd=donate'
 }));
+// review
+document.getElementById('review').addEventListener('click', () => chrome.tabs.create({
+  url: 'https://www.youtube.com/watch?v=Jp-RaiTHzCQ'
+}));
+// FAQs Page
+document.getElementById('page').addEventListener('click', () => chrome.tabs.create({
+  url: chrome.runtime.getManifest().homepage_url
+}));

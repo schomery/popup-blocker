@@ -3,55 +3,7 @@
 <head>
   <title>Options Page :: Popup Blocker (strict)</title>
   <meta charset="utf-8">
-  <style>
-    @supports (-moz-appearance:none) {
-      body {
-        font-size: 13px;
-        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-        margin: 15px;
-      }
-      button,
-      input[type=submit],
-      input[type=button] {
-        height: 24px;
-        color: rgb(68, 68, 68);
-        background-image: linear-gradient(rgb(237, 237, 237), rgb(237, 237, 237) 38%, rgb(222, 222, 222));
-        box-shadow: rgba(0, 0, 0, 0.08) 0 1px 0, rgba(255, 255, 255, 0.75) 0 1px 2px inset;
-        text-shadow: rgb(240, 240, 240) 0 1px 0;
-        border: solid 1px rgba(0, 0, 0, 0.25);
-      }
-    }
-    input[type=number] {
-      width: 50px;
-    }
-    textarea,
-    input[type=text] {
-      width: 100%;
-      box-sizing: border-box;
-    }
-    hr {
-      margin: 10px 0;
-      border: none;
-      height: 1px;
-      border-bottom: dashed 1px #ccc;
-    }
-    summary {
-      outline: none;
-    }
-    a {
-      text-decoration: none;
-      cursor: pointer;
-    }
-    #status {
-      margin-right: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .rtl td:last-child {
-      text-align: right;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 
 <body>
@@ -152,15 +104,21 @@
     <textarea id="silent" rows="2"></textarea>
   </p>
 
-  <div style="display: flex">
-    <button id="support" data-i18n="options_support"></button>
+  <p style="display: flex">
     <button id="import" data-i18n="options_import"></button>
     <button id="export" data-i18n="options_export"></button>
+  </p>
+  <p style="display: flex">
+    <button id="review" data-i18n="options_review"></button>
+    <button id="page" data-i18n="options_page"></button>
+  </p>
+  <p style="display: flex">
+    <button id="support" data-i18n="options_support"></button>
     <button id="reset" data-i18n="options_reset"></button>
     <span style="flex: 1"></span>
     <span id="status"></span>
     <button id="save" data-i18n="options_save"></button>
-  </div>
+  </p>
 
   <hr>
 

@@ -140,6 +140,12 @@
   "options_msg": {
     "message": "Options are saved"
   },
+  "options_review": {
+    "message": "YouTube Review"
+  },
+  "options_page": {
+    "message": "FAQs Page"
+  },
   "ui_msg": {
     "message": "Popup is requested for"
   },

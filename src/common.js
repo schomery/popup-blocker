@@ -1,8 +1,6 @@
 /* globals config */
 'use strict';
 
-const TEST_SUITE = 'https://webbrowsertools.com/popup-blocker/';
-
 const cookie = {
   get: host => {
     const key = document.cookie.split(`${host}-wot=`);
@@ -149,10 +147,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       let enabled = prefs.enabled;
       const {hostname, href} = request;
 
-      if (href && href.startsWith(TEST_SUITE)) {
-        enabled = true;
-      }
-      else if (hostname && prefs.enabled) {
+      if (hostname && prefs.enabled) {
         // white-list
         if (prefs.blacklist.length === 0) {
           enabled = prefs['top-hosts'].some(h => h.endsWith(hostname) || hostname.endsWith(h)) === false;
@@ -225,7 +220,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'open-test-page') {
     chrome.tabs.create({
-      url: TEST_SUITE
+      url: 'https://webbrowsertools.com/popup-blocker/'
     });
   }
   else if (info.menuItemId === 'open-options') {
