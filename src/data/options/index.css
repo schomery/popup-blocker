@@ -63,3 +63,7 @@ a {
   grid-gap: 5px;
   align-items: center;
 }
+
+label[for="wot"] {
+  text-decoration: line-through;
+}

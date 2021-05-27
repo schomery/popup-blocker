@@ -37,17 +37,17 @@ try {
 catch (e) {
   script.dataset = script.dataset = {}; // XML documents
 }
+chrome.storage.local.get({
+  aggressive: false
+}, prefs => script.dataset.aggressive = prefs.aggressive);
 
 const prefs = window.prefs = new Proxy({}, {
   set(obj, key, value) {
     obj[key] = value;
-    if (key === 'shadow' || key === 'aggressive') {
-      script.dataset[key] = value;
-    }
+
     if (key === 'enabled') {
       script.dataset[key] = value === true;
       if (window === window.top) {
-        console.log('- >', window.enabled);
         chrome.runtime.sendMessage({
           'cmd': 'state',
           'active': value === true
@@ -78,7 +78,6 @@ chrome.storage.onChanged.addListener(ps => {
     prefs.enabled = 'enabled' in window ? window.enabled : true;
   }
 });
-console.log('bb', location.href, prefs.enabled, window.enabled);
 
 /* recording window.open */
 script.addEventListener('record', e => {
@@ -263,7 +262,6 @@ blocker.policy.configs = {
 chrome.storage.local.get(blocker.policy.configs, ps => Object.assign(blocker.policy.configs, ps));
 chrome.storage.onChanged.addListener(ps => {
   Object.keys(ps).filter(k => k in blocker.policy.configs).forEach(k => blocker.policy.configs[k] = ps[k].newValue);
-  console.log(blocker.policy.configs, ps);
 });
 
 /* messaging */

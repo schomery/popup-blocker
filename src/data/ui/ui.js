@@ -212,6 +212,7 @@ const message = async (request, sender) => {
   prefs = prefs || await config.get([
     'numbers', 'timeout', 'countdown', 'default-action', 'immediate-action', 'simulate-allow', 'wot'
   ]);
+  prefs.wot = false; // this API is deprecated
 
   // only accept requests from bg page
   if (request.cmd === 'popup-request' && !sender.tab) {
