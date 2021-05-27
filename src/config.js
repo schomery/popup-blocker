@@ -8,6 +8,7 @@ var config = {
   'default-action': 'ignore',
   'immediate-action': false,
   'simulate-allow': true,
+  'aggressive': false,
   'wot': false,
   'domain': false, // allow popups from the same domain
   'badge': true,

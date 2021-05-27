@@ -24,17 +24,17 @@
           ready = true;
         };
         iframe.setAttribute('style', `
-          z-index: 2147483649;
-          color-scheme: light;
-          position: fixed;
-          right: 10px;
-          top: 10px;
-          width: 420px;
-          max-width: 80vw;
-          height: 85px;
-          border: none;
-          background: transparent;
-          border-radius: 0;
+          z-index: 2147483649 !important;
+          color-scheme: light !important;
+          position: fixed !important;
+          right: 10px !important;
+          top: 10px !important;
+          width: 420px !important;
+          max-width: 80vw !important;
+          height: 85px !important;
+          border: none !important;
+          background: transparent !important;
+          border-radius: 0 !important;
         `);
         // do not attach to body to make sure the notification is visible
         document.documentElement.appendChild(iframe);

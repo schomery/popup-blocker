@@ -57,3 +57,9 @@ a {
 .rtl td:last-child {
   text-align: right;
 }
+.checks {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  grid-gap: 5px;
+  align-items: center;
+}

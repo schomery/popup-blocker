@@ -7,11 +7,9 @@
   "permissions": [
     "storage",
     "<all_urls>",
-    "contextMenus",
-    "declarativeContent"
+    "contextMenus"
   ],
   "background": {
-    "persistent": false,
     "scripts": [
       "config.js",
       "common.js"
@@ -19,16 +17,6 @@
   },
   "browser_action": {},
   "content_scripts": [{
-    "match_about_blank": true,
-    "matches": ["<all_urls>"],
-    "js": [
-      "data/inject/uncode.js",
-      "data/inject/blocker.js"
-    ],
-    "run_at": "document_start",
-    "all_frames": true
-  },
-  {
     "matches": ["<all_urls>"],
     "js": ["data/inject/iframe.js"],
     "run_at": "document_start",

@@ -122,6 +122,12 @@
   "options_item35": {
     "message": "Comma-separated list of hostnames that the popup blocker will not display notification if a popup is requested"
   },
+  "options_item36": {
+    "message": "Enable aggressive static IFrame detection"
+  },
+  "options_item37": {
+    "message": "When this mode is enabled, the extension installs a mutation observer to monitor static IFrames with 'JavaScript:' src attributes. This enhances the blocking power but has performance drawbacks."
+  },
   "options_support": {
     "message": "Support Development"
   },

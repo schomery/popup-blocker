@@ -73,58 +73,12 @@ const uncode = () => {
             return Reflect.apply(target, self, args);
           }
         });
-        // TO-DO; remove when "javascript:" injections are supported with "match_data_urls"
-        const prepare = (target, win) => {
-          Object.defineProperties(target, {
-            contentDocument: {value: win.document},
-            contentWindow: {value: win}
-          });
-          blocker.install(win);
-        };
-        const {HTMLIFrameElement} = w;
-        const hps = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'src');
-        Object.defineProperty(HTMLIFrameElement.prototype, 'src', {
-          set(v) {
-            hps.set.call(this, v);
-            if (v.toLowerCase().startsWith('javascript:') || v.toLowerCase().startsWith('data:')) {
-              const hpd = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentDocument');
-              const hpw = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentWindow');
-              Object.defineProperties(this, {
-                'contentDocument': {
-                  configurable: true,
-                  get() {
-                    const doc = hpd.get.call(this);
-                    if (doc) {
-                      prepare(this, doc.defaultView);
-                    }
-                    return doc;
-                  }
-                },
-                'contentWindow': {
-                  configurable: true,
-                  get() {
-                    const win = hpw.get.call(this);
-                    if (win) {
-                      prepare(this, win);
-                    }
-                    return win;
-                  }
-                }
-              });
-            }
-          }
-        });
-        post('state', 'install');
       }
     },
     remove(w = window, d = document) {
       if (script.dataset.enabled === 'false' && protected.has(w)) {
         protected.delete(w);
         d.removeEventListener('click', blocker.onclick);
-        post('state', 'remove');
-      }
-      else if (script.dataset.state !== script.dataset.enabled) {
-        post('state', 'remove');
       }
     }
   };
@@ -164,19 +118,42 @@ const uncode = () => {
       return block ? false : Reflect.apply(target, self, args);
     }
   });
+  /* iframe mess */
+  const frame = target => {
+    const {src, tagName} = target;
+    if (src && tagName === 'IFRAME') {
+      const s = src.toLowerCase();
+      if (s.startsWith('javascript:') || s.startsWith('data:')) {
+        try {
+          blocker.install(target.contentWindow);
+        }
+        catch (e) {}
+      }
+    }
+  };
+  HTMLElement.prototype.appendChild = new Proxy(HTMLElement.prototype.appendChild, {
+    apply(target, self, args) {
+      const r = Reflect.apply(target, self, args);
+      frame(r);
+      return r;
+    }
+  });
+  document.addEventListener('load', ({target}) => frame(target), true);
+  if (script.dataset.aggressive === 'true') {
+    new MutationObserver(ms => {
+      for (const m of ms) {
+        for (const e of m.addedNodes) {
+          frame(e);
+        }
+      }
+    }).observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+  }
 
   // always install since we do not know the enabling status right now
   blocker.install();
-  // TO-DO; remove when "match_data_urls" is supported
-  document.addEventListener('load', ({target}) => {
-    const {src, tagName} = target;
-    if (src && tagName === 'IFRAME' && src.toLowerCase().startsWith('javascript:')) {
-      try {
-        blocker.install(target.contentWindow);
-      }
-      catch (e) {}
-    }
-  }, true);
   // document.open removes all the DOM listeners
   let dHTML = document.documentElement;
   document.write = new Proxy(document.write, {

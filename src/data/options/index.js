@@ -9,7 +9,7 @@
 async function restore(defaults = false) {
   const prefs = defaults ? config : await config.get([
     'numbers', 'timeout', 'countdown', 'badge', 'badge-color', 'domain', 'wot',
-    'simulate-allow', 'faqs', 'block-page-redirection', 'popup-hosts',
+    'simulate-allow', 'aggressive', 'faqs', 'block-page-redirection', 'popup-hosts',
     'top-hosts', 'blacklist', 'protocols', 'silent', 'default-action',
     'whitelist-mode', 'immediate-action'
   ]);
@@ -21,6 +21,7 @@ async function restore(defaults = false) {
   document.getElementById('domain').checked = prefs.domain;
   document.getElementById('wot').checked = prefs.wot;
   document.getElementById('simulate-allow').checked = prefs['simulate-allow'];
+  document.getElementById('aggressive').checked = prefs['aggressive'];
   document.getElementById('faqs').checked = prefs.faqs;
   document.getElementById('block-page-redirection').checked = prefs['block-page-redirection'];
   document.getElementById('popup-hosts').value = prefs['popup-hosts'].join(', ');
@@ -47,6 +48,7 @@ function save() {
     'domain': document.getElementById('domain').checked,
     'wot': document.getElementById('wot').checked,
     'simulate-allow': document.getElementById('simulate-allow').checked,
+    'aggressive': document.getElementById('aggressive').checked,
     'faqs': document.getElementById('faqs').checked,
     'block-page-redirection': document.getElementById('block-page-redirection').checked,
     'popup-hosts': prepare(document.getElementById('popup-hosts').value),
