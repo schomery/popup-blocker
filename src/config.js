@@ -15,9 +15,9 @@ var config = {
   'badge-color': '#6e6e6e',
   'whitelist-mode': 'popup-hosts',
   // the following hostnames can issue popup on every website
-  'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com', 'disqus.com'],
+  'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com', 'disqus.com', 'login.yahoo.com', 'mail.google.com'],
   // popup blocker is disabled in the following hostname tabs
-  'top-hosts': ['disqus.com', 'github.com', 'twitter.com', 'add0n.com', 'google.com', 'www.paypal.com'],
+  'top-hosts': ['github.com', 'twitter.com', 'add0n.com', 'google.com', 'www.paypal.com'],
   // these protocols are accepted
   'protocols': ['magnet:'],
   'blacklist': [],

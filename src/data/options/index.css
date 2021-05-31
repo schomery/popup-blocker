@@ -35,6 +35,11 @@ input[type=text] {
   width: 100%;
   box-sizing: border-box;
 }
+label[for=wot],
+input:disabled,
+textarea:disabled {
+  opacity: 0.6 !important;
+}
 hr {
   margin: 10px 0;
   border: none;

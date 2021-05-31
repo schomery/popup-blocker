@@ -1,6 +1,20 @@
 /* global uncode */
 'use strict';
 
+/* Checks
+  1.
+  https://chrome.google.com/webstore/detail/aefkmifgmaafnojlojpnekbpbmjiiogg
+  FF -> The page’s settings blocked the loading of a resource at inline (“script-src”)
+
+  2.
+  https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_win_open
+
+  3. test on incognito and private mode
+
+  4. https://webbrowsertools.com/popup-blocker/?fire_on_start
+
+  5. test reverse mode
+*/
 // record fake window's executed commands
 const records = {};
 
@@ -29,8 +43,7 @@ const redirect = {
     clearTimeout(redirect.timeout);
   }
 };
-
-const script = document.createElement('script');
+let script = document.createElement('script');
 try {
   script.dataset.enabled = true;
 }
@@ -57,36 +70,54 @@ const prefs = window.prefs = new Proxy({}, {
     return true;
   }
 });
-if ('enabled' in window) {
-  prefs.enabled = window.enabled;
+
+if (typeof isFirefox !== 'undefined') {
+  prefs.enabled = 'enabled' in window ? window.enabled : false;
+  chrome.storage.onChanged.addListener(ps => {
+    if (ps.enabled && ps.enabled.newValue === false) {
+      prefs.enabled = false;
+    }
+    else if (ps.enabled) {
+      prefs.enabled = 'enabled' in window ? window.enabled : true;
+    }
+  });
 }
-else {
-  try {
-    prefs.enabled = parent.enabled;
+else { // Chrome
+  // for top frame, the extension is always enabled unless get disabled by "window.enabled"
+  if (window.top === window) {
+    if (document.contentType === 'text/html') {
+      prefs.enabled = 'enabled' in window ? window.enabled : true;
+    }
+    else {
+      prefs.enabled = false;
+    }
   }
-  catch (e) { // this is a CORS frame on Chrome
-    chrome.runtime.sendMessage({
-      cmd: 'is-active'
-    });
+  else {
+    try {
+      prefs.enabled = parent.prefs.enabled;
+    }
+    catch (e) { // this is a CORS frame on Chrome
+      chrome.runtime.sendMessage({
+        cmd: 'is-active'
+      });
+    }
   }
+  chrome.storage.onChanged.addListener(ps => {
+    if (ps.enabled) {
+      prefs.enabled = ps.enabled.newValue;
+    }
+  });
 }
-chrome.storage.onChanged.addListener(ps => {
-  if (ps.enabled && ps.enabled.newValue === false) {
-    prefs.enabled = false;
-  }
-  else if (ps.enabled) {
-    prefs.enabled = 'enabled' in window ? window.enabled : true;
-  }
-});
 
 /* recording window.open */
-script.addEventListener('record', e => {
+script.record = e => {
   e.stopPropagation();
   const {id, name, method, args} = e.detail;
   records[id].push({name, method, args});
-});
+};
+script.addEventListener('record', script.record);
 /* channel */
-script.addEventListener('policy', e => {
+script.policy = e => {
   e.stopPropagation();
   // make sure the request is from our script; see example 1
   if (e.target === script) {
@@ -112,12 +143,27 @@ script.addEventListener('policy', e => {
       script.setAttribute('block', false);
     }
   }
-});
+};
+script.addEventListener('policy', script.policy);
 
 /* inject unprotected */
 script.textContent = `(${uncode.toString()})()`;
 document.documentElement.appendChild(script);
-script.remove();
+if (script.dataset.injected === 'true') {
+  script.remove();
+}
+else { // Firefox does not inject if there is CSP!
+  const s = document.createElement('script');
+  s.src = 'data:text/javascript;charset=utf-8;base64,' + btoa(`(${uncode.toString()})()`);
+  Object.assign(s.dataset, script.dataset);
+  s.addEventListener('policy', script.policy);
+  s.addEventListener('record', script.record);
+  s.onload = () => s.remove();
+  document.documentElement.appendChild(s);
+  script.remove();
+  script = s;
+  // console.warn('Popup Blocker (script)', 'Async injection due to CSP', location.href);
+}
 
 /* blocker */
 const blocker = {};
@@ -257,7 +303,7 @@ blocker.policy = request => {
 blocker.policy.configs = {
   'domain': false,
   'protocols': ['magnet:'],
-  'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com', 'disqus.com']
+  'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com', 'disqus.com', 'login.yahoo.com', 'mail.google.com']
 };
 chrome.storage.local.get(blocker.policy.configs, ps => Object.assign(blocker.policy.configs, ps));
 chrome.storage.onChanged.addListener(ps => {

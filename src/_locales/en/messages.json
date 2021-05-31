@@ -128,6 +128,9 @@
   "options_item37": {
     "message": "When this mode is enabled, the extension installs a mutation observer to monitor static IFrames with 'JavaScript:' src attributes. This enhances the blocking power but has performance drawbacks."
   },
+  "options_item38": {
+    "message": "This feature is deprecated! If you don't want this extension to globally block pages, right-click on the action button and limit the access to particular websites from the \"This can read and change site data\" context menu item."
+  },
   "options_support": {
     "message": "Support Development"
   },

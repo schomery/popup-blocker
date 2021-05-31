@@ -84,9 +84,9 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       });
     });
   }
-  else if (request.cmd === 'is-active') {
+  else if (request.cmd === 'is-active') { // only on CORS sub-frames
     chrome.tabs.executeScript(sender.tab.id, {
-      code: 'window.enabled'
+      code: 'prefs.enabled'
     }, ar => {
       const lastError = chrome.runtime.lastError;
       if (lastError === undefined) {
@@ -245,6 +245,29 @@ const onClicked = async toggle => {
   chrome.browserAction.setIcon({
     path
   });
+  // make sure the blocker script is injected (on FF, when disabled, blocker.js is not being injected)
+  if (isFirefox) {
+    if (prefs.enabled) {
+      chrome.tabs.executeScript({
+        code: 'typeof prefs'
+      }, async a => {
+        const lastError = chrome.runtime.lastError;
+        if (!lastError && a && a[0] !== 'object') {
+          const opts = {
+            'matchAboutBlank': true,
+            'runAt': 'document_start',
+            'allFrames': true
+          };
+          for (const file of ['actions/enabled.js', 'data/inject/ff.js', 'data/inject/uncode.js', 'data/inject/blocker.js']) {
+            try {
+              await browser.tabs.executeScript({...opts, file});
+            }
+            catch (e) {}
+          }
+        }
+      });
+    }
+  }
 };
 chrome.browserAction.onClicked.addListener(() => onClicked(true));
 onClicked();
@@ -284,6 +307,16 @@ if (isFirefox) {
     };
     // white-list
     if (prefs.blacklist.length === 0) {
+      chrome.browserAction.setIcon({
+        path: {
+          '16': 'data/icons/16.png',
+          '32': 'data/icons/32.png'
+        }
+      });
+      chrome.browserAction.setTitle({
+        title: chrome.i18n.getMessage('bg_msg_state_1')
+      });
+
       if (prefs['top-hosts'].length) {
         ps.push(await browser.contentScripts.register({
           ...opts,
@@ -297,6 +330,16 @@ if (isFirefox) {
       }
     }
     else {
+      chrome.browserAction.setIcon({
+        path: {
+          '16': 'data/icons/state/3/16.png',
+          '32': 'data/icons/state/3/32.png'
+        }
+      });
+      chrome.browserAction.setTitle({
+        title: chrome.i18n.getMessage('bg_msg_state_3')
+      });
+
       ps.push(await browser.contentScripts.register({
         ...opts,
         matches: prefs.blacklist.map(h => `*://${h}/*`)
@@ -322,11 +365,11 @@ if (isFirefox) {
   });
 }
 else {
-  const disable = () => new Promise(resolve => chrome.declarativeContent.onPageChanged.removeRules(undefined, resolve));
-  const enable = () => disable().then(async () => {
-    const prefs = await config.get(['blacklist', 'top-hosts']);
-    // white-list
-    if (prefs.blacklist.length === 0) {
+  const disable = isEnabled => new Promise(resolve => {
+    chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
+      if (isEnabled) {
+        return resolve();
+      }
       chrome.declarativeContent.onPageChanged.addRules([{
         conditions: [
           new chrome.declarativeContent.PageStateMatcher({
@@ -336,11 +379,19 @@ else {
           })
         ],
         actions: [new chrome.declarativeContent.RequestContentScript({
-          js: ['actions/enabled.js'],
+          js: ['actions/disabled.js'],
           allFrames: true,
           matchAboutBlank: true
         })]
-      }, {
+      }]);
+      resolve();
+    });
+  });
+  const enable = () => disable(true).then(async () => {
+    const prefs = await config.get(['blacklist', 'top-hosts']);
+    // white-list
+    if (prefs['top-hosts'].length) {
+      chrome.declarativeContent.onPageChanged.addRules([{
         conditions: prefs['top-hosts'].map(host => new chrome.declarativeContent.PageStateMatcher({
           pageUrl: {
             hostEquals: host
@@ -351,23 +402,10 @@ else {
         })]
       }]);
     }
-    // black-list
-    else {
-      chrome.declarativeContent.onPageChanged.addRules([{
-        conditions: prefs.blacklist.map(host => new chrome.declarativeContent.PageStateMatcher({
-          pageUrl: {
-            hostEquals: host
-          }
-        })),
-        actions: [new chrome.declarativeContent.RequestContentScript({
-          js: ['actions/enabled.js']
-        })]
-      }]);
-    }
   });
   const once = () => chrome.storage.local.get({
     enabled: true
-  }, prefs => prefs.enabled ? enable() : disable());
+  }, prefs => prefs.enabled ? enable() : disable(prefs.enabled));
   chrome.runtime.onInstalled.addListener(once);
   chrome.runtime.onStartup.addListener(once);
   chrome.storage.onChanged.addListener(ps => {
@@ -375,7 +413,7 @@ else {
       enable();
     }
     else if (ps.enabled) {
-      disable();
+      disable(false);
     }
     else if (ps['top-hosts'] || ps['blacklist']) {
       once();

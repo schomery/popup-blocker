@@ -163,6 +163,14 @@
         "message": "Lista de hostnames separada por vírgula que o bloqueador de pop-ups não exibirá notificação se um pop-up for solicitado",
         "description": ""
     },
+    "options_item36": {
+        "message": "Habilitar detecção agressiva de IFrame estático",
+        "description": ""
+    },
+    "options_item37": {
+        "message": "Quando este modo está ativado, a extensão instala um observador de mutação para monitorar IFrames estáticos com atributos 'JavaScript:' src. Isso aumenta o poder de bloqueio, mas tem desvantagens de desempenho.",
+        "description": ""
+    },
     "options_support": {
         "message": "Apoie o desinvolvimento",
         "description": ""
@@ -185,6 +193,14 @@
     },
     "options_msg": {
         "message": "As opções foram salvas",
+        "description": ""
+    },
+    "options_review": {
+        "message": "Revisão do YouTube",
+        "description": ""
+    },
+    "options_page": {
+        "message": "Página de Perguntas Frequentes",
         "description": ""
     },
     "ui_msg": {

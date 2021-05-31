@@ -163,6 +163,14 @@
         "message": "Lista de nombres de host separado por comas que el bloqueador de ventanas emergentes no mostrará notificación si se solicita una ventana emergente",
         "description": ""
     },
+    "options_item36": {
+        "message": "Enable aggressive static IFrame detection",
+        "description": ""
+    },
+    "options_item37": {
+        "message": "When this mode is enabled, the extension installs a mutation observer to monitor static IFrames with 'JavaScript:' src attributes. This enhances the blocking power but has performance drawbacks.",
+        "description": ""
+    },
     "options_support": {
         "message": "Apoyar el desarrollo",
         "description": ""
@@ -185,6 +193,14 @@
     },
     "options_msg": {
         "message": "Se han guardado las opciones",
+        "description": ""
+    },
+    "options_review": {
+        "message": "Reseña en YouTube",
+        "description": ""
+    },
+    "options_page": {
+        "message": "Página de preguntas frecuentes",
         "description": ""
     },
     "ui_msg": {

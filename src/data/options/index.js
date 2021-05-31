@@ -1,6 +1,8 @@
 /* globals config  */
 'use strict';
 
+const isFirefox = /Firefox/.test(navigator.userAgent) || typeof InstallTrigger !== 'undefined';
+
 // localization
 [...document.querySelectorAll('[data-i18n]')].forEach(e => {
   e.textContent = chrome.i18n.getMessage(e.dataset.i18n);
@@ -26,7 +28,7 @@ async function restore(defaults = false) {
   document.getElementById('block-page-redirection').checked = prefs['block-page-redirection'];
   document.getElementById('popup-hosts').value = prefs['popup-hosts'].join(', ');
   document.getElementById('top-hosts').value = prefs['top-hosts'].join(', ');
-  document.getElementById('blacklist').value = prefs.blacklist.join(', ');
+  document.getElementById('blacklist').value = isFirefox ? prefs.blacklist.join(', ') : '';
   document.getElementById('protocols').value = prefs.protocols.join(', ');
   document.getElementById('silent').value = prefs.silent.join(', ');
   document.getElementById('default-action').value = prefs['default-action'];
@@ -132,3 +134,9 @@ document.getElementById('review').addEventListener('click', () => chrome.tabs.cr
 document.getElementById('page').addEventListener('click', () => chrome.tabs.create({
   url: chrome.runtime.getManifest().homepage_url
 }));
+
+
+if (isFirefox === false) {
+  document.getElementById('blacklist').setAttribute('placeholder', chrome.i18n.getMessage('options_item38'));
+  document.getElementById('blacklist').disabled = true;
+}

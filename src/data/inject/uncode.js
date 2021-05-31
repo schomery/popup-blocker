@@ -2,6 +2,8 @@
 
 const uncode = () => {
   const script = document.currentScript;
+  script.dataset.injected = true;
+
   const post = (name, detail) => script.dispatchEvent(new CustomEvent(name, {
     detail
   }));
