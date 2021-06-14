@@ -15,6 +15,7 @@
 
   5. test reverse mode
 */
+
 // record fake window's executed commands
 const records = {};
 
@@ -43,12 +44,13 @@ const redirect = {
     clearTimeout(redirect.timeout);
   }
 };
+
 let script = document.createElement('script');
 try {
   script.dataset.enabled = true;
 }
 catch (e) {
-  script.dataset = script.dataset = {}; // XML documents
+  script.dataset = {}; // XML documents
 }
 
 const prefs = window.prefs = new Proxy({}, {
@@ -144,7 +146,7 @@ script.policy = e => {
 script.addEventListener('policy', script.policy);
 
 /* inject unprotected */
-script.textContent = `(${uncode.toString()})()`;
+script.textContent = '(' + uncode.toString() + ')()';
 document.documentElement.appendChild(script);
 if (script.dataset.injected === 'true') {
   script.remove();
