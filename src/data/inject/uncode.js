@@ -140,6 +140,21 @@ const uncode = () => {
       return r;
     }
   });
+  HTMLElement.prototype.prepend = new Proxy(HTMLElement.prototype.prepend, {
+    apply(target, self, args) {
+      const r = Reflect.apply(target, self, args);
+      (args || []).forEach(frame);
+      return r;
+    }
+  });
+  HTMLElement.prototype.append = new Proxy(HTMLElement.prototype.append, {
+    apply(target, self, args) {
+      const r = Reflect.apply(target, self, args);
+      (args || []).forEach(frame);
+      return r;
+    }
+  });
+
   document.addEventListener('load', ({target}) => frame(target), true);
   if (script.dataset.aggressive === 'true') {
     new MutationObserver(ms => {
