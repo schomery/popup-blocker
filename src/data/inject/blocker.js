@@ -50,9 +50,6 @@ try {
 catch (e) {
   script.dataset = script.dataset = {}; // XML documents
 }
-chrome.storage.local.get({
-  aggressive: false
-}, prefs => script.dataset.aggressive = prefs.aggressive);
 
 const prefs = window.prefs = new Proxy({}, {
   set(obj, key, value) {
