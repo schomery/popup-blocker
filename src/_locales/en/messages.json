@@ -2,23 +2,11 @@
   "app_description": {
     "message": "Strictly block all popup requests from any website"
   },
-  "context_item1": {
-    "message": "Test your popup blocker"
-  },
   "context_item2": {
     "message": "Allow the last popup request"
   },
   "context_item3": {
     "message": "Deny the last popup request"
-  },
-  "context_item4": {
-    "message": "Use shadow window for this tab"
-  },
-  "context_item5": {
-    "message": "Open options page"
-  },
-  "context_item6": {
-    "message": "Ignore popup notification if possible"
   },
   "options_item1": {
     "message": "Maximum number of popup requests for a single page"
@@ -199,5 +187,38 @@
   },
   "bg_msg_state_4": {
     "message": "Popup Blocker (strict) is globally disabled but protects this tab"
+  },
+  "pp_enabled_g": {
+    "message": "Enabled (Globally)"
+  },
+  "pp_enabled_c": {
+    "message": "Enabled (This Hostname)"
+  },
+  "pp_silent": {
+    "message": "Display Notifications"
+  },
+  "pp_ignore": {
+    "message": "Ignore when Possible"
+  },
+  "pp_last_request": {
+    "message": "Last Request"
+  },
+  "pp_test": {
+    "message": "Test Blocker"
+  },
+  "pp_homepage": {
+    "message": "Homepage"
+  },
+  "pp_options": {
+    "message": "Options"
+  },
+  "pp_shadow": {
+    "message": "Shadow Window"
+  },
+  "pp_allow": {
+    "message": "Allow"
+  },
+  "pp_block": {
+    "message": "Block"
   }
 }

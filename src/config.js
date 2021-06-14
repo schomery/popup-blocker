@@ -17,11 +17,12 @@ var config = {
   // the following hostnames can issue popup on every website
   'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com', 'disqus.com', 'login.yahoo.com', 'mail.google.com'],
   // popup blocker is disabled in the following hostname tabs
-  'top-hosts': ['github.com', 'twitter.com', 'add0n.com', 'google.com', 'www.paypal.com'],
+  'top-hosts': ['github.com', 'webbrowsertools.com', 'twitter.com', 'add0n.com', 'google.com', 'www.paypal.com'],
   // these protocols are accepted
   'protocols': ['magnet:'],
   'blacklist': [],
   'silent': [],
+  'issue': true,
   'block-page-redirection': false,
   'target': true,
   'version': null,

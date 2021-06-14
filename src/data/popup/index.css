@@ -1,0 +1,61 @@
+:root {
+  --bg: #fff;
+  --clr: #4d5156;
+  --dark: #d9d9d9;
+  --button: #f0f0f0;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #35363a;
+    --clr: #b1b1b1;
+    --dark: #202124;
+    --button: #202124;
+  }
+}
+
+body {
+  font-size: 13px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  width: 400px;
+  color: var(--clr);
+  background-color: var(--bg);
+  margin: 0;
+}
+hr {
+  border: none;
+  border-bottom: solid 1px var(--clr);
+}
+input[type=button] {
+  color: var(--clr);
+  background-color: var(--button);
+  text-align: center;
+  border: none;
+  padding: 5px 10px;
+  min-width: 80px;
+  cursor: pointer;
+}
+input:disabled {
+  opacity: 0.2;
+}
+p {
+  padding: 0 10px;
+}
+.col2 {
+  display: grid;
+  grid-gap: 5px 0;
+  grid-template-columns: 1fr min-content;
+}
+.col3 {
+  display: grid;
+  grid-gap: 5px 0;
+  grid-gap: 5px;
+  grid-template-columns: 1fr min-content min-content;
+}
+.spc {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.spc > input {
+  padding: 10px;
+  min-width: unset;
+}

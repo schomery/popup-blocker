@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+  <p class="col2">
+    <label for="global" data-i18n="pp_enabled_g"></label>
+    <input type="checkbox" id="global">
+    <label for="page" data-i18n="pp_enabled_c"></label>
+    <input type="checkbox" id="page">
+  </p>
+  <hr>
+  <p class="col3">
+    <span data-i18n="pp_last_request"></span>
+    <input type="button" id="deny-last-request" data-i18n="pp_block">
+    <input type="button" id="allow-last-request" data-i18n="pp_allow">
+  </p>
+  <p class="col2">
+    <label for="issue" data-i18n="pp_silent"></label>
+    <input type="checkbox" id="issue">
+    <label for="immediate-action" data-i18n="pp_ignore"></label>
+    <input type="checkbox" id="immediate-action">
+  </p>
+
+  <div class="spc">
+    <input type="button" id="test-page" data-i18n="pp_test">
+    <input type="button" id="homepage" data-i18n="pp_homepage">
+    <input type="button" id="options" data-i18n="pp_options">
+    <input type="button" id="use-shadow" data-i18n="pp_shadow">
+  </div>
+
+  <script type="text/javascript" src="/config.js"></script>
+  <script type="text/javascript" src="index.js"></script>
+</body>
+</html>

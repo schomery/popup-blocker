@@ -6,8 +6,7 @@
   "default_locale": "en",
   "permissions": [
     "storage",
-    "<all_urls>",
-    "contextMenus"
+    "<all_urls>"
   ],
   "background": {
     "scripts": [
@@ -15,7 +14,9 @@
       "common.js"
     ]
   },
-  "browser_action": {},
+  "browser_action": {
+    "default_popup": "data/popup/index.html"
+  },
   "content_scripts": [{
     "matches": ["<all_urls>"],
     "js": ["data/inject/iframe.js"],

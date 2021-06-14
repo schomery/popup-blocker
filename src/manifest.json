@@ -7,7 +7,6 @@
   "permissions": [
     "storage",
     "<all_urls>",
-    "contextMenus",
     "declarativeContent"
   ],
   "background": {
@@ -17,7 +16,9 @@
       "common.js"
     ]
   },
-  "browser_action": {},
+  "browser_action": {
+    "default_popup": "data/popup/index.html"
+  },
   "content_scripts": [{
     "match_about_blank": true,
     "matches": ["<all_urls>"],

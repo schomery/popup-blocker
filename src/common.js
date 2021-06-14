@@ -33,11 +33,9 @@ chrome.storage.onChanged.addListener(prefs => {
       color: prefs['badge-color'].newValue
     });
   }
-  // update toolbar's checkbox
-  if (prefs['immediate-action']) {
-    chrome.contextMenus.update('immediate-action', {
-      checked: prefs['immediate-action'].newValue
-    });
+  //
+  if (prefs.enabled) {
+    action();
   }
 });
 
@@ -102,7 +100,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 chrome.runtime.onMessage.addListener((request, sender) => {
   // bouncing back to ui.js; since ui.js is loaded on its frame, we need to send the message to all frames
   if (request.cmd === 'popup-request') {
-    config.get(['silent']).then(prefs => {
+    config.get(['silent', 'issue']).then(prefs => {
+      if (prefs.issue === false) {
+        return;
+      }
       const {hostname} = new URL(sender.tab.url);
       if (prefs.silent.indexOf(hostname) === -1) {
         chrome.tabs.sendMessage(sender.tab.id, Object.assign(request, {
@@ -204,40 +205,16 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
   }
 });
 
-// context menu
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === 'open-test-page') {
-    chrome.tabs.create({
-      url: 'https://webbrowsertools.com/popup-blocker/'
-    });
-  }
-  else if (info.menuItemId === 'open-options') {
-    chrome.runtime.openOptionsPage();
-  }
-  else if (info.menuItemId === 'immediate-action') {
-    chrome.storage.local.set({
-      'immediate-action': info.checked
-    });
-  }
-  else {
-    chrome.tabs.sendMessage(tab.id, {
-      cmd: info.menuItemId
-    });
-  }
-});
 chrome.commands.onCommand.addListener(cmd => chrome.tabs.query({
   active: true,
   currentWindow: true
 }, tabs => tabs && tabs[0] && chrome.tabs.sendMessage(tabs[0].id, {
   cmd
 })));
+
 // browser action
-const onClicked = async toggle => {
+const action = async () => {
   const prefs = await config.get(['enabled']);
-  if (toggle) {
-    prefs.enabled = !prefs.enabled;
-    chrome.storage.local.set(prefs);
-  }
   const path = {
     16: 'data/icons/' + (prefs.enabled ? '' : 'disabled/') + '16.png',
     32: 'data/icons/' + (prefs.enabled ? '' : 'disabled/') + '32.png'
@@ -269,16 +246,19 @@ const onClicked = async toggle => {
     }
   }
 };
-chrome.browserAction.onClicked.addListener(() => onClicked(true));
-onClicked();
 
 // on startup (run once)
 {
-  const start = () => document.documentElement.appendChild(Object.assign(document.createElement('script'), {
-    src: 'once.js'
-  }));
-  chrome.runtime.onInstalled.addListener(start);
-  chrome.runtime.onStartup.addListener(start);
+  const once = () => {
+    // icon
+    action();
+    // badge color
+    config.get(['badge-color']).then(prefs => chrome.browserAction.setBadgeBackgroundColor({
+      color: prefs['badge-color']
+    }));
+  };
+  chrome.runtime.onInstalled.addListener(once);
+  chrome.runtime.onStartup.addListener(once);
 }
 
 /* enabled */
