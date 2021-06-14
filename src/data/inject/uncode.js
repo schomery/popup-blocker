@@ -133,41 +133,19 @@ const uncode = () => {
       }
     }
   };
-  HTMLElement.prototype.appendChild = new Proxy(HTMLElement.prototype.appendChild, {
-    apply(target, self, args) {
-      const r = Reflect.apply(target, self, args);
-      frame(r);
-      return r;
-    }
-  });
-  HTMLElement.prototype.prepend = new Proxy(HTMLElement.prototype.prepend, {
-    apply(target, self, args) {
-      const r = Reflect.apply(target, self, args);
-      (args || []).forEach(frame);
-      return r;
-    }
-  });
-  HTMLElement.prototype.append = new Proxy(HTMLElement.prototype.append, {
-    apply(target, self, args) {
-      const r = Reflect.apply(target, self, args);
-      (args || []).forEach(frame);
-      return r;
-    }
-  });
-
-  document.addEventListener('load', ({target}) => frame(target), true);
-  if (script.dataset.aggressive === 'true') {
-    new MutationObserver(ms => {
-      for (const m of ms) {
-        for (const e of m.addedNodes) {
-          frame(e);
+  new MutationObserver(ms => {
+    for (const m of ms) {
+      for (const e of m.addedNodes) {
+        frame(e);
+        if (e.childElementCount) {
+          [...e.querySelectorAll('iframe')].forEach(frame);
         }
       }
-    }).observe(document.documentElement, {
-      childList: true,
-      subtree: true
-    });
-  }
+    }
+  }).observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
 
   // always install since we do not know the enabling status right now
   blocker.install();
