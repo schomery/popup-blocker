@@ -146,7 +146,7 @@ script.policy = e => {
 script.addEventListener('policy', script.policy);
 
 /* inject unprotected */
-script.textContent = '(' + uncode.toString() + ')()';
+script.textContent = '(' + uncode.toString() + ')(3)';
 document.documentElement.appendChild(script);
 if (script.dataset.injected === 'true') {
   script.remove();

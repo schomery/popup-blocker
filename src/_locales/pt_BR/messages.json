@@ -3,28 +3,12 @@
         "message": "Estritamente bloquear todos pedidos de pop-up de qualquer site",
         "description": ""
     },
-    "context_item1": {
-        "message": "Testar seu bloqueador de pop-up",
-        "description": ""
-    },
     "context_item2": {
         "message": "Permitir o último pedido de pop-up",
         "description": ""
     },
     "context_item3": {
         "message": "Negar o último pedido de pop-up",
-        "description": ""
-    },
-    "context_item4": {
-        "message": "Use a sombra de janela para esta guia",
-        "description": ""
-    },
-    "context_item5": {
-        "message": "Abrir página de opções",
-        "description": ""
-    },
-    "context_item6": {
-        "message": "Ignorar notificação pop-up se possível",
         "description": ""
     },
     "options_item1": {
@@ -171,6 +155,10 @@
         "message": "Quando este modo está ativado, a extensão instala um observador de mutação para monitorar IFrames estáticos com atributos 'JavaScript:' src. Isso aumenta o poder de bloqueio, mas tem desvantagens de desempenho.",
         "description": ""
     },
+    "options_item38": {
+        "message": "Este recurso está obsoleto! Se você não quiser que esta extensão bloqueie páginas globalmente, clique com o botão direito do mouse no botão de ação e limite o acesso a sites específicos a partir do item de menu de contexto \"Isso pode ler e alterar os dados do site\".",
+        "description": ""
+    },
     "options_support": {
         "message": "Apoie o desinvolvimento",
         "description": ""
@@ -261,6 +249,50 @@
     },
     "bg_msg_state_4": {
         "message": "Popup Blocker (strict) está globalmente desativado, mas protege esta aba",
+        "description": ""
+    },
+    "pp_enabled_g": {
+        "message": "Habilitado (Global)",
+        "description": ""
+    },
+    "pp_enabled_c": {
+        "message": "Habilitado (Este nome de host)",
+        "description": ""
+    },
+    "pp_silent": {
+        "message": "Exibir Notificações",
+        "description": ""
+    },
+    "pp_ignore": {
+        "message": "Ignorar quando Possível",
+        "description": ""
+    },
+    "pp_last_request": {
+        "message": "Última Solicitação",
+        "description": ""
+    },
+    "pp_test": {
+        "message": "Testar Bloqueador",
+        "description": ""
+    },
+    "pp_homepage": {
+        "message": "Página Inicial",
+        "description": ""
+    },
+    "pp_options": {
+        "message": "Opções",
+        "description": ""
+    },
+    "pp_shadow": {
+        "message": "Use Shadow",
+        "description": ""
+    },
+    "pp_allow": {
+        "message": "Permitir",
+        "description": ""
+    },
+    "pp_block": {
+        "message": "Bloquear",
         "description": ""
     }
 }
