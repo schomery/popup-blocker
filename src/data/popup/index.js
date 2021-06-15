@@ -27,7 +27,7 @@ chrome.tabs.executeScript({
   })`
 }, async arr => {
   const lastError = chrome.runtime.lastError;
-  if (lastError) {
+  if (lastError || arr[0] === undefined) {
     document.getElementById('page').disabled = true;
   }
   else {

@@ -107,8 +107,7 @@ document.getElementById('import').addEventListener('click', () => {
     if (fileInput.value !== fileInput.initialValue) {
       const file = fileInput.files[0];
       if (file.size > 100e6) {
-        console.warn('100MB backup? I don\'t believe you.');
-        return;
+        return console.warn('The file is too large!');
       }
       const fReader = new FileReader();
       fReader.onloadend = event => {

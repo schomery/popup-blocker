@@ -3,9 +3,12 @@
   --clr: #4d5156;
   --dark: #d9d9d9;
   --button: #f0f0f0;
+  --border: rgba(128, 128, 128, 0.2);
 }
 @media (prefers-color-scheme: dark) {
   :root {
+    color-scheme: dark;
+
     --bg: #35363a;
     --clr: #b1b1b1;
     --dark: #202124;
@@ -23,9 +26,9 @@ body {
 }
 hr {
   border: none;
-  border-bottom: solid 1px var(--clr);
+  border-bottom: solid 1px var(--border);
 }
-input[type=button] {
+.button {
   color: var(--clr);
   background-color: var(--button);
   text-align: center;
@@ -33,7 +36,17 @@ input[type=button] {
   padding: 5px 10px;
   min-width: 80px;
   cursor: pointer;
+  position: relative;
 }
+.button:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 1px;
+  height: 14px;
+  background-color: var(--border);
+}
+
 input:disabled {
   opacity: 0.2;
 }
@@ -47,15 +60,13 @@ p {
 }
 .col3 {
   display: grid;
-  grid-gap: 5px 0;
-  grid-gap: 5px;
   grid-template-columns: 1fr min-content min-content;
 }
 .spc {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
-.spc > input {
+.spc > span {
   padding: 10px;
   min-width: unset;
 }
