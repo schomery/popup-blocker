@@ -14,6 +14,12 @@
   4. https://webbrowsertools.com/popup-blocker/?fire_on_start
 
   5. test reverse mode
+
+  6.
+    https://codepen.io/pipr/pen/VwpVyZQ
+    https://codepen.io/pipr/pen/LYWMpdR
+    https://codepen.io/pipr/pen/XWMoPog
+    https://codepen.io/pipr/pen/YzZdOdJ
 */
 
 // record fake window's executed commands

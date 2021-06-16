@@ -114,25 +114,26 @@ const uncode = (aggressive = 3) => {
 
     /* iframe mess */
     if (aggressive > 1) {
-      const prx = {
-        apply(target, self, args) {
-          const r = Reflect.apply(target, self, args);
-          for (const e of [r, ...args]) {
-            if (e && e.nodeType === 1) {
-              blocker.frame(e);
-            }
-          }
-          return r;
+      const contentWindow = Object.getOwnPropertyDescriptor(w.HTMLIFrameElement.prototype, 'contentWindow');
+      Object.defineProperty(w.HTMLIFrameElement.prototype, 'contentWindow', {
+        configurable: true,
+        enumerable: true,
+        get() {
+          const w = contentWindow.get.call(this);
+          blocker.install(w);
+          return w;
         }
-      };
-      w.HTMLElement.prototype.prepend = new Proxy(w.HTMLElement.prototype.prepend, prx);
-      w.HTMLElement.prototype.append = new Proxy(w.HTMLElement.prototype.append, prx);
-      w.HTMLElement.prototype.after = new Proxy(w.HTMLElement.prototype.after, prx);
-      w.HTMLElement.prototype.before = new Proxy(w.HTMLElement.prototype.before, prx);
-      w.HTMLElement.prototype.appendChild = new Proxy(w.HTMLElement.prototype.appendChild, prx);
-      w.HTMLElement.prototype.insertBefore = new Proxy(w.HTMLElement.prototype.insertBefore, prx);
-      w.HTMLElement.prototype.insertAdjacentElement = new Proxy(w.HTMLElement.prototype.insertAdjacentElement, prx);
-      w.HTMLElement.prototype.replaceChild = new Proxy(w.HTMLElement.prototype.replaceChild, prx);
+      });
+      const contentDocument = Object.getOwnPropertyDescriptor(w.HTMLIFrameElement.prototype, 'contentDocument');
+      Object.defineProperty(w.HTMLIFrameElement.prototype, 'contentDocument', {
+        configurable: true,
+        enumerable: true,
+        get() {
+          const w = contentDocument.get.call(this);
+          blocker.install(w);
+          return w;
+        }
+      });
     }
 
     /* iframe creation with innerHTML */
