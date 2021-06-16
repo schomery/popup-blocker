@@ -33,16 +33,11 @@ const redirect = {
   },
   block() {
     if (window.top === window) {
-      chrome.storage.local.get({
-        'block-page-redirection': false,
-        'block-page-redirection-period': 2000
-      }, prefs => {
-        if (prefs['block-page-redirection']) {
-          window.addEventListener('beforeunload', redirect.beforeunload);
-          clearTimeout(redirect.timeout);
-          redirect.timeout = setTimeout(redirect.release, prefs['block-page-redirection-period']);
-        }
-      });
+      if (redirect.prefs['block-page-redirection']) {
+        window.addEventListener('beforeunload', redirect.beforeunload, true);
+        clearTimeout(redirect.timeout);
+        redirect.timeout = setTimeout(redirect.release, redirect.prefs['block-page-redirection-period']);
+      }
     }
   },
   release() {
@@ -50,6 +45,11 @@ const redirect = {
     clearTimeout(redirect.timeout);
   }
 };
+chrome.storage.local.get({
+  'block-page-redirection': false,
+  'block-page-redirection-period': 2000
+}, prefs => redirect.prefs = prefs);
+
 
 let script = document.createElement('script');
 try {

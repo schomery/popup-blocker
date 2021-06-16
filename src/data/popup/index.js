@@ -14,10 +14,16 @@
 // Global
 config.get(['enabled']).then(prefs => {
   document.getElementById('global').checked = prefs.enabled;
+  if (prefs.enabled === false) {
+    document.getElementById('page').disabled = true;
+  }
 });
-document.getElementById('global').onchange = e => chrome.storage.local.set({
-  enabled: e.target.checked
-});
+document.getElementById('global').onchange = e => {
+  chrome.storage.local.set({
+    enabled: e.target.checked
+  });
+  document.getElementById('page').disabled = e.target.checked === false;
+};
 
 // This Page
 chrome.tabs.executeScript({
@@ -29,6 +35,8 @@ chrome.tabs.executeScript({
   const lastError = chrome.runtime.lastError;
   if (lastError || arr[0] === undefined) {
     document.getElementById('page').disabled = true;
+    // force disabled
+    document.getElementById('page').classList.add('disabled');
   }
   else {
     if (arr[0].enabled === true || arr[0].enabled === false) {

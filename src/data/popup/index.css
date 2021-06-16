@@ -47,8 +47,10 @@ hr {
   background-color: var(--border);
 }
 
+input.disabled,
 input:disabled {
   opacity: 0.2;
+  pointer-events: none;
 }
 p {
   padding: 0 10px;

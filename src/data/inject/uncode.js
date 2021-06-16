@@ -59,7 +59,6 @@ const uncode = (aggressive = 3) => {
     if (src && (tagName === 'IFRAME' || tagName === 'FRAME')) {
       const s = src.toLowerCase();
       if (s.startsWith('javascript:') || s.startsWith('data:')) {
-        console.log('frame protection', s);
         try {
           blocker.install(target.contentWindow);
         }
@@ -86,26 +85,27 @@ const uncode = (aggressive = 3) => {
     protected.set(w);
 
     /* overwrites */
-    w.HTMLAnchorElement.prototype.click = new Proxy(w.HTMLAnchorElement.prototype.click, {
+    const {HTMLAnchorElement, HTMLFormElement} = w;
+    HTMLAnchorElement.prototype.click = new Proxy(HTMLAnchorElement.prototype.click, {
       apply(target, self, args) {
         const {block} = policy('dynamic.a.click', self);
         return block ? undefined : Reflect.apply(target, self, args);
       }
     });
-    w.HTMLAnchorElement.prototype.dispatchEvent = new Proxy(w.HTMLAnchorElement.prototype.dispatchEvent, {
+    HTMLAnchorElement.prototype.dispatchEvent = new Proxy(HTMLAnchorElement.prototype.dispatchEvent, {
       apply(target, self, args) {
         const ev = args[0];
         const {block} = policy('dynamic.a.dispatch', self, ev);
         return block ? false : Reflect.apply(target, self, args);
       }
     });
-    w.HTMLFormElement.prototype.submit = new Proxy(w.HTMLFormElement.prototype.submit, {
+    HTMLFormElement.prototype.submit = new Proxy(HTMLFormElement.prototype.submit, {
       apply(target, self, args) {
         const {block} = policy('dynamic.form.submit', self);
         return block ? false : Reflect.apply(target, self, args);
       }
     });
-    w.HTMLFormElement.prototype.dispatchEvent = new Proxy(w.HTMLFormElement.prototype.dispatchEvent, {
+    HTMLFormElement.prototype.dispatchEvent = new Proxy(HTMLFormElement.prototype.dispatchEvent, {
       apply(target, self, args) {
         const {block} = policy('dynamic.form.dispatch', self);
         return block ? false : Reflect.apply(target, self, args);
@@ -114,24 +114,46 @@ const uncode = (aggressive = 3) => {
 
     /* iframe mess */
     if (aggressive > 1) {
-      const contentWindow = Object.getOwnPropertyDescriptor(w.HTMLIFrameElement.prototype, 'contentWindow');
-      Object.defineProperty(w.HTMLIFrameElement.prototype, 'contentWindow', {
+      const {HTMLIFrameElement, HTMLFrameElement} = w;
+
+      const wf = Object.getOwnPropertyDescriptor(HTMLFrameElement.prototype, 'contentWindow');
+      Object.defineProperty(HTMLFrameElement.prototype, 'contentWindow', {
         configurable: true,
         enumerable: true,
-        get() {
-          const w = contentWindow.get.call(this);
+        get: function() {
+          const w = wf.get.call(this);
           blocker.install(w);
           return w;
         }
       });
-      const contentDocument = Object.getOwnPropertyDescriptor(w.HTMLIFrameElement.prototype, 'contentDocument');
-      Object.defineProperty(w.HTMLIFrameElement.prototype, 'contentDocument', {
+      const wif = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentWindow');
+      Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', {
         configurable: true,
         enumerable: true,
-        get() {
-          const w = contentDocument.get.call(this);
+        get: function() {
+          const w = wif.get.call(this);
           blocker.install(w);
           return w;
+        }
+      });
+      const cf = Object.getOwnPropertyDescriptor(HTMLFrameElement.prototype, 'contentDocument');
+      Object.defineProperty(HTMLFrameElement.prototype, 'contentDocument', {
+        configurable: true,
+        enumerable: true,
+        get: function() {
+          const d = cf.get.call(this);
+          blocker.install(d.defaultView);
+          return d;
+        }
+      });
+      const cif = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentDocument');
+      Object.defineProperty(HTMLIFrameElement.prototype, 'contentDocument', {
+        configurable: true,
+        enumerable: true,
+        get: function() {
+          const d = cif.get.call(this);
+          blocker.install(d.defaultView);
+          return d;
         }
       });
     }
@@ -183,8 +205,7 @@ const uncode = (aggressive = 3) => {
         const r = Reflect.apply(target, self, args);
         if (dHTML !== self.documentElement) {
           dHTML = self.documentElement;
-          protected.delete(self.defaultView);
-          blocker.install(self.defaultView);
+          self.addEventListener('click', blocker.onclick, true);
         }
         return r;
       }
