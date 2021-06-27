@@ -122,7 +122,10 @@ const uncode = (aggressive = 3) => {
         enumerable: true,
         get: function() {
           const w = wf.get.call(this);
-          blocker.install(w);
+          try {
+            blocker.install(w);
+          }
+          catch (e) {}
           return w;
         }
       });
@@ -132,7 +135,10 @@ const uncode = (aggressive = 3) => {
         enumerable: true,
         get: function() {
           const w = wif.get.call(this);
-          blocker.install(w);
+          try {
+            blocker.install(w);
+          }
+          catch (e) {}
           return w;
         }
       });
@@ -142,7 +148,10 @@ const uncode = (aggressive = 3) => {
         enumerable: true,
         get: function() {
           const d = cf.get.call(this);
-          blocker.install(d.defaultView);
+          try {
+            blocker.install(d.defaultView);
+          }
+          catch (e) {}
           return d;
         }
       });
@@ -152,7 +161,10 @@ const uncode = (aggressive = 3) => {
         enumerable: true,
         get: function() {
           const d = cif.get.call(this);
-          blocker.install(d.defaultView);
+          try {
+            blocker.install(d.defaultView);
+          }
+          catch (e) {}
           return d;
         }
       });
