@@ -44,7 +44,7 @@ const redirect = {
     }
   },
   release() {
-    window.removeEventListener('beforeunload', redirect.beforeunload);
+    window.removeEventListener('beforeunload', redirect.beforeunload, true);
     clearTimeout(redirect.timeout);
   }
 };
