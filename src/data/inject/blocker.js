@@ -156,21 +156,25 @@ script.addEventListener('policy', script.policy);
 
 /* inject unprotected */
 script.textContent = '(' + uncode.toString() + ')(3)';
-document.documentElement.appendChild(script);
-if (script.dataset.injected === 'true') {
-  script.remove();
-}
-else { // Firefox does not inject if there is CSP!
-  const s = document.createElement('script');
-  s.src = 'data:text/javascript;charset=utf-8;base64,' + btoa(`(${uncode.toString()})()`);
-  Object.assign(s.dataset, script.dataset);
-  s.addEventListener('policy', script.policy);
-  s.addEventListener('record', script.record);
-  s.onload = () => s.remove();
-  document.documentElement.appendChild(s);
-  script.remove();
-  script = s;
-  // console.warn('Popup Blocker (script)', 'Async injection due to CSP', location.href);
+
+// https://github.com/schomery/popup-blocker/issues/135
+if (document.contentType === 'text/html') {
+  document.documentElement.appendChild(script);
+  if (script.dataset.injected === 'true') {
+    script.remove();
+  }
+  else { // Firefox does not inject if there is CSP!
+    const s = document.createElement('script');
+    s.src = 'data:text/javascript;charset=utf-8;base64,' + btoa(`(${uncode.toString()})()`);
+    Object.assign(s.dataset, script.dataset);
+    s.addEventListener('policy', script.policy);
+    s.addEventListener('record', script.record);
+    s.onload = () => s.remove();
+    document.documentElement.appendChild(s);
+    script.remove();
+    script = s;
+    // console.warn('Popup Blocker (script)', 'Async injection due to CSP', location.href);
+  }
 }
 
 /* blocker */

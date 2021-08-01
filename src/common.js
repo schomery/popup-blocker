@@ -57,30 +57,32 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     });
   }
   else if (request.cmd === 'state') {
-    config.get(['enabled']).then(({enabled}) => {
-      let state = 4;
-      if (enabled && request.active) {
-        state = 1;
-      }
-      else if (enabled && request.active === false) {
-        state = 2;
-      }
-      else if (enabled === false && request.active === false) {
-        state = 3;
-      }
-      const path = {
-        16: 'data/icons/state/' + state + '/16.png',
-        32: 'data/icons/state/' + state + '/32.png'
-      };
-      chrome.browserAction.setIcon({
-        tabId: sender.tab.id,
-        path
+    if (sender.tab) {
+      config.get(['enabled']).then(({enabled}) => {
+        let state = 4;
+        if (enabled && request.active) {
+          state = 1;
+        }
+        else if (enabled && request.active === false) {
+          state = 2;
+        }
+        else if (enabled === false && request.active === false) {
+          state = 3;
+        }
+        const path = {
+          16: 'data/icons/state/' + state + '/16.png',
+          32: 'data/icons/state/' + state + '/32.png'
+        };
+        chrome.browserAction.setIcon({
+          tabId: sender.tab.id,
+          path
+        });
+        chrome.browserAction.setTitle({
+          tabId: sender.tab.id,
+          title: chrome.i18n.getMessage('bg_msg_state_' + state)
+        });
       });
-      chrome.browserAction.setTitle({
-        tabId: sender.tab.id,
-        title: chrome.i18n.getMessage('bg_msg_state_' + state)
-      });
-    });
+    }
   }
   else if (request.cmd === 'is-active') { // only on CORS sub-frames
     chrome.tabs.executeScript(sender.tab.id, {
