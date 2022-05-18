@@ -8,25 +8,27 @@ const entry = document.getElementById('entry');
 const urls = {};
 const cookie = {
   get: host => {
-    const key = document.cookie.split(`${host}-action=`);
-    if (key.length > 1) {
-      return key[1].split(';')[0];
-    }
+    return (localStorage.getItem(host) || '').split(';')[0];
   },
   set: (host, cmd) => {
-    const days = 10;
-    const date = new Date();
-    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-
-    document.cookie = `${host}-action=${cmd}; expires=${date.toGMTString()}`;
+    localStorage.setItem(host, cmd + ';' + (Date.now() + 10 * 24 * 60 * 60 * 1000));
   },
   remove: host => {
-    const cmd = cookie.get(host);
-    if (cmd) {
-      document.cookie = `${host}-action=${cmd}; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+    localStorage.removeItem(host);
+  },
+  clean() {
+    const now = Date.now();
+    for (const [key, value] of Object.entries(localStorage)) {
+      if (value && value.includes(';')) {
+        const date = Number(value.split(';')[1]);
+        if (date < now) {
+          localStorage.removeItem(key);
+        }
+      }
     }
   }
 };
+cookie.clean();
 
 const resize = () => chrome.scripting.executeScript({
   target: {
@@ -85,7 +87,6 @@ function onClick(e) {
     const div = target.closest('.ppblocker-div');
     if (div) {
       const {url, hostname, id, frameId, sameContext} = div.dataset;
-      remove(div, url, id, cmd);
       if (cmd !== 'popup-denied' && cmd !== 'popup-close') {
         // on user-action use native method
         const msg = {cmd, id, url,
@@ -93,6 +94,7 @@ function onClick(e) {
           sameContext: sameContext === 'true' || (e.isTrusted && navigator.userAgent.indexOf('Firefox') === -1)
         };
         msg.parent = args.get('parent');
+
         chrome.runtime.sendMessage(msg);
         // https://github.com/schomery/popup-blocker/issues/90
         if (cmd === 'white-list') {
@@ -104,9 +106,11 @@ function onClick(e) {
       if (cmd === 'popup-close') {
         cookie.remove(hostname);
       }
-      else if (hostname && ['popup-redirect', 'open-tab', 'popup-denied'].indexOf(cmd) !== -1) {
+      else if (hostname && ['popup-redirect', 'open-tab', 'popup-denied'].includes(cmd)) {
         cookie.set(hostname, cmd);
       }
+
+      setTimeout(() => remove(div, url, id, cmd), 100);
     }
   }
 }
@@ -228,7 +232,7 @@ const message = (request, sender, response) => {
     prepare(() => onPopupRequest(request));
     response(true);
   }
-  else if (request.cmd === 'cached-popup-requests') {
+  else if (request.cmd === 'cached-popup-requests' && request.tabId.toString() === args.get('tabId')) {
     prepare(() => {
       request.requests.forEach(r => onPopupRequest(r));
     });

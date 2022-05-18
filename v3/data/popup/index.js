@@ -55,7 +55,6 @@ chrome.tabs.query({
           prefs['top-hosts'].some(h => h === hostname) ? false : true;
       }
     }).catch(e => {
-      console.warn(e);
       document.getElementById('page').disabled = true;
       // force disabled
       document.getElementById('page').classList.add('disabled');

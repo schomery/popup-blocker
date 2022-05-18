@@ -40,8 +40,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     config.get(['badge']).then(({badge}) => {
       if (badge) {
         chrome.action.getBadgeText({tabId}, text => {
-          text = text ? parseInt(text) : 0;
-          text = String(text + 1);
+          if (text !== 'E') {
+            text = text ? parseInt(text) : 0;
+            text = String(text + 1);
+          }
           chrome.action.setBadgeText({
             tabId,
             text

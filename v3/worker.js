@@ -4,34 +4,50 @@ self.importScripts('badge.js');
 
 /* enable or disable the blocker */
 const activate = () => config.get(['enabled', 'top-hosts']).then(async prefs => {
-  await chrome.scripting.unregisterContentScripts({
-    ids: ['page', 'chrome', 'disabled']
-  }).catch(() => {});
+  try {
+    await chrome.scripting.unregisterContentScripts({
+      ids: ['page', 'chrome']
+    }).catch(() => {});
+    // this might throw error
+    await chrome.scripting.unregisterContentScripts({
+      ids: ['disabled']
+    }).catch(() => {});
 
-  if (prefs.enabled) {
-    const props = {
-      'matches': ['*://*/*'],
-      'excludeMatches': prefs['top-hosts'].map(s => ['*://' + s + '/*', '*://*.' + s + '/*']).flat(),
-      'allFrames': true,
-      'runAt': 'document_start'
-    };
-    await chrome.scripting.registerContentScripts([{
-      'id': 'page',
-      'js': ['/data/inject/block/page.js'],
-      'world': 'MAIN',
-      ...props
-    }, {
-      'id': 'chrome',
-      'js': ['/data/inject/block/chrome.js'],
-      'world': 'ISOLATED',
-      ...props
-    }, { // only on top frame
-      'id': 'disabled',
-      'js': ['/data/inject/disabled.js'],
-      'world': 'ISOLATED',
-      'matches': prefs['top-hosts'].map(s => ['*://' + s + '/*', '*://*.' + s + '/*']).flat(),
-      'runAt': 'document_start'
-    }]);
+    if (prefs.enabled) {
+      const props = {
+        'matches': ['*://*/*'],
+        'excludeMatches': prefs['top-hosts'].map(s => ['*://' + s + '/*', '*://*.' + s + '/*']).flat(),
+        'allFrames': true,
+        'runAt': 'document_start'
+      };
+      await chrome.scripting.registerContentScripts([{
+        'id': 'page',
+        'js': ['/data/inject/block/page.js'],
+        'world': 'MAIN',
+        ...props
+      }, {
+        'id': 'chrome',
+        'js': ['/data/inject/block/chrome.js'],
+        'world': 'ISOLATED',
+        ...props
+      }]);
+      // only on top frame
+      if (prefs['top-hosts'].length) {
+        await chrome.scripting.registerContentScripts([{
+          'id': 'disabled',
+          'js': ['/data/inject/disabled.js'],
+          'world': 'ISOLATED',
+          'matches': prefs['top-hosts'].map(s => ['*://' + s + '/*', '*://*.' + s + '/*']).flat(),
+          'runAt': 'document_start'
+        }]);
+      }
+    }
+  }
+  catch (e) {
+    chrome.action.setBadgeBackgroundColor({color: '#b16464'});
+    chrome.action.setBadgeText({text: 'E'});
+    chrome.action.setTitle({title: 'Blocker Registration Failed: ' + e.message});
+    console.error('Blocker Registration Failed', e);
   }
 });
 chrome.runtime.onStartup.addListener(activate);
@@ -87,7 +103,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
                 window.container.addEventListener('load', () => {
                   chrome.runtime.sendMessage({
                     cmd: 'cached-popup-requests',
-                    requests: window.container.requests
+                    requests: window.container.requests,
+                    tabId
                   });
                   delete window.container.requests;
                 }, {once: true});
@@ -124,6 +141,35 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       });
     }
   }
+  else if (request.cmd === 'run-records') {
+    chrome.scripting.executeScript({
+      target: {
+        tabId: sender.tab.id,
+        frameIds: [sender.frameId]
+      },
+      world: 'MAIN',
+      func: (records, href) => {
+        if (records) {
+          const [{method, args}, ...commands] = records;
+          const loaded = [window[method](...args)];
+          commands.forEach(({name, method, args}) => {
+            const o = loaded.map(o => o[name]).filter(o => o).shift();
+            if (loaded.indexOf(o) === -1) {
+              loaded.push(o);
+            }
+            o[method](...args);
+          });
+        }
+        else {
+          const a = document.createElement('a');
+          a.target = '_blank';
+          a.href = href;
+          a.click();
+        }
+      },
+      args: [request.records || false, request.url]
+    });
+  }
   // open a new tab or redirect current tab
   else if (request.cmd === 'popup-redirect' || request.cmd === 'open-tab') {
     const url = request.url;
@@ -158,13 +204,16 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         [mode]: prefs[mode]
       });
       if (mode === 'top-hosts') {
-        chrome.tabs.executeScript(sender.tab.id, {
-          allFrames: true,
-          code: `
+        chrome.scripting.executeScript({
+          target: {
+            tabId: sender.tab.id,
+            allFrames: true
+          },
+          func: () => {
             if (typeof prefs !== 'undefined') {
-              prefs.enabled = false
+              prefs.enabled = false;
             }
-          `
+          }
         });
       }
     });

@@ -42,6 +42,7 @@ textarea:disabled {
 }
 textarea {
   padding: 5px;
+  margin-top: 2px;
 }
 hr {
   margin: 10px 0;

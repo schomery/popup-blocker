@@ -3,7 +3,12 @@
 
 // localization
 [...document.querySelectorAll('[data-i18n]')].forEach(e => {
-  e.textContent = chrome.i18n.getMessage(e.dataset.i18n);
+  if (e.dataset.i18nValue) {
+    e.setAttribute(e.dataset.i18nValue, chrome.i18n.getMessage(e.dataset.i18n));
+  }
+  else {
+    e.textContent = chrome.i18n.getMessage(e.dataset.i18n);
+  }
 });
 
 async function restore(defaults = false) {

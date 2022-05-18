@@ -65,7 +65,7 @@ const redirect = {
   },
   block() {
     if (window.top === window) {
-      if (redirect.prefs['block-page-redirection']) {
+      if (redirect.prefs && redirect.prefs['block-page-redirection']) {
         window.addEventListener('beforeunload', redirect.beforeunload, true);
         clearTimeout(redirect.timeout);
         redirect.timeout = setTimeout(redirect.release, redirect.prefs['block-page-redirection-period']);
@@ -270,33 +270,15 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
   // apply popup-accept on the context where it is originally requested
   if (request.cmd === 'popup-accepted') {
     port.dataset.enabled = false;
-    const s = document.createElement('script');
-    if (records[request.id]) {
-      s.dataset.commands = JSON.stringify(records[request.id]);
+
+    chrome.runtime.sendMessage({
+      cmd: 'run-records',
+      url: request.url,
+      records: records[request.id]
+    }, () => {
       delete records[request.id];
-      s.textContent = `{
-        const [{method, args}, ...commands] = JSON.parse(document.currentScript.dataset.commands);
-        const loaded = [window[method].apply(window, args)];
-        commands.forEach(({name, method, args}) => {
-          const o = loaded.map(o => o[name]).filter(o => o).shift();
-          if (loaded.indexOf(o) === -1) {
-            loaded.push(o);
-          }
-          o[method].apply(o, args);
-        });
-      }`;
-    }
-    else {
-      s.textContent = `{
-        const a = document.createElement('a');
-        a.target = '_blank';
-        a.href = '${request.url}';
-        a.click();
-      }`;
-    }
-    document.body.appendChild(s);
-    s.remove();
-    port.dataset.enabled = prefs.enabled;
+      port.dataset.enabled = prefs.enabled;
+    });
   }
   else if (request.cmd === 'use-shadow') {
     port.dataset.shadow = true;

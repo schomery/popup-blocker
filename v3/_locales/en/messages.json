@@ -116,6 +116,12 @@
   "options_page": {
     "message": "FAQs Page"
   },
+  "options_t_1": {
+    "message": "comma-separated list of hostnames (e.g.: www.google.com, www.yahoo.com)"
+  },
+  "options_t_2": {
+    "message": "comma-separated list of domains (e.g.: google.com, yahoo.com)"
+  },
   "ui_msg": {
     "message": "Popup is requested for"
   },
@@ -171,7 +177,7 @@
     "message": "Display Notifications"
   },
   "pp_ignore": {
-    "message": "Ignore when Possible"
+    "message": "Run Action when Possible"
   },
   "pp_last_request": {
     "message": "Last Request"
