@@ -1,0 +1,106 @@
+{
+    "options_item12": {
+        "message": "쉼표로 구분된 팝업이 완벽히 차단된 호스트 이름의 목록",
+        "description": ""
+    },
+    "options_msg": {
+        "message": "옵션이 저장 됨",
+        "description": ""
+    },
+    "options_item10": {
+        "message": "카운트 다운을 비활성화 하려면 0을 입력",
+        "description": ""
+    },
+    "context_item1": {
+        "message": "팝업 차단기 테스트",
+        "description": ""
+    },
+    "options_item3": {
+        "message": "동일한 출처의 팝업 차단 요청을 차단하지 않음",
+        "description": ""
+    },
+    "options_item16": {
+        "message": "일부 웹 사이트에서 팝업 광고가 차단되면 다른 페이지로 이동하게 됩니다. 이 옵션을 사용하면 다른 페이지로 이동 되기 전에 경고가 발생합니다.",
+        "description": ""
+    },
+    "options_item4": {
+        "message": "새 탭에서 여는 링크 열기 차단",
+        "description": ""
+    },
+    "options_item15": {
+        "message": "팝업을 요청한 페이지에서 2초간 다른 페이지로 전송 방지",
+        "description": ""
+    },
+    "app_description": {
+        "message": "모든 웹 사이트의 팝업 요청을 엄격하게 차단합니다.",
+        "description": ""
+    },
+    "options_item19": {
+        "message": "요청 거부",
+        "description": ""
+    },
+    "options_item9": {
+        "message": "마지막 작업 수행을 위한 카운트 다운 (초 단위)",
+        "description": ""
+    },
+    "options_item2": {
+        "message": "각 팝업의 표시 제한 시간(초 단위)",
+        "description": ""
+    },
+    "options_item7": {
+        "message": "화이트 리스트(웹 페이지)",
+        "description": ""
+    },
+    "options_save": {
+        "message": "설정 저장",
+        "description": ""
+    },
+    "options_item22": {
+        "message": "배지 배경 색",
+        "description": ""
+    },
+    "options_item1": {
+        "message": "한 페이지의 최대 팝업 요청 수",
+        "description": ""
+    },
+    "options_item17": {
+        "message": "팝업이 요청 될 때의 기본 동작",
+        "description": ""
+    },
+    "options_item14": {
+        "message": "140/5000\n쉼표로 구분 된 호스트 차단 목록으로, 팝업 차단기가 활성화되어 있어야 합니다. 즉, 다른 모든 도메인에서 팝업 차단을 사용할 수 없습니다.",
+        "description": ""
+    },
+    "options_item11": {
+        "message": "쉼표로 구분된 차단되지 않은 팝업 호스트 이름 목록(이 도메인은 모든 웹 페이지에서 팝업을 생성할 수 있음)",
+        "description": ""
+    },
+    "options_item18": {
+        "message": "아무 것도 안 함",
+        "description": ""
+    },
+    "options_item21": {
+        "message": "페이지 다시 전송",
+        "description": ""
+    },
+    "options_item8": {
+        "message": "탭을 새로 고쳐야 함",
+        "description": ""
+    },
+    "options_item13": {
+        "message": "블랙 리스트(웹 페이지)",
+        "description": ""
+    },
+    "options_item5": {
+        "message": "도구 모음 아이콘에 모든 차단된 요청의 수를 표시",
+        "description": ""
+    },
+    "options_item6": {
+        "message": "화이트 리스트(팝업):",
+        "description": ""
+    },
+    "options_item20": {
+        "message": "백그라운드에서 열기",
+        "description": ""
+    }
+}

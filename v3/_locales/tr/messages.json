@@ -1,0 +1,134 @@
+{
+    "options_item12": {
+        "message": "Virgül ile ayrılan beyaz liste sitelerinde bu eklenti tamamen kapalı olacaktır",
+        "description": ""
+    },
+    "options_msg": {
+        "message": "Ayarlar Kaydedildi",
+        "description": ""
+    },
+    "options_item23": {
+        "message": "Eğer mümkünse popup istekleri bildirimini engelle (önerilmez)",
+        "description": ""
+    },
+    "options_item10": {
+        "message": "Geri sayımı kapatmak için sıfır yazın",
+        "description": ""
+    },
+    "context_item1": {
+        "message": "Popup engleleyici test et",
+        "description": ""
+    },
+    "options_item3": {
+        "message": "Aynı kaynaktan popup isteği alma",
+        "description": ""
+    },
+    "options_item16": {
+        "message": "Bazı sitelerde , sayfa reklamlı link yönlendirmeli olarak verilir.Bu ayar site yönlendirmesine gitmeden önce sizi uyarır.",
+        "description": ""
+    },
+    "options_item4": {
+        "message": "Yeni sekmede açılan linkleri engelle",
+        "description": ""
+    },
+    "options_item24": {
+        "message": "Bu ayar otomatik olarak popup isteklerine \"Kabul\" veya \"Reddet\" komutunu uygulayacaktır (önerilmez)",
+        "description": ""
+    },
+    "options_item25": {
+        "message": "Açıklamalar",
+        "description": ""
+    },
+    "options_item15": {
+        "message": "Popup isteğinden 2 saniye sonra yönlendirmeyi engelle",
+        "description": ""
+    },
+    "app_description": {
+        "message": "Kesin olarak bütün popup isteklerini engeller",
+        "description": ""
+    },
+    "options_item19": {
+        "message": "Reddet",
+        "description": ""
+    },
+    "options_item9": {
+        "message": "En son işlem için geri sayım süresi (saniye)",
+        "description": ""
+    },
+    "options_item2": {
+        "message": "Popup bildirisi penceresi görünüm süresi (saniye)",
+        "description": ""
+    },
+    "options_item7": {
+        "message": "Güvenilir kaynaklar:",
+        "description": ""
+    },
+    "options_save": {
+        "message": "Ayarları Kaydet",
+        "description": ""
+    },
+    "options_item26": {
+        "message": "Sıkça sorulan soruları güncellemelerde göster",
+        "description": ""
+    },
+    "options_item22": {
+        "message": "Sayacın arka plan rengi",
+        "description": ""
+    },
+    "context_item4": {
+        "message": "Popup isteğini gizli sekmede aç",
+        "description": ""
+    },
+    "options_item1": {
+        "message": "Bir sayfada engellenecek en fazla popup isteği sayısı",
+        "description": ""
+    },
+    "options_item17": {
+        "message": "Popup isteği geldiğinde yapılacak ilk komut",
+        "description": ""
+    },
+    "options_item14": {
+        "message": "Virgül ile ayrılan kara liste sitelerde bu uygulama tamamen aktif olacaktır. Eğer bu ayarı kullanırsanız bu uygulama diğer TÜM sitelerde çalışmayacaktır.",
+        "description": ""
+    },
+    "options_item11": {
+        "message": "Virgül ile ayrılan beyaz liste sitelerinde hiç bir engelleme olmayacaktır (bu sitelerde herhangi bir yeni pencere veya sekme çıkabilir)",
+        "description": ""
+    },
+    "options_item18": {
+        "message": "Hiçbir şey yapma",
+        "description": ""
+    },
+    "options_item21": {
+        "message": "Sayfayı yönlendir",
+        "description": ""
+    },
+    "options_item8": {
+        "message": "Ayarları düzenledikten sonra sayfanızı yenileyin",
+        "description": ""
+    },
+    "options_item13": {
+        "message": "Kara liste:",
+        "description": ""
+    },
+    "options_item5": {
+        "message": "Engellenene isteklerin sayısını eklenti simgesinde göster",
+        "description": ""
+    },
+    "options_item6": {
+        "message": "Güvenilir siteler:",
+        "description": ""
+    },
+    "context_item3": {
+        "message": "En son gelen popup isteğini reddet",
+        "description": ""
+    },
+    "options_item20": {
+        "message": "Arka planda aç",
+        "description": ""
+    },
+    "context_item2": {
+        "message": "En son gelen popup isteğini kabul et",
+        "description": ""
+    }
+}

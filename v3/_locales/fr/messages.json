@@ -1,0 +1,250 @@
+{
+    "app_description": {
+        "message": "Bloquer strictement toutes les demandes de popup provenant de n'importe quel site web",
+        "description": ""
+    },
+    "context_item1": {
+        "message": "Testez votre bloqueur de popups",
+        "description": ""
+    },
+    "context_item2": {
+        "message": "Autoriser la dernière demande de popup",
+        "description": ""
+    },
+    "context_item3": {
+        "message": "Refuser la dernière demande de popup",
+        "description": ""
+    },
+    "context_item4": {
+        "message": "Utiliser une fenêtre d'ombre pour cet onglet",
+        "description": ""
+    },
+    "context_item5": {
+        "message": "Ouvrir la page des options",
+        "description": ""
+    },
+    "context_item6": {
+        "message": "Ignorer la popup si possible",
+        "description": ""
+    },
+    "options_item1": {
+        "message": "Nombre maximum de demandes de popup pour une seule page",
+        "description": ""
+    },
+    "options_item2": {
+        "message": "Délai d'affichage de chaque popup (en secondes)",
+        "description": ""
+    },
+    "options_item3": {
+        "message": "Ne pas bloquer les requêtes pop-up de la même origine",
+        "description": ""
+    },
+    "options_item5": {
+        "message": "Afficher le nombre total de demandes bloquées dans l'icône de la barre d'outils",
+        "description": ""
+    },
+    "options_item6": {
+        "message": "Destinations de la liste blanche",
+        "description": ""
+    },
+    "options_item7": {
+        "message": "Sources de la liste blanche :",
+        "description": ""
+    },
+    "options_item8": {
+        "message": "Pour que ce changement prenne effet, rafraîchissez l'onglet.",
+        "description": ""
+    },
+    "options_item9": {
+        "message": "Compte à rebours pour l'exécution de la dernière action (en secondes)",
+        "description": ""
+    },
+    "options_item10": {
+        "message": "Utilisez un zéro pour désactiver le compte à rebours pour effectuer l'action précédente.",
+        "description": ""
+    },
+    "options_item11": {
+        "message": "Liste, séparée par des virgules, des noms d'hôtes qui ne seront pas bloqués (ces noms d'hôtes peuvent afficher des popups sur n'importe quel site web).",
+        "description": ""
+    },
+    "options_item12": {
+        "message": "Liste de noms d'hôtes séparés par des virgules sur lesquels l'extension de blocage des pop-ups est complètement désactivée.",
+        "description": ""
+    },
+    "options_item13": {
+        "message": "Liste noire des sources (mode de fonctionnement inverse) :",
+        "description": ""
+    },
+    "options_item14": {
+        "message": "Liste de noms d'hôtes séparés par des virgules sur lesquels le bloqueur de popups ne doit être actif qu'à leur égard. Cela signifie que le bloqueur de pop-ups est désactivé sur TOUS les autres noms d'hôtes. Pour désactiver ce mode, effacez complètement la liste noire.",
+        "description": ""
+    },
+    "options_item15": {
+        "message": "Empêcher la redirection des pages pendant 2 secondes après qu'une popup ai été demandée",
+        "description": ""
+    },
+    "options_item16": {
+        "message": "Certains sites web redirigent l'utilisateur vers la page de pub si la demande d'affichage d'une annonce est bloquée. Cette option peut empêcher cela en n'autorisant pas la redirection de la page pendant la durée spécifiée.",
+        "description": ""
+    },
+    "options_item17": {
+        "message": "Action par défaut lorsqu'une popup est demandée",
+        "description": ""
+    },
+    "options_item18": {
+        "message": "ne rien faire",
+        "description": ""
+    },
+    "options_item19": {
+        "message": "refuser la demande",
+        "description": ""
+    },
+    "options_item20": {
+        "message": "ouvrir en arrière-plan",
+        "description": ""
+    },
+    "options_item21": {
+        "message": "rediriger la page",
+        "description": ""
+    },
+    "options_item22": {
+        "message": "Couleur de fond du badge",
+        "description": ""
+    },
+    "options_item23": {
+        "message": "Ignorer les notifications pop-up lorsque c'est possible (non recommandé)",
+        "description": ""
+    },
+    "options_item24": {
+        "message": "Cela permet \"d'ignorer\" ou \"d'accepter\" un popup sans interaction de l'utilisateur (non recommandé)",
+        "description": ""
+    },
+    "options_item25": {
+        "message": "Descriptions",
+        "description": ""
+    },
+    "options_item26": {
+        "message": "Afficher la FAQ concernant les mises à jour",
+        "description": ""
+    },
+    "options_item27": {
+        "message": "Protocoles de la liste blanche :",
+        "description": ""
+    },
+    "options_item28": {
+        "message": "Les protocoles énumérés peuvent être ouverts dans un nouvel onglet du navigateur. Par exemple, ajoutez \"magnet :\" pour permettre l'ouverture des liens magnétiques dans un onglet du navigateur.",
+        "description": ""
+    },
+    "options_item29": {
+        "message": "Utiliser le service Web of Trust (WOT) pour décider si la fenêtre contextuelle provient d'un nom d'hôte de confiance ou non",
+        "description": ""
+    },
+    "options_item30": {
+        "message": "Simulez le bouton \"autoriser\" pour empêcher le bloqueur de popup interne de votre navigateur de bloquer ces demandes",
+        "description": ""
+    },
+    "options_item31": {
+        "message": "Lorsque vous appuyez sur le bouton \" faire confiance \", ajoutez le nom d'hôte à",
+        "description": ""
+    },
+    "options_item32": {
+        "message": "Destinations de la liste blanche",
+        "description": ""
+    },
+    "options_item33": {
+        "message": "Sources de la liste blanche",
+        "description": ""
+    },
+    "options_item34": {
+        "message": "Liste noire de notification",
+        "description": ""
+    },
+    "options_item35": {
+        "message": "Liste de noms d'hôtes séparés par des virgules que le bloqueur de popups n'affichera pas si une popup est demandé",
+        "description": ""
+    },
+    "options_support": {
+        "message": "Soutenir le développement",
+        "description": ""
+    },
+    "options_import": {
+        "message": "Importer",
+        "description": ""
+    },
+    "options_export": {
+        "message": "Exporter",
+        "description": ""
+    },
+    "options_reset": {
+        "message": "Réinitialisation des paramètres par défaut",
+        "description": ""
+    },
+    "options_save": {
+        "message": "Sauvegarder",
+        "description": ""
+    },
+    "options_msg": {
+        "message": "Les options sont sauvegardées",
+        "description": ""
+    },
+    "ui_msg": {
+        "message": "La popup est demandé pour",
+        "description": ""
+    },
+    "ui_button_allow": {
+        "message": "Autoriser cette popup",
+        "description": ""
+    },
+    "ui_button_allow_value": {
+        "message": "Autoriser",
+        "description": ""
+    },
+    "ui_button_redirect": {
+        "message": "Rediriger la page actuelle vers la nouvelle destination au lieu de l'ouvrir dans un nouvel onglet ou une popup",
+        "description": ""
+    },
+    "ui_button_redirect_value": {
+        "message": "rediriger",
+        "description": ""
+    },
+    "ui_button_background": {
+        "message": "Ouvrir le lien dans un onglet de fond",
+        "description": ""
+    },
+    "ui_button_background_value": {
+        "message": "en arrière-plan",
+        "description": ""
+    },
+    "ui_button_deny": {
+        "message": "Refuser l'ouverture de la fenêtre popup ou de l'onglet",
+        "description": ""
+    },
+    "ui_button_deny_value": {
+        "message": "interdire",
+        "description": ""
+    },
+    "ui_button_trust": {
+        "message": "Inscrivez ce domaine sur la liste blanche pour l'affichage des popups",
+        "description": ""
+    },
+    "ui_button_trust_value": {
+        "message": "de confiance",
+        "description": ""
+    },
+    "bg_msg_state_1": {
+        "message": "Popup Blocker (strict) est entièrement activé et protège cet onglet",
+        "description": ""
+    },
+    "bg_msg_state_2": {
+        "message": "Popup Blocker (strict) est entièrement activé mais ne protège pas cet onglet",
+        "description": ""
+    },
+    "bg_msg_state_3": {
+        "message": "Popup Blocker (strict) est entièrement désactivé et ne protège pas cet onglet",
+        "description": ""
+    },
+    "bg_msg_state_4": {
+        "message": "Popup Blocker (strict) est entièrement désactivé mais protège cet onglet",
+        "description": ""
+    }
+}

@@ -1,0 +1,104 @@
+body {
+  margin: 0;
+  font-family: "Helvetica Neue",Helvetica,sans-serif;
+  font-size: 12px;
+  overflow: hidden;
+}
+
+input[type=button] {
+  border: solid 1px #999;
+  background-color: #fff;
+  color: #000;
+  font-size: 10px;
+  margin: 0 3px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 0;
+  line-height: 20px;
+  outline: none;
+}
+input[type=button][data-default=true] {
+  font-weight: 500;
+}
+input[type=button][data-cmd="popup-close"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 14px;
+}
+
+.ppblocker-div {
+  position: relative;
+  text-shadow: none;
+  box-sizing: content-box;
+  border: solid 1px #cebc7d;
+  background-color: #f4e1a7;
+  color: #000;
+  padding: 5px;
+  margin:  8px 8px 5px 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 2px;
+  box-shadow: 1px 1px 5px rgb(206,188,125);
+}
+.ppblocker-div>div {
+  display: flex;
+  justify-content: flex-end;
+}
+.ppblocker-div>div>span {
+  display: flex;
+  flex: 1;
+}
+.ppblocker-div>p:first-of-type {
+  font-weight: 500;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+.ppblocker-div>p:last-of-type {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  padding: 0;
+  line-height: 32px;
+}
+.ppblocker-div::before {
+  content: attr(data-badge);
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  border: solid 2px #fff;
+  border-radius: 50%;
+  background-color: #fc0d1b;
+  color: #000;
+  color: #fff;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80%;
+}
+.ppblocker-div[data-badge="1"]::before {
+  display: none;
+}
+.ppblocker-div:not([data-page=true]) [data-cmd="white-list"],
+.ppblocker-div:not([data-page=true]) [data-cmd="popup-redirect"],
+.ppblocker-div:not([data-page=true]) [data-cmd="open-tab"] {
+  display: none;
+}
+
+.ppblocker-wot {
+  position: absolute;
+  top: 6px;
+  right: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80%;
+}

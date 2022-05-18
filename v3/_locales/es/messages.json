@@ -1,0 +1,266 @@
+{
+    "app_description": {
+        "message": "Bloquear estrictamente todas las peticiones de ventanas emergentes de cualquier sitio web",
+        "description": ""
+    },
+    "context_item1": {
+        "message": "Probar tu bloqueador de ventanas emergentes",
+        "description": ""
+    },
+    "context_item2": {
+        "message": "Permitir la última petición de ventana emergente",
+        "description": ""
+    },
+    "context_item3": {
+        "message": "Denegar la última petición de ventana emergente",
+        "description": ""
+    },
+    "context_item4": {
+        "message": "Usar sombra de ventana para esta pestaña",
+        "description": ""
+    },
+    "context_item5": {
+        "message": "Abrir página de opciones",
+        "description": ""
+    },
+    "context_item6": {
+        "message": "Ignorar notificación de ventana emergente si es posible",
+        "description": ""
+    },
+    "options_item1": {
+        "message": "Número máximo de peticiones de ventanas emergentes para una página",
+        "description": ""
+    },
+    "options_item2": {
+        "message": "Tiempo de espera para mostrar cada ventana emergente (en segundos)",
+        "description": ""
+    },
+    "options_item3": {
+        "message": "No bloquear peticiones de ventanas emergentes provenientes del mismo origen",
+        "description": ""
+    },
+    "options_item5": {
+        "message": "Mostrar el número total de peticiones bloqueadas en el icono de la barra de herramientas",
+        "description": ""
+    },
+    "options_item6": {
+        "message": "Destinos de lista blanca:",
+        "description": ""
+    },
+    "options_item7": {
+        "message": "Fuentes de lista blanca:",
+        "description": ""
+    },
+    "options_item8": {
+        "message": "Para que este cambio surta efecto, actualiza la pestaña.",
+        "description": ""
+    },
+    "options_item9": {
+        "message": "Cuenta regresiva para realizar la última acción (en segundos)",
+        "description": ""
+    },
+    "options_item10": {
+        "message": "Usar el número cero para deshabilitar la cuenta regresiva para realizar la acción anterior.",
+        "description": ""
+    },
+    "options_item11": {
+        "message": "Lista de nombres de host separado por comas que no se van a bloquear (estos nombres de host pueden abrir ventanas emergentes en cualquier sitio web).",
+        "description": ""
+    },
+    "options_item12": {
+        "message": "Lista de nombres de host separado por comas que la extensión bloqueador de ventanas emergentes está completamente deshabilitada en ellos.",
+        "description": ""
+    },
+    "options_item13": {
+        "message": "Fuentes de lista negra (modo de operación inversa):",
+        "description": ""
+    },
+    "options_item14": {
+        "message": "Lista de nombres de host separado por comas que el bloqueador de ventanas emergentes solo debe estar habilitado en ellos. Esto significa que el bloqueador de ventanas emergentes está deshabilitado en TODOS los demás nombres de host. Para deshabilitar este modo, borra completamente la entrada de la lista negra.",
+        "description": ""
+    },
+    "options_item15": {
+        "message": "Impedir la redirección de la página durante 2 segundos tras una solicitud de ventana emergente",
+        "description": ""
+    },
+    "options_item16": {
+        "message": "Algunos sitios web redirigen al usuario a una página de anuncios si la petición de ventana emergente para mostrar el anuncio está bloqueada. Esta opción puede impedir esto al no permitir la redirección de la página durante el tiempo especificado.",
+        "description": ""
+    },
+    "options_item17": {
+        "message": "Acción predeterminada cuando se solicita una ventana emergente",
+        "description": ""
+    },
+    "options_item18": {
+        "message": "no hacer nada",
+        "description": ""
+    },
+    "options_item19": {
+        "message": "denegar petición",
+        "description": ""
+    },
+    "options_item20": {
+        "message": "abrir en segundo plano",
+        "description": ""
+    },
+    "options_item21": {
+        "message": "redirigir página",
+        "description": ""
+    },
+    "options_item22": {
+        "message": "Color de fondo del escudo",
+        "description": ""
+    },
+    "options_item23": {
+        "message": "Ignorar notificación de ventana emergente cuando sea posible (no recomendado)",
+        "description": ""
+    },
+    "options_item24": {
+        "message": "Esto \"ignorará\" o \"aceptará\" un ventana emergente sin la interacción del usuario (no recomendado)",
+        "description": ""
+    },
+    "options_item25": {
+        "message": "Descripciones",
+        "description": ""
+    },
+    "options_item26": {
+        "message": "Mostrar página de preguntas frecuentes en actualizaciones",
+        "description": ""
+    },
+    "options_item27": {
+        "message": "Protocolos en lista blanca:",
+        "description": ""
+    },
+    "options_item28": {
+        "message": "Los protocolos listados pueden abrirse en una pestaña nueva del navegador. Por ejemplo, añadir 'magnet:' para permitir que los enlaces magnet se abran en una pestaña del navegador.",
+        "description": ""
+    },
+    "options_item29": {
+        "message": "Usar el servicio Web of Trust (WOT) para decidir si una ventana emergente es de un nombre de host de confianza o no.",
+        "description": ""
+    },
+    "options_item30": {
+        "message": "Simular el botón 'permitir' para impedir que el bloqueador de ventanas emergentes interno de tu navegador bloquee estas peticiones",
+        "description": ""
+    },
+    "options_item31": {
+        "message": "Cuando se presiona el botón 'confiar', añadir el nombre de host a",
+        "description": ""
+    },
+    "options_item32": {
+        "message": "Destinos de lista blanca",
+        "description": ""
+    },
+    "options_item33": {
+        "message": "Fuentes de lista blanca",
+        "description": ""
+    },
+    "options_item34": {
+        "message": "Notificación de lista negra",
+        "description": ""
+    },
+    "options_item35": {
+        "message": "Lista de nombres de host separado por comas que el bloqueador de ventanas emergentes no mostrará notificación si se solicita una ventana emergente",
+        "description": ""
+    },
+    "options_item36": {
+        "message": "Enable aggressive static IFrame detection",
+        "description": ""
+    },
+    "options_item37": {
+        "message": "When this mode is enabled, the extension installs a mutation observer to monitor static IFrames with 'JavaScript:' src attributes. This enhances the blocking power but has performance drawbacks.",
+        "description": ""
+    },
+    "options_support": {
+        "message": "Apoyar el desarrollo",
+        "description": ""
+    },
+    "options_import": {
+        "message": "Importar",
+        "description": ""
+    },
+    "options_export": {
+        "message": "Exportar",
+        "description": ""
+    },
+    "options_reset": {
+        "message": "Restablecer los valores predeterminados",
+        "description": ""
+    },
+    "options_save": {
+        "message": "Guardar",
+        "description": ""
+    },
+    "options_msg": {
+        "message": "Se han guardado las opciones",
+        "description": ""
+    },
+    "options_review": {
+        "message": "Reseña en YouTube",
+        "description": ""
+    },
+    "options_page": {
+        "message": "Página de preguntas frecuentes",
+        "description": ""
+    },
+    "ui_msg": {
+        "message": "Solicita una ventana emergente para",
+        "description": ""
+    },
+    "ui_button_allow": {
+        "message": "Permitir esta ventana emergente",
+        "description": ""
+    },
+    "ui_button_allow_value": {
+        "message": "permitir",
+        "description": ""
+    },
+    "ui_button_redirect": {
+        "message": "Redirigir página actual al nuevo destino en lugar de abrirla en una pestaña nueva o ventana emergente",
+        "description": ""
+    },
+    "ui_button_redirect_value": {
+        "message": "redirigir",
+        "description": ""
+    },
+    "ui_button_background": {
+        "message": "Abrir el enlace en una pestaña en segundo plano",
+        "description": ""
+    },
+    "ui_button_background_value": {
+        "message": "segundo plano",
+        "description": ""
+    },
+    "ui_button_deny": {
+        "message": "Rechazar ventana emergente o apertura de pestaña",
+        "description": ""
+    },
+    "ui_button_deny_value": {
+        "message": "denegar",
+        "description": ""
+    },
+    "ui_button_trust": {
+        "message": "Poner en lista blanca este dominio para abrir ventanas emergentes",
+        "description": ""
+    },
+    "ui_button_trust_value": {
+        "message": "confiar",
+        "description": ""
+    },
+    "bg_msg_state_1": {
+        "message": "Popup Blocker (estricto) está habilitado globalmente y protege esta pestaña",
+        "description": ""
+    },
+    "bg_msg_state_2": {
+        "message": "Popup Blocker (estricto) está habilitado globalmente pero no protege esta pestaña",
+        "description": ""
+    },
+    "bg_msg_state_3": {
+        "message": "Popup Blocker (estricto) está deshabilitado globalmente y no protege esta pestaña",
+        "description": ""
+    },
+    "bg_msg_state_4": {
+        "message": "Popup Blocker (estricto) está deshabilitado globalmente pero protege esta pestaña",
+        "description": ""
+    }
+}

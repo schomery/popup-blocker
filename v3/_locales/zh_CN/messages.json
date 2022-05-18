@@ -1,0 +1,101 @@
+{
+  "app_description": {
+    "message": "严格拦截任何网站的所有弹窗请求"
+  },
+  "context_item1": {
+    "message": "测试您的弹窗拦截器"
+  },
+  "context_item2": {
+    "message": "允许最后的弹窗请求"
+  },
+  "context_item3": {
+    "message": "拒绝最后的弹窗请求"
+  },
+  "context_item4": {
+    "message": "在弹出请求上创建阴影窗口"
+  },
+  "options_item1": {
+    "message": "单个页面最多请求多少弹窗"
+  },
+  "options_item2": {
+    "message": "每个弹窗请求的显示超时（秒）"
+  },
+  "options_item3": {
+    "message": "不拦截同源的弹窗请求"
+  },
+  "options_item4": {
+    "message": "阻止在新标签页打开链接"
+  },
+  "options_item5": {
+    "message": "工具栏图标上显示已拦截请求总量"
+  },
+  "options_item6": {
+    "message": "白名单目的地："
+  },
+  "options_item7": {
+    "message": "白名单源网站："
+  },
+  "options_item8": {
+    "message": "需要刷新标签页"
+  },
+  "options_item9": {
+    "message": "执行上次动作的倒计时（秒）"
+  },
+  "options_item10": {
+    "message": "使用 0 禁用倒计时"
+  },
+  "options_item11": {
+    "message": "逗号分隔不拦截的域名列表（任何网站都可以弹出这些域的窗口）"
+  },
+  "options_item12": {
+    "message": "逗号分隔不处理的域名列表（弹窗拦截器不在这些域上运行）"
+  },
+  "options_item13": {
+    "message": "黑名单源网站："
+  },
+  "options_item14": {
+    "message": "逗号分隔域名列表，弹窗拦截器只在这些域上显示。这意味着其他域上不使用弹窗拦截器。"
+  },
+  "options_item15": {
+    "message": "一个弹窗请求后，阻止页面在 2 秒内重定向"
+  },
+  "options_item16": {
+    "message": "在某些网站上，如果弹窗广告被拦截，则页面被重定向到另一页面。此选项可以在重定向前发出提醒，您可阻止此操作。"
+  },
+  "options_item17": {
+    "message": "弹窗请求时的默认操作"
+  },
+  "options_item18": {
+    "message": "无动作"
+  },
+  "options_item19": {
+    "message": "拒绝请求"
+  },
+  "options_item20": {
+    "message": "在后台打开"
+  },
+  "options_item21": {
+    "message": "重定向页面"
+  },
+  "options_item22": {
+    "message": "徽章背景色"
+  },
+  "options_item23": {
+    "message": "可能时忽略弹窗通知（不推荐）"
+  },
+  "options_item24": {
+    "message": "没有用户交互时，这将“忽略”或“接受”一个弹窗（不推荐）"
+  },
+  "options_item25": {
+    "message": "说明"
+  },
+  "options_item26": {
+    "message": "更新后打开 FAQ 页面"
+  },
+  "options_save": {
+    "message": "保存设置"
+  },
+  "options_msg": {
+    "message": "选项已保存"
+  }
+}

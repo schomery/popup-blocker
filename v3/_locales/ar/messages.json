@@ -1,0 +1,250 @@
+{
+    "app_description": {
+        "message": "حظر جميع النوافذ المنبثقه من أي موقع",
+        "description": ""
+    },
+    "context_item1": {
+        "message": "اختبر حظر النوافذ المنبثقه",
+        "description": ""
+    },
+    "context_item2": {
+        "message": "السماح لآخر طلب نافذه منبثقه بالظهور",
+        "description": ""
+    },
+    "context_item3": {
+        "message": "حظر آخر طلب للنافذه المنبثقه",
+        "description": ""
+    },
+    "context_item4": {
+        "message": "استخدم ظلال النوافذ للصفحه الحاليه",
+        "description": ""
+    },
+    "context_item5": {
+        "message": "فتح صفحه الخيارات",
+        "description": ""
+    },
+    "context_item6": {
+        "message": "تجاهل التنبيهات المنبثقه اذا امكن ",
+        "description": ""
+    },
+    "options_item1": {
+        "message": "اقصي عدد لطلبات النوافذ المنبثقه للثفحه الواحده",
+        "description": ""
+    },
+    "options_item2": {
+        "message": "الوقت اللازم لظهور كل نافذه منبثقه (بالثواني)",
+        "description": ""
+    },
+    "options_item3": {
+        "message": "لا تقم بحظر طلبات النوافذ المنبثقه لنفس الصفحات الاساسيه",
+        "description": ""
+    },
+    "options_item5": {
+        "message": "اظهار اجمالي عدد الطلبات المحظوره علي اايقونه في شريط الادوات",
+        "description": ""
+    },
+    "options_item6": {
+        "message": "وجه قائمه السماح:",
+        "description": ""
+    },
+    "options_item7": {
+        "message": "مصادر قائمه السماح:",
+        "description": ""
+    },
+    "options_item8": {
+        "message": "لتطبيق التغييرات عليك بتحديث الصفحه",
+        "description": ""
+    },
+    "options_item9": {
+        "message": "العد التنازلي لتطبيق اخر حدث (بالثواني)",
+        "description": ""
+    },
+    "options_item10": {
+        "message": "استخدم (الصفر) لتعطيل العد التنازلي لتطبيق اخر حدث",
+        "description": ""
+    },
+    "options_item11": {
+        "message": "(,)للفصل بين المواقع التي تريد عدم عمل حظر لها والتي تتسبب في حدوث مشاكل (علي كل المواقع )",
+        "description": ""
+    },
+    "options_item12": {
+        "message": "(,)للفصل بين المواقع التي تريد  عمل حظر لها بالكامل",
+        "description": ""
+    },
+    "options_item13": {
+        "message": "مصادر القائمه السوداء (وضع العمليه المعكوسه)",
+        "description": ""
+    },
+    "options_item14": {
+        "message": "(,)للفصل بين المواقع التي تريد ان تعمل عليهم فقط مع العلم انها ستكون معطله علي باقي المواقع لتعطيل هذا الوضع قم بتظيف القائمه السوداء بالكامل",
+        "description": ""
+    },
+    "options_item15": {
+        "message": "منع الصفحه من الانتقال التلقائي ل 2 (ثانيه)بعد الطلب المنبثق",
+        "description": ""
+    },
+    "options_item16": {
+        "message": "بعض المواقع توجه المستخدم لصفحات اعلانات .هذا الخيار يمنع المواقع من عمل ذلك لوقت محدد.",
+        "description": ""
+    },
+    "options_item17": {
+        "message": "الحدث الافتراضي عند ظهور نافذه منبثقه",
+        "description": ""
+    },
+    "options_item18": {
+        "message": "لا تفعل شئ",
+        "description": ""
+    },
+    "options_item19": {
+        "message": "حظر الطلب",
+        "description": ""
+    },
+    "options_item20": {
+        "message": "الفتح في الخلفيه",
+        "description": ""
+    },
+    "options_item21": {
+        "message": "توجيه الصفحه",
+        "description": ""
+    },
+    "options_item22": {
+        "message": "تمميز background-color",
+        "description": ""
+    },
+    "options_item23": {
+        "message": "تجاهل النوافذ المنبثقه اذا امكن (غير موصي به)",
+        "description": ""
+    },
+    "options_item24": {
+        "message": "هذ الخيار ل \"تجاهل\" او \"الموافقه\" للنوافقذ المنبثقه بدون تدخل المستخدم ( غير موصي به)",
+        "description": ""
+    },
+    "options_item25": {
+        "message": "الوصف",
+        "description": ""
+    },
+    "options_item26": {
+        "message": "اظهار صفحه الاسئله الشائعه ( FAQs) عند التحديث",
+        "description": ""
+    },
+    "options_item27": {
+        "message": "بروتوكولات قائمه السماح:",
+        "description": ""
+    },
+    "options_item28": {
+        "message": "قائمه البروتوكولات يمكن فتحها في نافذه تصفح جديده .وللاضافه السريعه قم باضافه 'magnet:' للسماح برورابط الملتقطه يتم فتحها في نافذه جديده",
+        "description": ""
+    },
+    "options_item29": {
+        "message": "استخدام خدمه الثقه (WOT) لتقرر السماح او لا  بالنوافذ المنبثقه اعتمادا علي  المواقع الموثوقه والامنه واتخاذ القرار المناسب",
+        "description": ""
+    },
+    "options_item30": {
+        "message": "محاكاه زر السماح 'allow' لمنع مانع النوافذ المنبثقه  الداخلي للمتصفح من حظر هذه الطلبات ",
+        "description": ""
+    },
+    "options_item31": {
+        "message": "عندما ضغط زر السماح 'trust' اضافه الموقع الي ",
+        "description": ""
+    },
+    "options_item32": {
+        "message": "وجهة قائمه السماح",
+        "description": ""
+    },
+    "options_item33": {
+        "message": "مصادر قائمه السماح",
+        "description": ""
+    },
+    "options_item34": {
+        "message": "تنبيهات قائمه الحظر",
+        "description": ""
+    },
+    "options_item35": {
+        "message": "استخدم (,)للفصل بين المواقع التي تريد الغاء التبيه لها اذا تم اظهار نافذه منبثقه",
+        "description": ""
+    },
+    "options_support": {
+        "message": "دعم المطور",
+        "description": ""
+    },
+    "options_import": {
+        "message": "استيراد",
+        "description": ""
+    },
+    "options_export": {
+        "message": "تصدير",
+        "description": ""
+    },
+    "options_reset": {
+        "message": "استعاده الافتراضيه",
+        "description": ""
+    },
+    "options_save": {
+        "message": "حفظ",
+        "description": ""
+    },
+    "options_msg": {
+        "message": "الخيارات التي تم حفظها",
+        "description": ""
+    },
+    "ui_msg": {
+        "message": "الطلب المنبثق ل ",
+        "description": ""
+    },
+    "ui_button_allow": {
+        "message": "السماح لهذا",
+        "description": ""
+    },
+    "ui_button_allow_value": {
+        "message": "اسمح",
+        "description": ""
+    },
+    "ui_button_redirect": {
+        "message": "توجيه هذه الصفحه الحاليه الي وجهة جديده بدلا من فتها في نافذه تصفح جديده",
+        "description": ""
+    },
+    "ui_button_redirect_value": {
+        "message": "إعادة توجيه",
+        "description": ""
+    },
+    "ui_button_background": {
+        "message": "فتح الرابط في نافذه جديده في الخلفيه",
+        "description": ""
+    },
+    "ui_button_background_value": {
+        "message": "في الخلفية",
+        "description": ""
+    },
+    "ui_button_deny": {
+        "message": "حظر النافذه المنبثقه او الصفحه الجديده من الفتح",
+        "description": ""
+    },
+    "ui_button_deny_value": {
+        "message": "رفض",
+        "description": ""
+    },
+    "ui_button_trust": {
+        "message": "اضافه هذا النطاق الي قائمه النوافذ المنبثقه المسموح بها",
+        "description": ""
+    },
+    "ui_button_trust_value": {
+        "message": "وثوق",
+        "description": ""
+    },
+    "bg_msg_state_1": {
+        "message": "مانع النوافذ المنبثقة مفعل بشكل عام ويحمي هذا التبويب",
+        "description": ""
+    },
+    "bg_msg_state_2": {
+        "message": "مانع النوافذ المنبثقة مفعل بشكل عام ولكن لا يحمي هذا التبويب",
+        "description": ""
+    },
+    "bg_msg_state_3": {
+        "message": "مانع النوافذ المنبثقة معطل بشكل عام ولا يحمي هذا التبويب",
+        "description": ""
+    },
+    "bg_msg_state_4": {
+        "message": "مانع النوافذ المنبثقة معطل بشكل عام ولكن يحمي هذا التبويب",
+        "description": ""
+    }
+}

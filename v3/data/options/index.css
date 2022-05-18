@@ -1,0 +1,83 @@
+:root {
+  --border: solid 1px rgba(0, 0, 0, 0.25);
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 13px;
+  margin: 10px auto;
+  width: min(800px, 100% - 2rem);
+}
+button,
+input[type=submit],
+input[type=button] {
+  height: 24px;
+  color: rgb(68, 68, 68);
+  background-image: linear-gradient(rgb(237, 237, 237), rgb(237, 237, 237) 38%, rgb(222, 222, 222));
+  box-shadow: rgba(0, 0, 0, 0.08) 0 1px 0, rgba(255, 255, 255, 0.75) 0 1px 2px inset;
+  text-shadow: rgb(240, 240, 240) 0 1px 0;
+}
+select,
+textarea,
+button,
+input {
+  border: var(--border);
+}
+select {
+  padding: 2px 5px;
+}
+input[type=number] {
+  width: 50px;
+  padding: 2px 5px;
+}
+textarea,
+input[type=text] {
+  width: 100%;
+  box-sizing: border-box;
+}
+label[for=wot],
+input:disabled,
+textarea:disabled {
+  opacity: 0.6 !important;
+}
+textarea {
+  padding: 5px;
+}
+hr {
+  margin: 10px 0;
+  border: none;
+  height: 1px;
+  border-bottom: dashed 1px #ccc;
+}
+summary {
+  outline: none;
+}
+a {
+  text-decoration: none;
+  cursor: pointer;
+  color: #0074cc;
+}
+#status {
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rtl td:last-child {
+  text-align: right;
+}
+.checks {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  grid-gap: 5px;
+  align-items: center;
+}
+
+label[for="wot"] {
+  text-decoration: line-through;
+}
+
+.bc {
+  display: flex;
+  gap: 5px;
+}
