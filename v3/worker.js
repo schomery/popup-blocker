@@ -1,55 +1,76 @@
-/* global config */
+/* global config, URLPattern */
 self.importScripts('config.js');
 self.importScripts('badge.js');
 
 /* enable or disable the blocker */
-const activate = () => config.get(['enabled', 'top-hosts']).then(async prefs => {
-  try {
-    await chrome.scripting.unregisterContentScripts({
-      ids: ['page', 'chrome']
-    }).catch(() => {});
-    // this might throw error
-    await chrome.scripting.unregisterContentScripts({
-      ids: ['disabled']
-    }).catch(() => {});
+const activate = () => {
+  if (activate.busy) {
+    return;
+  }
+  activate.busy = true;
 
-    if (prefs.enabled) {
-      const props = {
-        'matches': ['*://*/*'],
-        'excludeMatches': prefs['top-hosts'].map(s => ['*://' + s + '/*', '*://*.' + s + '/*']).flat(),
-        'allFrames': true,
-        'runAt': 'document_start'
-      };
-      await chrome.scripting.registerContentScripts([{
-        'id': 'page',
-        'js': ['/data/inject/block/page.js'],
-        'world': 'MAIN',
-        ...props
-      }, {
-        'id': 'chrome',
-        'js': ['/data/inject/block/chrome.js'],
-        'world': 'ISOLATED',
-        ...props
-      }]);
-      // only on top frame
-      if (prefs['top-hosts'].length) {
-        await chrome.scripting.registerContentScripts([{
-          'id': 'disabled',
-          'js': ['/data/inject/disabled.js'],
-          'world': 'ISOLATED',
-          'matches': prefs['top-hosts'].map(s => ['*://' + s + '/*', '*://*.' + s + '/*']).flat(),
+  config.get(['enabled', 'top-hosts']).then(async prefs => {
+    try {
+      await chrome.scripting.unregisterContentScripts();
+
+      if (prefs.enabled) {
+        const th = [];
+        for (const s of prefs['top-hosts']) {
+          try {
+            new URLPattern('*://' + s + '/*');
+            th.push('*://' + s + '/*');
+          }
+          catch (e) {
+            console.warn('Cannot use ' + s + ' rule');
+          }
+          try {
+            new URLPattern('*://*.' + s + '/*');
+            th.push('*://*.' + s + '/*');
+          }
+          catch (e) {
+            console.warn('Cannot use ' + s + ' rule');
+          }
+        }
+
+        const props = {
+          'matches': ['*://*/*'],
+          'excludeMatches': th,
+          'allFrames': true,
+          'matchOriginAsFallback': true,
           'runAt': 'document_start'
+        };
+        await chrome.scripting.registerContentScripts([{
+          'id': 'page',
+          'js': ['/data/inject/block/page.js'],
+          'world': 'MAIN',
+          ...props
+        }, {
+          'id': 'chrome',
+          'js': ['/data/inject/block/chrome.js'],
+          'world': 'ISOLATED',
+          ...props
         }]);
+        // only on top frame
+        if (th.length) {
+          await chrome.scripting.registerContentScripts([{
+            'id': 'disabled',
+            'js': ['/data/inject/disabled.js'],
+            'world': 'ISOLATED',
+            'matches': th,
+            'runAt': 'document_start'
+          }]);
+        }
       }
     }
-  }
-  catch (e) {
-    chrome.action.setBadgeBackgroundColor({color: '#b16464'});
-    chrome.action.setBadgeText({text: 'E'});
-    chrome.action.setTitle({title: 'Blocker Registration Failed: ' + e.message});
-    console.error('Blocker Registration Failed', e);
-  }
-});
+    catch (e) {
+      chrome.action.setBadgeBackgroundColor({color: '#b16464'});
+      chrome.action.setBadgeText({text: 'E'});
+      chrome.action.setTitle({title: 'Blocker Registration Failed: ' + e.message});
+      console.error('Blocker Registration Failed', e);
+    }
+    activate.busy = false;
+  });
+};
 chrome.runtime.onStartup.addListener(activate);
 chrome.runtime.onInstalled.addListener(activate);
 chrome.storage.onChanged.addListener(ps => {

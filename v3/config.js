@@ -26,6 +26,8 @@ const config = {
   'silent': [],
   'issue': true,
   'block-page-redirection': false,
+  'block-page-redirection-hostnames': [],
+  'block-page-redirection-same-origin': true,
   'target': true,
   'version': null,
   'faqs': true,

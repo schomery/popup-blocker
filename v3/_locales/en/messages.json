@@ -71,6 +71,12 @@
   "options_item27": {
     "message": "Do not block these protocols:"
   },
+  "options_item28": {
+    "message": "Allow page redirection to the following origins:"
+  },
+  "options_item29": {
+    "message": "Allow page redirection to the same origin"
+  },
   "options_item30": {
     "message": "Simulate the 'allow' button to prevent your browser's internal popup blocker from blocking these requests"
   },
@@ -91,6 +97,12 @@
   },
   "options_item37": {
     "message": "When this mode is enabled, the extension installs a mutation observer to monitor static IFrames with 'JavaScript:' src attributes. This enhances the blocking power but has performance drawbacks."
+  },
+  "options_item38": {
+    "message": "Page Redirection"
+  },
+  "options_item39": {
+    "message": "Misc"
   },
   "options_support": {
     "message": "Support Development"

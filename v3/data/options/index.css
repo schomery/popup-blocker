@@ -58,6 +58,9 @@ a {
   cursor: pointer;
   color: #0074cc;
 }
+h1 {
+  font-size: 1.1rem;
+}
 #status {
   margin-right: 10px;
   display: flex;

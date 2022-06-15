@@ -1,3 +1,5 @@
+/* global navigation */
+
 /* Checks
   1.
   https://chrome.google.com/webstore/detail/aefkmifgmaafnojlojpnekbpbmjiiogg
@@ -52,7 +54,6 @@ chrome.storage.onChanged.addListener(ps => {
     prefs.enabled = ps.enabled.newValue;
   }
 });
-console.log('blocker is ready');
 
 /* record fake window's executed commands */
 const records = {};
@@ -61,6 +62,25 @@ const records = {};
 const redirect = {
   timeout: null,
   beforeunload(e) {
+    if (redirect.href) {
+      try {
+        const {origin, hostname} = new URL(redirect.href);
+        // do not block same origin
+        if (redirect.prefs['block-page-redirection-same-origin'] && (
+          origin.includes(location.hostname) ||
+          location.origin.includes(hostname)
+        )) {
+          return true;
+        }
+        if (redirect.prefs['block-page-redirection-hostnames'].includes(hostname)) {
+          return true;
+        }
+      }
+      catch (e) {
+        console.warn('block redirect error', e);
+      }
+    }
+
     e.returnValue = 'false';
   },
   block() {
@@ -77,9 +97,18 @@ const redirect = {
     clearTimeout(redirect.timeout);
   }
 };
+// get notified on navigation
+if (typeof navigation !== 'undefined') {
+  navigation.addEventListener('navigate', navigateEvent => {
+    redirect.href = navigateEvent.destination.url;
+  });
+}
+
 chrome.storage.local.get({
   'block-page-redirection': false,
-  'block-page-redirection-period': 2000
+  'block-page-redirection-period': 2000,
+  'block-page-redirection-hostnames': [],
+  'block-page-redirection-same-origin': true
 }, prefs => redirect.prefs = prefs);
 
 /* recording window.open */

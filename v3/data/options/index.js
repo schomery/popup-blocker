@@ -14,7 +14,8 @@
 async function restore(defaults = false) {
   const prefs = defaults ? config : await config.get([
     'numbers', 'timeout', 'countdown', 'badge', 'badge-color', 'domain',
-    'simulate-allow', 'faqs', 'block-page-redirection', 'popup-hosts',
+    'simulate-allow', 'faqs', 'popup-hosts',
+    'block-page-redirection', 'block-page-redirection-same-origin', 'block-page-redirection-hostnames',
     'top-hosts', 'protocols', 'silent', 'default-action',
     'whitelist-mode', 'immediate-action'
   ]);
@@ -27,6 +28,8 @@ async function restore(defaults = false) {
   document.getElementById('simulate-allow').checked = prefs['simulate-allow'];
   document.getElementById('faqs').checked = prefs.faqs;
   document.getElementById('block-page-redirection').checked = prefs['block-page-redirection'];
+  document.getElementById('block-page-redirection-same-origin').checked = prefs['block-page-redirection-same-origin'];
+  document.getElementById('block-page-redirection-hostnames').value = prefs['block-page-redirection-hostnames'].join(', ');
   document.getElementById('popup-hosts').value = prefs['popup-hosts'].join(', ');
   document.getElementById('top-hosts').value = prefs['top-hosts'].join(', ');
   document.getElementById('protocols').value = prefs.protocols.join(', ');
@@ -51,6 +54,8 @@ function save() {
     'simulate-allow': document.getElementById('simulate-allow').checked,
     'faqs': document.getElementById('faqs').checked,
     'block-page-redirection': document.getElementById('block-page-redirection').checked,
+    'block-page-redirection-same-origin': document.getElementById('block-page-redirection-same-origin').checked,
+    'block-page-redirection-hostnames': prepare(document.getElementById('block-page-redirection-hostnames').value),
     'popup-hosts': prepare(document.getElementById('popup-hosts').value),
     'top-hosts': prepare(document.getElementById('top-hosts').value),
     'silent': prepare(document.getElementById('silent').value),
