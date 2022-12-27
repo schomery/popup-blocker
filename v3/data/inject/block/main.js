@@ -2,6 +2,7 @@
 {
   /* port is used to communicate between chrome and page scripts */
   const port = document.getElementById('pp-port');
+
   port.remove();
   const post = (name, detail) => port.dispatchEvent(new CustomEvent(name, {
     detail

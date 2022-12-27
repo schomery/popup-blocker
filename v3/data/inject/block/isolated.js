@@ -65,6 +65,7 @@ const redirect = {
     if (redirect.href) {
       try {
         const {origin, hostname} = new URL(redirect.href);
+
         // do not block same origin
         if (redirect.prefs['block-page-redirection-same-origin'] && (
           origin.includes(location.hostname) ||
@@ -98,7 +99,7 @@ const redirect = {
   }
 };
 // get notified on navigation
-if (typeof navigation !== 'undefined') {
+if (typeof navigation !== 'undefined' && window.top === window) {
   navigation.addEventListener('navigate', navigateEvent => {
     redirect.href = navigateEvent.destination.url;
   });

@@ -1,5 +1,12 @@
-/* globals config */
+/* global config, tld, URLPattern */
 'use strict';
+
+// links
+for (const a of [...document.querySelectorAll('[data-href]')]) {
+  if (a.hasAttribute('href') === false) {
+    a.href = chrome.runtime.getManifest().homepage_url + '#' + a.dataset.href;
+  }
+}
 
 // localization
 [...document.querySelectorAll('[data-i18n]')].forEach(e => {
@@ -27,6 +34,23 @@ document.getElementById('global').onchange = e => {
 
 const page = {};
 
+const match = (hostname, href) => {
+  try {
+    const v = new URLPattern({hostname});
+    if (v.test(href)) {
+      return true;
+    }
+  }
+  catch (e) {}
+  try {
+    const v = new URLPattern({hostname: '*.' + hostname});
+    if (v.test(href)) {
+      return true;
+    }
+  }
+  catch (e) {}
+};
+
 // Start Point
 chrome.tabs.query({
   currentWindow: true,
@@ -41,20 +65,24 @@ chrome.tabs.query({
       },
       func: () => ({
         enabled: window.prefs?.enabled,
-        hostname: location.hostname
+        hostname: location.hostname,
+        href: location.href
       })
     }).then(async response => {
-      const {enabled, hostname} = response[0].result;
+      const {enabled, hostname, href} = response[0].result;
+      console.log(enabled);
+
       page.hostname = hostname;
+      page.href = href;
       if (enabled === true || enabled === false) {
         document.getElementById('page').checked = enabled;
       }
       else {
         const prefs = await config.get(['top-hosts']);
         document.getElementById('page').checked =
-          prefs['top-hosts'].some(h => h === hostname) ? false : true;
+          prefs['top-hosts'].some(h => match(h, page.href)) ? false : true;
       }
-    }).catch(e => {
+    }).catch(() => {
       document.getElementById('page').disabled = true;
       // force disabled
       document.getElementById('page').classList.add('disabled');
@@ -64,14 +92,22 @@ chrome.tabs.query({
 
 document.getElementById('page').onchange = async e => {
   const prefs = await config.get(['top-hosts']);
+
+  const d = tld.getDomain(page.hostname) || page.hostname;
+
   if (e.target.checked) {
-    const n = prefs['top-hosts'].indexOf(page.hostname);
-    if (n !== -1) {
-      prefs['top-hosts'].splice(n, 1);
+    const rms = new Set();
+    rms.add(d);
+
+    for (const hostname of prefs['top-hosts']) {
+      if (match(hostname, page.href)) {
+        rms.add(hostname);
+      }
     }
+    prefs['top-hosts'] = prefs['top-hosts'].filter(s => rms.has(s) === false);
   }
   else {
-    prefs['top-hosts'].push(page.hostname);
+    prefs['top-hosts'].push(d);
     prefs['top-hosts'] = prefs['top-hosts'].filter((s, i, l) => s && l.indexOf(s) === i);
   }
   chrome.storage.local.set(prefs, () => chrome.tabs.reload());
@@ -82,6 +118,13 @@ config.get(['immediate-action']).then(prefs => {
 });
 document.getElementById('immediate-action').onchange = e => chrome.storage.local.set({
   'immediate-action': e.target.checked
+});
+
+config.get(['block-page-redirection']).then(prefs => {
+  document.getElementById('block-page-redirection').checked = prefs['block-page-redirection'];
+});
+document.getElementById('block-page-redirection').onchange = e => chrome.storage.local.set({
+  'block-page-redirection': e.target.checked
 });
 
 config.get(['issue']).then(prefs => {

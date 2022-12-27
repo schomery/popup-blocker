@@ -138,34 +138,37 @@
     "message": "Popup is requested for"
   },
   "ui_button_allow": {
-    "message": "Allow this popup"
+    "message": "Allow this popup (Alt + Shift + A or Control + Option + A)"
   },
   "ui_button_allow_value": {
     "message": "allow"
   },
   "ui_button_redirect": {
-    "message": "Redirect current page to the new destination instead of opening it in a new tab or popup"
+    "message": "Redirect current page to the new destination instead of opening it in a new tab or popup (Alt + Shift + R or Control + Option + R)"
   },
   "ui_button_redirect_value": {
     "message": "redirect"
   },
   "ui_button_background": {
-    "message": "Open the link in a background tab"
+    "message": "Open the link in a background tab (Alt + Shift + B or Control + Option + B)"
   },
   "ui_button_background_value": {
     "message": "background"
   },
   "ui_button_deny": {
-    "message": "Decline the popup or tab opening"
+    "message": "Decline the popup or tab opening (Alt + Shift + D or Control + Option + D)"
   },
   "ui_button_deny_value": {
     "message": "deny"
   },
   "ui_button_trust": {
-    "message": "White-list this domain to open popups"
+    "message": "White-list this domain to open popups (Alt + Shift + T or Control + Option + T)"
   },
   "ui_button_trust_value": {
     "message": "trust"
+  },
+  "ui_button_trust_confirm": {
+    "message": "Click to Confirm"
   },
   "bg_msg_state_1": {
     "message": "Popup Blocker (strict) is globally enabled and protects this tab"
@@ -179,17 +182,23 @@
   "bg_msg_state_4": {
     "message": "Popup Blocker (strict) is globally disabled but protects this tab"
   },
+  "bg_msg_reg": {
+    "message": "Registering blocking filter failed due to an improperly formatted rule. Use the options page to fix it."
+  },
   "pp_enabled_g": {
     "message": "Enabled (Globally)"
   },
   "pp_enabled_c": {
-    "message": "Enabled (This Hostname)"
+    "message": "Enabled (This Domain)"
   },
   "pp_silent": {
     "message": "Display Notifications"
   },
   "pp_ignore": {
     "message": "Run Action when Possible"
+  },
+  "pp_redirect": {
+    "message": "Block Page Redirection"
   },
   "pp_last_request": {
     "message": "Last Request"
@@ -211,5 +220,8 @@
   },
   "pp_block": {
     "message": "Block"
+  },
+  "pp_health": {
+    "message": "The background script seems to be unresponsive. Do you want to try restarting the extension?"
   }
 }

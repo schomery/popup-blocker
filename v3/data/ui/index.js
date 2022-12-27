@@ -83,6 +83,7 @@ function remove(div, url) {
 function onClick(e) {
   const target = e.target;
   const cmd = target.dataset.cmd;
+
   if (cmd) {
     const div = target.closest('.ppblocker-div');
     if (div) {
@@ -95,10 +96,30 @@ function onClick(e) {
         };
         msg.parent = args.get('parent');
 
-        chrome.runtime.sendMessage(msg);
         // https://github.com/schomery/popup-blocker/issues/90
         if (cmd === 'white-list') {
-          msg.cmd = 'popup-accepted';
+          clearTimeout(target.timeout);
+          if (target.confirm) {
+            chrome.runtime.sendMessage(msg);
+            msg.cmd = 'popup-accepted';
+            chrome.runtime.sendMessage(msg);
+
+            target.confirm = false;
+            target.value = chrome.i18n.getMessage('ui_button_trust_value');
+          }
+          else {
+            target.confirm = true;
+
+            target.timeout = setTimeout(() => {
+              target.confirm = false;
+              target.value = chrome.i18n.getMessage('ui_button_trust_value');
+            }, 3000);
+            target.value = chrome.i18n.getMessage('ui_button_trust_confirm');
+
+            return;
+          }
+        }
+        else {
           chrome.runtime.sendMessage(msg);
         }
       }
@@ -144,6 +165,7 @@ const onPopupRequest = request => {
     div.dataset.badge = Number(div.dataset.badge || '1') + 1;
     obj.timer.reset();
     obj.timestamp = Date.now();
+    div.querySelector('[data-cmd=popup-close]').focus();
   }
   // new popup
   else {
@@ -191,6 +213,7 @@ const onPopupRequest = request => {
       }
     });
     document.body.appendChild(clone);
+    div.querySelector('[data-cmd=popup-close]').focus();
     // hide on timeout
     urls[tag] = {
       div,
@@ -251,3 +274,13 @@ const message = (request, sender, response) => {
   }
 };
 chrome.runtime.onMessage.addListener(message);
+
+// keyboard support for Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const d = document.activeElement.closest('.ppblocker-div') || document.querySelector('.ppblocker-div');
+    if (d) {
+      d.querySelector('[data-cmd=popup-close]').click();
+    }
+  }
+});

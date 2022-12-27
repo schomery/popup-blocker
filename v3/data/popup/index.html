@@ -20,8 +20,14 @@
   <p class="col2">
     <label for="issue" data-i18n="pp_silent"></label>
     <input type="checkbox" id="issue">
-    <label for="immediate-action" data-i18n="pp_ignore"></label>
+    <label for="immediate-action">
+      <a data-href="faq15" data-i18n="pp_ignore"></a>
+    </label>
     <input type="checkbox" id="immediate-action">
+    <label for="block-page-redirection">
+      <a data-href="faq13" target="_blank" data-i18n="pp_redirect"></a>
+    </label>
+    <input type="checkbox" id="block-page-redirection">
   </p>
 
   <div class="spc">
@@ -32,6 +38,8 @@
   </div>
 
   <script type="text/javascript" src="/config.js"></script>
+  <script type="text/javascript" src="tld.js"></script>
   <script type="text/javascript" src="index.js"></script>
+  <script type="text/javascript" src="health.js"></script>
 </body>
 </html>

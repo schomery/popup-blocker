@@ -14,21 +14,22 @@ const activate = () => {
       await chrome.scripting.unregisterContentScripts();
 
       if (prefs.enabled) {
+        // exception list
         const th = [];
-        for (const s of prefs['top-hosts']) {
+        for (const hostname of prefs['top-hosts']) {
           try {
-            new URLPattern('*://' + s + '/*');
-            th.push('*://' + s + '/*');
+            new URLPattern({hostname});
+            th.push('*://' + hostname + '/*');
           }
           catch (e) {
-            console.warn('Cannot use ' + s + ' rule');
+            console.warn('Cannot use ' + hostname + ' rule');
           }
           try {
-            new URLPattern('*://*.' + s + '/*');
-            th.push('*://*.' + s + '/*');
+            new URLPattern({hostname: '*.' + hostname});
+            th.push('*://*.' + hostname + '/*');
           }
           catch (e) {
-            console.warn('Cannot use ' + s + ' rule');
+            console.warn('Cannot use *.' + hostname + ' rule');
           }
         }
 
@@ -39,17 +40,19 @@ const activate = () => {
           'matchOriginAsFallback': true,
           'runAt': 'document_start'
         };
+
         await chrome.scripting.registerContentScripts([{
-          'id': 'page',
-          'js': ['/data/inject/block/page.js'],
+          'id': 'main',
+          'js': ['/data/inject/block/main.js'],
           'world': 'MAIN',
           ...props
         }, {
-          'id': 'chrome',
-          'js': ['/data/inject/block/chrome.js'],
+          'id': 'isolated',
+          'js': ['/data/inject/block/isolated.js'],
           'world': 'ISOLATED',
           ...props
         }]);
+
         // only on top frame
         if (th.length) {
           await chrome.scripting.registerContentScripts([{
@@ -63,9 +66,29 @@ const activate = () => {
       }
     }
     catch (e) {
+      await chrome.scripting.unregisterContentScripts();
+
+      const props = {
+        'matches': ['*://*/*'],
+        'allFrames': true,
+        'matchOriginAsFallback': true,
+        'runAt': 'document_start'
+      };
+      await chrome.scripting.registerContentScripts([{
+        'id': 'main',
+        'js': ['/data/inject/block/main.js'],
+        'world': 'MAIN',
+        ...props
+      }, {
+        'id': 'isolated',
+        'js': ['/data/inject/block/isolated.js'],
+        'world': 'ISOLATED',
+        ...props
+      }]);
+
       chrome.action.setBadgeBackgroundColor({color: '#b16464'});
       chrome.action.setBadgeText({text: 'E'});
-      chrome.action.setTitle({title: 'Blocker Registration Failed: ' + e.message});
+      chrome.action.setTitle({title: chrome.i18n.getMessage('bg_msg_reg') + '\n\n' + e.message});
       console.error('Blocker Registration Failed', e);
     }
     activate.busy = false;
@@ -79,7 +102,9 @@ chrome.storage.onChanged.addListener(ps => {
   }
 });
 
-chrome.runtime.onMessage.addListener((request, sender) => {
+chrome.runtime.onMessage.addListener((request, sender, response) => {
+  console.log(request);
+
   if (request.cmd === 'popup-request') {
     config.get(['silent', 'issue']).then(prefs => {
       if (prefs.issue === false) {
@@ -93,6 +118,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       chrome.tabs.sendMessage(sender.tab.id, request, response => {
         chrome.runtime.lastError;
         // iframe is not present or it is not loaded yet
+        console.log(response);
+
         if (response !== true) {
           chrome.scripting.executeScript({
             target: {
@@ -100,7 +127,8 @@ chrome.runtime.onMessage.addListener((request, sender) => {
             },
             func: (request, tabId) => {
               // iframe is loading. Just add the request and it will get executed later
-              if (window.container) {
+
+              if (window.container && window.container.requests) {
                 window.container.requests.push(request);
               }
               // there is no frame element
@@ -108,6 +136,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
                 window.container = document.createElement('iframe');
                 window.container.requests = [request];
                 window.container.setAttribute('style', `
+                  all: initial;
                   z-index: 2147483649 !important;
                   color-scheme: light !important;
                   position: fixed !important;
@@ -127,7 +156,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
                     requests: window.container.requests,
                     tabId
                   });
-                  delete window.container.requests;
+                  window.container.requests.length = 0;
                 }, {once: true});
                 // do not attach to body to make sure the notification is visible
                 document.documentElement.appendChild(window.container);
@@ -218,6 +247,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   else if (request.cmd === 'white-list') {
     config.get(['whitelist-mode', 'top-hosts', 'popup-hosts']).then(prefs => {
       const mode = prefs['whitelist-mode'];
+
       const {hostname} = new URL(mode === 'popup-hosts' ? request.url : request.parent);
       prefs[mode].push(hostname);
       prefs[mode] = prefs[mode].filter((h, i, l) => l.indexOf(h) === i);
@@ -238,6 +268,9 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         });
       }
     });
+  }
+  else if (request.method === 'echo') {
+    response(true);
   }
 });
 

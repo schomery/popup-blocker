@@ -1,8 +1,11 @@
 body {
   margin: 0;
-  font-family: "Helvetica Neue",Helvetica,sans-serif;
-  font-size: 12px;
   overflow: hidden;
+}
+body,
+input {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+  font-size: 12px;
 }
 
 input[type=button] {
@@ -16,6 +19,9 @@ input[type=button] {
   border-radius: 0;
   line-height: 20px;
   outline: none;
+}
+input[type=button]:focus {
+  font-weight: bold;
 }
 input[type=button][data-default=true] {
   font-weight: 500;
@@ -37,28 +43,32 @@ input[type=button][data-cmd="popup-close"] {
   background-color: #f4e1a7;
   color: #000;
   padding: 5px;
-  margin:  8px 8px 5px 0;
+  margin: 8px 8px 5px 0;
   display: flex;
   flex-direction: column;
   border-radius: 2px;
-  box-shadow: 1px 1px 5px rgb(206,188,125);
+  box-shadow: 1px 1px 5px rgb(206, 188, 125);
+  outline: none;
 }
-.ppblocker-div>div {
+.ppblocker-div:focus {
+  box-shadow: 1px 1px 5px #60a7ff;
+}
+.ppblocker-div > div {
   display: flex;
   justify-content: flex-end;
 }
-.ppblocker-div>div>span {
+.ppblocker-div > div > span {
   display: flex;
   flex: 1;
 }
-.ppblocker-div>p:first-of-type {
+.ppblocker-div > p:first-of-type {
   font-weight: 500;
   font-size: 13px;
   margin: 0;
   padding: 0;
   user-select: none;
 }
-.ppblocker-div>p:last-of-type {
+.ppblocker-div > p:last-of-type {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -96,7 +106,6 @@ input[type=button][data-cmd="popup-close"] {
   position: absolute;
   top: 6px;
   right: 25px;
-
   display: flex;
   align-items: center;
   justify-content: center;

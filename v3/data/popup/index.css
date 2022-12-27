@@ -4,6 +4,7 @@
   --dark: #d9d9d9;
   --button: #f0f0f0;
   --border: rgba(128, 128, 128, 0.2);
+  --blue: #0374ff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,6 +15,7 @@
     --clr: #b1b1b1;
     --dark: #202124;
     --button: #202124;
+    --blue: #9ac8ff;
   }
 }
 
@@ -28,6 +30,10 @@ body {
 hr {
   border: none;
   border-bottom: solid 1px var(--border);
+}
+a {
+  text-decoration: none;
+  color: var(--blue);
 }
 .button {
   color: var(--clr);
@@ -50,7 +56,7 @@ hr {
 
 input.disabled,
 input:disabled {
-  opacity: 0.2;
+  opacity: 0.5;
   pointer-events: none;
 }
 p {
