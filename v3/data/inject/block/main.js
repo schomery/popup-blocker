@@ -39,16 +39,31 @@
       };
     };
     /* simulate a window */
-    const simulate = (name, root, id) => new Proxy({}, { // window.location.replace
+    const simulate = (id, root = {}, tree = []) => new Proxy(root, { // window.location.replace
       get(obj, key) {
         return typeof root[key] === 'function' ? function(...args) {
           post('record', {
             id,
-            name,
-            method: root[key].name || key, // window.focus
-            args
+            tree,
+            action: {
+              method: key,
+              args
+            }
           });
-        } : simulate(key, root[key], id);
+        } : simulate(id, root[key], [...tree, key]);
+      },
+      set(obj, key, value) {
+        if (value) {
+          post('record', {
+            id,
+            tree,
+            action: {
+              value,
+              prop: key
+            }
+          });
+        }
+        return true;
       }
     });
     const protected = new WeakMap(); // keep reference of all protected window objects
@@ -205,7 +220,7 @@
               return iframe.contentWindow;
             }
             else {
-              return simulate('self', window, id);
+              return simulate(id, window);
             }
           }
           return Reflect.apply(target, self, args);
@@ -243,5 +258,8 @@
       attributeFilter: ['data-enabled']
     });
   };
-  uncode(3);
+
+  if (port.dataset) { // SVG documents
+    uncode(3);
+  }
 }

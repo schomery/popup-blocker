@@ -158,10 +158,14 @@ const doTimer = (div, button, countdown) => {
 };
 const onPopupRequest = request => {
   const tag = request.href && request.href !== 'about:blank' ? request.href : request.id;
+
   // already listed
-  if (urls[tag]) {
+  if (urls[tag] && urls[tag].div) {
     const obj = urls[tag];
     const div = obj.div;
+
+    console.log(div);
+
     div.dataset.badge = Number(div.dataset.badge || '1') + 1;
     obj.timer.reset();
     obj.timestamp = Date.now();

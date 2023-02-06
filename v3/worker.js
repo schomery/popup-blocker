@@ -103,8 +103,6 @@ chrome.storage.onChanged.addListener(ps => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, response) => {
-  console.log(request);
-
   if (request.cmd === 'popup-request') {
     config.get(['silent', 'issue']).then(prefs => {
       if (prefs.issue === false) {
@@ -118,7 +116,6 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       chrome.tabs.sendMessage(sender.tab.id, request, response => {
         chrome.runtime.lastError;
         // iframe is not present or it is not loaded yet
-        console.log(response);
 
         if (response !== true) {
           chrome.scripting.executeScript({
@@ -198,17 +195,23 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
         frameIds: [sender.frameId]
       },
       world: 'MAIN',
-      func: (records, href) => {
+      func: (records, href, args) => {
         if (records) {
-          const [{method, args}, ...commands] = records;
-          const loaded = [window[method](...args)];
-          commands.forEach(({name, method, args}) => {
-            const o = loaded.map(o => o[name]).filter(o => o).shift();
-            if (loaded.indexOf(o) === -1) {
-              loaded.push(o);
+          const w = window.open(...args);
+          for (const record of records) {
+            let c = w;
+            for (const name of record.tree) {
+              c = c[name];
             }
-            o[method](...args);
-          });
+            const {method, args} = record.action;
+            if (method) {
+              c[method](...args);
+            }
+            const {prop, value} = record.action;
+            if (prop) {
+              c[prop] = value;
+            }
+          }
         }
         else {
           const a = document.createElement('a');
@@ -217,7 +220,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
           a.click();
         }
       },
-      args: [request.records || false, request.url]
+      args: [request.records || false, request.url, request.args]
     });
   }
   // open a new tab or redirect current tab

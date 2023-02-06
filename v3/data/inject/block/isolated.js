@@ -27,6 +27,7 @@
 /* port is used to communicate between chrome and page scripts */
 const port = document.createElement('span');
 port.id = 'pp-port';
+
 document.documentElement.appendChild(port);
 
 /* preferences */
@@ -48,7 +49,10 @@ const prefs = window.prefs = new Proxy({}, {
 });
 
 /* is enabled */
-port.dataset.enabled = true;
+try { // SVG documents
+  port.dataset.enabled = true;
+}
+catch (e) {}
 chrome.storage.onChanged.addListener(ps => {
   if (ps.enabled) {
     prefs.enabled = ps.enabled.newValue;
@@ -115,8 +119,8 @@ chrome.storage.local.get({
 /* recording window.open */
 const record = e => {
   e.stopPropagation();
-  const {id, name, method, args} = e.detail;
-  records[id].push({name, method, args});
+  const request = e.detail;
+  records[request.id].push(request);
 };
 port.addEventListener('record', record);
 
@@ -271,11 +275,8 @@ blocker.policy = request => {
 
   const id = target.dataset.ppbid || Math.random();
   if (sameContext) {
-    records[id] = [{
-      name: 'self',
-      method: 'open',
-      args: request.args
-    }];
+    records[id] = [];
+    records[id].args = request.args;
   }
   return {
     id,
@@ -304,7 +305,8 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     chrome.runtime.sendMessage({
       cmd: 'run-records',
       url: request.url,
-      records: records[request.id]
+      records: records[request.id],
+      args: records[request.id].args
     }, () => {
       delete records[request.id];
       port.dataset.enabled = prefs.enabled;
