@@ -38,15 +38,15 @@ Install the latest version from your web browser Add-ons web site.
 
 ## FAQs
 
-Please go to
+Visit
 
-* https://add0n.com/popup-blocker.html
+* https://webextension.org/listing/popup-blocker.html
 
 ### Test the effectiveness of this tool
 
-Please go to
+Visit
 
-* http://tools.add0n.com/popup-blocker.html
+* https://webbrowsertools.com/popup-blocker/
 
 ## Screenshos
 
