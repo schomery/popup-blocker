@@ -5,20 +5,20 @@
 </html>
 <body>
   <template id="entry">
-    <div class="ppblocker-div" data-badge=1 data-page=true>
-      <p data-i18n="ui_msg" data-i18n-value="textContent"></p>
-      <p data-id="info"></p>
-      <input type="button" value="✗" title="Close this notification" data-cmd="popup-close">
+    <div class="ppblocker-div" data-badge=1 data-page=true tabindex="-1">
+      <p data-id="info">https://example.com</p>
       <div>
         <input type="button" value="trust" data-i18n="ui_button_trust" data-cmd="white-list" accesskey="t">
-        <span></span>
         <input type="button" value="deny" data-i18n="ui_button_deny" data-cmd="popup-denied" accesskey="d">
         <input type="button" value="background" data-i18n="ui_button_background" data-cmd="open-tab" accesskey="b">
         <input type="button" value="redirect" data-i18n="ui_button_redirect" data-cmd="popup-redirect" accesskey="r">
         <input type="button" value="allow" data-i18n="ui_button_allow" data-cmd="popup-accepted" accesskey="a">
+        <input type="button" value="close" title="Close this notification" data-cmd="popup-close">
       </div>
     </div>
   </template>
+  <div id="container"></div>
+
   <script src="/config.js"></script>
   <script src="index.js"></script>
 </body>

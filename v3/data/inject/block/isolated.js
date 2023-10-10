@@ -25,10 +25,16 @@
 */
 
 /* port is used to communicate between chrome and page scripts */
-const port = document.createElement('span');
-port.id = 'pp-port';
-
-document.documentElement.appendChild(port);
+let port;
+try {
+  port = document.getElementById('ppop-port');
+  port.remove();
+}
+catch (e) {
+  port = document.createElement('span');
+  port.id = 'ppop-port';
+  document.documentElement.append(port);
+}
 
 /* preferences */
 const prefs = window.prefs = new Proxy({}, {

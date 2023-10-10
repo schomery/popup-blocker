@@ -2,6 +2,7 @@
 'use strict';
 
 const args = new URLSearchParams(location.search);
+const tabId = Number(args.get('tabId'));
 let prefs = '';
 
 const entry = document.getElementById('entry');
@@ -30,25 +31,6 @@ const cookie = {
 };
 cookie.clean();
 
-const resize = () => chrome.scripting.executeScript({
-  target: {
-    tabId: Number(args.get('tabId'))
-  },
-  func: (hide, height) => {
-    if (hide) {
-      window.container.remove();
-      window.container = null;
-    }
-    else {
-      window.container.style.height = height + 'px';
-    }
-  },
-  args: [
-    Object.keys(urls).length === 0,
-    document.documentElement.getBoundingClientRect().height
-  ]
-});
-
 function Timer(callback, delay, ...args) {
   let timerId;
   let start;
@@ -76,8 +58,28 @@ function Timer(callback, delay, ...args) {
 
 function remove(div, url) {
   delete urls[url || div.dataset.url];
+  const e = div.previousElementSibling?.closest('.ppblocker-div') ||
+    div.nextElementSibling?.closest('.ppblocker-div');
+
+  const hasFocus = div.querySelector(':focus');
+
   div.remove();
-  resize();
+  // focus the previous one
+  if (e && hasFocus) {
+    e.querySelector('[data-cmd=popup-close]').focus();
+  }
+  // remove iframe if no more popups present
+  if (Object.keys(urls).length === 0) {
+    chrome.scripting.executeScript({
+      target: {
+        tabId
+      },
+      func: () => {
+        self.container.remove();
+        self.container = null;
+      }
+    });
+  }
 }
 
 function onClick(e) {
@@ -164,8 +166,6 @@ const onPopupRequest = request => {
     const obj = urls[tag];
     const div = obj.div;
 
-    console.log(div);
-
     div.dataset.badge = Number(div.dataset.badge || '1') + 1;
     obj.timer.reset();
     obj.timestamp = Date.now();
@@ -184,7 +184,7 @@ const onPopupRequest = request => {
     div.dataset.hostname = request.hostname;
 
     const p = clone.querySelector('[data-id=info]');
-    div.title = p.textContent = '↝ ' + (request.href || 'about:blank');
+    div.title = p.textContent = (request.href || 'about:blank');
     // do we have an action for this popup
 
     if (page) {
@@ -216,15 +216,16 @@ const onPopupRequest = request => {
         e.value = chrome.i18n.getMessage(e.dataset.i18n + '_value');
       }
     });
-    document.body.appendChild(clone);
-    div.querySelector('[data-cmd=popup-close]').focus();
     // hide on timeout
-    urls[tag] = {
+    urls[tag] = { // add before append so that observer detects it
       div,
       timer: new Timer(remove, prefs.timeout * 1000, div),
       prefs,
       timestamp: Date.now()
     };
+    document.getElementById('container').appendChild(clone);
+    div.querySelector('[data-cmd=popup-close]').focus();
+
     div.addEventListener('mouseenter', () => {
       div.dataset.hover = true;
       urls[tag].timer.pause();
@@ -241,7 +242,6 @@ const onPopupRequest = request => {
         remove(urls[key].div);
       }
     }
-    resize();
   }
 };
 
@@ -253,16 +253,30 @@ const prepare = async c => {
   c();
 };
 
+/* resize */
+const resizeObserver = new ResizeObserver(() => {
+  const {height} = document.documentElement.getBoundingClientRect();
+  if (height) {
+    chrome.scripting.executeScript({
+      target: {
+        tabId
+      },
+      func: height => {
+        if (self.container) {
+          self.container.style.height = CSS.px(height);
+        }
+      },
+      args: [height]
+    });
+  }
+});
+resizeObserver.observe(document.getElementById('container'));
+
 const message = (request, sender, response) => {
   // only accept requests from bg page
   if (request.cmd === 'popup-request' && !sender.tab) {
     prepare(() => onPopupRequest(request));
     response(true);
-  }
-  else if (request.cmd === 'cached-popup-requests' && request.tabId.toString() === args.get('tabId')) {
-    prepare(() => {
-      request.requests.forEach(r => onPopupRequest(r));
-    });
   }
   else if (request.cmd === 'allow-last-request' || request.cmd === 'deny-last-request') {
     const value = Object.values(urls).sort((a, b) => b.timestamp - a.timestamp).shift();
@@ -278,6 +292,13 @@ const message = (request, sender, response) => {
   }
 };
 chrome.runtime.onMessage.addListener(message);
+addEventListener('message', e => {
+  if (e.data && e.data.requests) {
+    prepare(() => {
+      e.data.requests.forEach(r => onPopupRequest(r));
+    });
+  }
+});
 
 // keyboard support for Escape
 document.addEventListener('keydown', e => {

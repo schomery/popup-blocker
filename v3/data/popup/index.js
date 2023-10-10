@@ -70,7 +70,6 @@ chrome.tabs.query({
       })
     }).then(async response => {
       const {enabled, hostname, href} = response[0].result;
-      console.log(enabled);
 
       page.hostname = hostname;
       page.href = href;

@@ -1,79 +1,47 @@
 /* global config, URLPattern */
+
 self.importScripts('config.js');
 self.importScripts('badge.js');
 
 /* enable or disable the blocker */
-const activate = () => {
+const activate = async () => {
   if (activate.busy) {
     return;
   }
   activate.busy = true;
 
-  config.get(['enabled', 'top-hosts']).then(async prefs => {
-    try {
-      await chrome.scripting.unregisterContentScripts();
+  const prefs = await config.get(['enabled', 'top-hosts']);
+  try {
+    await chrome.scripting.unregisterContentScripts();
 
-      if (prefs.enabled) {
-        // exception list
-        const th = [];
-        for (const hostname of prefs['top-hosts']) {
-          try {
-            new URLPattern({hostname});
-            th.push('*://' + hostname + '/*');
-          }
-          catch (e) {
-            console.warn('Cannot use ' + hostname + ' rule');
-          }
-          try {
-            new URLPattern({hostname: '*.' + hostname});
-            th.push('*://*.' + hostname + '/*');
-          }
-          catch (e) {
-            console.warn('Cannot use *.' + hostname + ' rule');
-          }
+    if (prefs.enabled) {
+      // exception list
+      const th = [];
+      for (const hostname of prefs['top-hosts']) {
+        try {
+          new URLPattern({hostname});
+          th.push('*://' + hostname + '/*');
         }
-
-        const props = {
-          'matches': ['*://*/*'],
-          'excludeMatches': th,
-          'allFrames': true,
-          'matchOriginAsFallback': true,
-          'runAt': 'document_start'
-        };
-
-        await chrome.scripting.registerContentScripts([{
-          'id': 'main',
-          'js': ['/data/inject/block/main.js'],
-          'world': 'MAIN',
-          ...props
-        }, {
-          'id': 'isolated',
-          'js': ['/data/inject/block/isolated.js'],
-          'world': 'ISOLATED',
-          ...props
-        }]);
-
-        // only on top frame
-        if (th.length) {
-          await chrome.scripting.registerContentScripts([{
-            'id': 'disabled',
-            'js': ['/data/inject/disabled.js'],
-            'world': 'ISOLATED',
-            'matches': th,
-            'runAt': 'document_start'
-          }]);
+        catch (e) {
+          console.warn('Cannot use ' + hostname + ' rule');
+        }
+        try {
+          new URLPattern({hostname: '*.' + hostname});
+          th.push('*://*.' + hostname + '/*');
+        }
+        catch (e) {
+          console.warn('Cannot use *.' + hostname + ' rule');
         }
       }
-    }
-    catch (e) {
-      await chrome.scripting.unregisterContentScripts();
 
       const props = {
         'matches': ['*://*/*'],
+        'excludeMatches': th,
         'allFrames': true,
         'matchOriginAsFallback': true,
         'runAt': 'document_start'
       };
+
       await chrome.scripting.registerContentScripts([{
         'id': 'main',
         'js': ['/data/inject/block/main.js'],
@@ -86,13 +54,45 @@ const activate = () => {
         ...props
       }]);
 
-      chrome.action.setBadgeBackgroundColor({color: '#b16464'});
-      chrome.action.setBadgeText({text: 'E'});
-      chrome.action.setTitle({title: chrome.i18n.getMessage('bg_msg_reg') + '\n\n' + e.message});
-      console.error('Blocker Registration Failed', e);
+      // only on top frame
+      if (th.length) {
+        await chrome.scripting.registerContentScripts([{
+          'id': 'disabled',
+          'js': ['/data/inject/disabled.js'],
+          'world': 'ISOLATED',
+          'matches': th,
+          'runAt': 'document_start'
+        }]);
+      }
     }
-    activate.busy = false;
-  });
+  }
+  catch (e) {
+    await chrome.scripting.unregisterContentScripts();
+
+    const props = {
+      'matches': ['*://*/*'],
+      'allFrames': true,
+      'matchOriginAsFallback': true,
+      'runAt': 'document_start'
+    };
+    await chrome.scripting.registerContentScripts([{
+      'id': 'main',
+      'js': ['/data/inject/block/main.js'],
+      'world': 'MAIN',
+      ...props
+    }, {
+      'id': 'isolated',
+      'js': ['/data/inject/block/isolated.js'],
+      'world': 'ISOLATED',
+      ...props
+    }]);
+
+    chrome.action.setBadgeBackgroundColor({color: '#b16464'});
+    chrome.action.setBadgeText({text: 'E'});
+    chrome.action.setTitle({title: chrome.i18n.getMessage('bg_msg_reg') + '\n\n' + e.message});
+    console.error('Blocker Registration Failed', e);
+  }
+  activate.busy = false;
 };
 chrome.runtime.onStartup.addListener(activate);
 chrome.runtime.onInstalled.addListener(activate);
@@ -123,41 +123,42 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
               tabId: sender.tab.id
             },
             func: (request, tabId) => {
-              // iframe is loading. Just add the request and it will get executed later
+              self.requests = self.requests || [];
+              self.requests.push(request);
 
-              if (window.container && window.container.requests) {
-                window.container.requests.push(request);
-              }
-              // there is no frame element
-              else {
-                window.container = document.createElement('iframe');
-                window.container.requests = [request];
-                window.container.setAttribute('style', `
+              const post = () => {
+                if (self.container?.ready) {
+                  self.container.contentWindow.postMessage({
+                    requests: [...self.requests]
+                  }, self.container.src);
+                  self.requests.length = 0;
+                }
+              };
+              if (!self.container) {
+                const container = self.container = document.createElement('iframe');
+                container.style = `
                   all: initial;
                   z-index: 2147483649 !important;
                   color-scheme: light !important;
                   position: fixed !important;
-                  right: 10px !important;
-                  top: 10px !important;
+                  right: 5px !important;
+                  top: 5px !important;
                   width: 420px !important;
                   max-width: 80vw !important;
                   height: 85px !important;
-                  border: none !important;
                   background: transparent !important;
                   border-radius: 0 !important;
-                `);
-                window.container.src = chrome.runtime.getURL('/data/ui/index.html?parent=' + encodeURIComponent(location.href)) + '&tabId=' + tabId;
-                window.container.addEventListener('load', () => {
-                  chrome.runtime.sendMessage({
-                    cmd: 'cached-popup-requests',
-                    requests: window.container.requests,
-                    tabId
-                  });
-                  window.container.requests.length = 0;
+                  border: none !important;
+                `;
+                container.addEventListener('load', () => {
+                  container.ready = true;
+                  post();
                 }, {once: true});
+                container.src = chrome.runtime.getURL('/data/ui/index.html?parent=' + encodeURIComponent(location.href)) + '&tabId=' + tabId;
                 // do not attach to body to make sure the notification is visible
-                document.documentElement.appendChild(window.container);
+                document.documentElement.append(container);
               }
+              post();
             },
             args: [request, sender.tab.id]
           });

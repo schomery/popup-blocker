@@ -1,9 +1,17 @@
 /* this is the entire unprotected code */
 {
   /* port is used to communicate between chrome and page scripts */
-  const port = document.getElementById('pp-port');
+  let port;
+  try {
+    port = document.getElementById('ppop-port');
+    port.remove();
+  }
+  catch (e) {
+    port = document.createElement('span');
+    port.id = 'ppop-port';
+    document.documentElement.append(port);
+  }
 
-  port.remove();
   const post = (name, detail) => port.dispatchEvent(new CustomEvent(name, {
     detail
   }));

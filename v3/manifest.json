@@ -15,24 +15,24 @@
     "service_worker": "worker.js"
   },
   "action": {
-    "default_popup": "data/popup/index.html"
+    "default_popup": "/data/popup/index.html"
   },
   "homepage_url": "https://webextension.org/listing/popup-blocker.html",
   "icons": {
-    "16": "data/icons/16.png",
-    "32": "data/icons/32.png",
-    "48": "data/icons/48.png",
-    "64": "data/icons/64.png",
-    "128": "data/icons/128.png",
-    "256": "data/icons/256.png",
-    "512": "data/icons/512.png"
+    "16": "/data/icons/16.png",
+    "32": "/data/icons/32.png",
+    "48": "/data/icons/48.png",
+    "64": "/data/icons/64.png",
+    "128": "/data/icons/128.png",
+    "256": "/data/icons/256.png",
+    "512": "/data/icons/512.png"
   },
   "options_ui": {
-    "page": "data/options/index.html",
+    "page": "/data/options/index.html",
     "open_in_tab": true
   },
   "web_accessible_resources": [{
-    "resources": ["data/ui/index.html"],
+    "resources": ["/data/ui/index.html"],
     "matches": ["*://*/*"]
   }],
   "commands": {
