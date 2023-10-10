@@ -50,7 +50,7 @@ Visit
 
 ## Screenshos
 
-![img](https://addons.cdn.mozilla.net/user-media/previews/full/179/179585.png)
+![img](https://addons.mozilla.org/user-media/previews/full/179/179585.png)
 
 ## Make a Donation
 
@@ -62,11 +62,7 @@ If this project help you, you can give the developer a cup of coffee :)
 
 * Bitcoin Address:
 
-1sM2BrTH8BRgt3quiASK8TmYSafutNvDo
-
-* Ether Address:
-
-0xCf9eaAc56992e12EB61fD46342172d4EEff5C8e4
+bc1qh7juzrxrawpr65elm4qs285m5rdhnhgsn7h2jf
 
 ## Help with Translation
 
