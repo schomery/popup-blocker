@@ -97,14 +97,14 @@ const redirect = {
   block() {
     if (window.top === window) {
       if (redirect.prefs && redirect.prefs['block-page-redirection']) {
-        window.addEventListener('beforeunload', redirect.beforeunload, true);
+        addEventListener('beforeunload', redirect.beforeunload, true);
         clearTimeout(redirect.timeout);
         redirect.timeout = setTimeout(redirect.release, redirect.prefs['block-page-redirection-period']);
       }
     }
   },
   release() {
-    window.removeEventListener('beforeunload', redirect.beforeunload, true);
+    removeEventListener('beforeunload', redirect.beforeunload, true);
     clearTimeout(redirect.timeout);
   }
 };
@@ -133,6 +133,7 @@ port.addEventListener('record', record);
 /* channel */
 const policy = e => {
   e.stopPropagation();
+
   // make sure the request is from our script; see example 1
   if (e.target === port) {
     if (port.dataset.enabled !== 'false') {
@@ -143,6 +144,7 @@ const policy = e => {
 
       if (block) {
         redirect.block();
+
         chrome.runtime.sendMessage({
           cmd: 'popup-request',
           type: request.type,
@@ -312,7 +314,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       cmd: 'run-records',
       url: request.url,
       records: records[request.id],
-      args: records[request.id].args
+      args: records[request.id]?.args || []
     }, () => {
       delete records[request.id];
       port.dataset.enabled = prefs.enabled;

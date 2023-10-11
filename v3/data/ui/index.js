@@ -9,24 +9,38 @@ const entry = document.getElementById('entry');
 const urls = {};
 const cookie = {
   get: host => {
-    return (localStorage.getItem(host) || '').split(';')[0];
+    try { // error on incognito manifest v3
+      return (localStorage.getItem(host) || '').split(';')[0];
+    }
+    catch (e) {
+      return '';
+    }
   },
   set: (host, cmd) => {
-    localStorage.setItem(host, cmd + ';' + (Date.now() + 10 * 24 * 60 * 60 * 1000));
+    try {
+      localStorage.setItem(host, cmd + ';' + (Date.now() + 10 * 24 * 60 * 60 * 1000));
+    }
+    catch (e) {}
   },
   remove: host => {
-    localStorage.removeItem(host);
+    try {
+      localStorage.removeItem(host);
+    }
+    catch (e) {}
   },
   clean() {
     const now = Date.now();
-    for (const [key, value] of Object.entries(localStorage)) {
-      if (value && value.includes(';')) {
-        const date = Number(value.split(';')[1]);
-        if (date < now) {
-          localStorage.removeItem(key);
+    try {
+      for (const [key, value] of Object.entries(localStorage)) {
+        if (value && value.includes(';')) {
+          const date = Number(value.split(';')[1]);
+          if (date < now) {
+            localStorage.removeItem(key);
+          }
         }
       }
     }
+    catch (e) {}
   }
 };
 cookie.clean();

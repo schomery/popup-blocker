@@ -222,7 +222,9 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
         }
       },
       args: [request.records || false, request.url, request.args]
-    });
+    }).finally(() => response(true));
+
+    return true;
   }
   // open a new tab or redirect current tab
   else if (request.cmd === 'popup-redirect' || request.cmd === 'open-tab') {
