@@ -21,7 +21,7 @@ const uncode = (aggressive = 3) => {
     }
     if (event) {
       extra.defaultPrevented = event.defaultPrevented;
-      extra.metaKey = event.metaKey;
+      extra.metaKey = event.metaKey || event.ctrlKey;
       extra.button = event.button || 0;
       extra.isTrusted = event.isTrusted;
     }
