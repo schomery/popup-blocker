@@ -183,7 +183,9 @@ const onPopupRequest = request => {
     div.dataset.badge = Number(div.dataset.badge || '1') + 1;
     obj.timer.reset();
     obj.timestamp = Date.now();
-    div.querySelector('[data-cmd=popup-close]').focus();
+    if (prefs['focus-popup']) {
+      div.querySelector('[data-cmd=popup-close]').focus();
+    }
   }
   // new popup
   else {
@@ -238,7 +240,9 @@ const onPopupRequest = request => {
       timestamp: Date.now()
     };
     document.getElementById('container').appendChild(clone);
-    div.querySelector('[data-cmd=popup-close]').focus();
+    if (prefs['focus-popup']) {
+      div.querySelector('[data-cmd=popup-close]').focus();
+    }
 
     div.addEventListener('mouseenter', () => {
       div.dataset.hover = true;
@@ -262,7 +266,7 @@ const onPopupRequest = request => {
 /* prepare storage then run */
 const prepare = async c => {
   prefs = prefs || await config.get([
-    'numbers', 'timeout', 'countdown', 'default-action', 'immediate-action', 'simulate-allow'
+    'numbers', 'timeout', 'countdown', 'default-action', 'immediate-action', 'simulate-allow', 'focus-popup'
   ]);
   c();
 };

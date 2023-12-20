@@ -14,7 +14,7 @@
 async function restore(defaults = false) {
   const prefs = defaults ? config : await config.get([
     'numbers', 'timeout', 'countdown', 'badge', 'badge-color', 'domain',
-    'simulate-allow', 'faqs', 'popup-hosts',
+    'simulate-allow', 'focus-popup', 'faqs', 'popup-hosts',
     'block-page-redirection', 'block-page-redirection-same-origin', 'block-page-redirection-hostnames',
     'top-hosts', 'protocols', 'silent', 'default-action',
     'whitelist-mode', 'immediate-action'
@@ -26,6 +26,7 @@ async function restore(defaults = false) {
   document.getElementById('badge-color').value = prefs['badge-color'];
   document.getElementById('domain').checked = prefs.domain;
   document.getElementById('simulate-allow').checked = prefs['simulate-allow'];
+  document.getElementById('focus-popup').checked = prefs['focus-popup'];
   document.getElementById('faqs').checked = prefs.faqs;
   document.getElementById('block-page-redirection').checked = prefs['block-page-redirection'];
   document.getElementById('block-page-redirection-same-origin').checked = prefs['block-page-redirection-same-origin'];
@@ -52,6 +53,7 @@ function save() {
     'badge-color': document.getElementById('badge-color').value,
     'domain': document.getElementById('domain').checked,
     'simulate-allow': document.getElementById('simulate-allow').checked,
+    'focus-popup': document.getElementById('focus-popup').checked,
     'faqs': document.getElementById('faqs').checked,
     'block-page-redirection': document.getElementById('block-page-redirection').checked,
     'block-page-redirection-same-origin': document.getElementById('block-page-redirection-same-origin').checked,

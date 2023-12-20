@@ -20,7 +20,7 @@ const config = window.config = {
     'mail.google.com', 'doubleclick.net'
   ],
   // popup blocker is disabled in the following hostname tabs
-  'top-hosts': ['github.com', 'twitter.com', 'add0n.com', 'google.com', 'www.paypal.com'],
+  'top-hosts': ['github.com', 'twitter.com', 'webextension.org', 'google.com', 'www.paypal.com'],
   // these protocols are accepted
   'protocols': ['magnet:'],
   'blacklist': [],
