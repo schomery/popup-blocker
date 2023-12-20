@@ -211,6 +211,50 @@ const onPopupRequest = request => {
           target: div.querySelector(`[data-cmd="${action}"]`)
         });
       }
+      // rules
+      try {
+        const matched = v => {
+          const action = {
+            'allow': 'popup-accepted',
+            'deny': 'popup-denied',
+            'background': 'open-tab',
+            'redirect': 'popup-redirect',
+            'close': 'popup-close'
+          }[v];
+          const target = div.querySelector(`[data-cmd="${action}"]`);
+          if (target) {
+            onClick({
+              target
+            });
+          }
+        };
+        for (const [match, action] of Object.entries(prefs.rules)) {
+          if (action === 'interface') {
+            continue;
+          }
+          else if (match.startsWith('p:')) {
+            const [p, o] = match.slice(2).split('|||');
+
+            const pattern = new self.URLPattern(p, o || ('https://' + request.hostname));
+            if (pattern.test(request.href)) {
+              return matched(action);
+            }
+          }
+          else if (match.startsWith('r:')) {
+            const re = new RegExp(match.slice(2));
+            console.log(re);
+            if (re.test(request.href)) {
+              return matched(action);
+            }
+          }
+          else if (request.href === match) {
+            return matched(action);
+          }
+        }
+      }
+      catch (e) {
+        console.error('failed to run rules', e);
+      }
       // only perform automatic action when there is no native request
       // to prevent the native popup blocker catch our request
       if (prefs.countdown && request.sameContext !== true) {
@@ -266,7 +310,7 @@ const onPopupRequest = request => {
 /* prepare storage then run */
 const prepare = async c => {
   prefs = prefs || await config.get([
-    'numbers', 'timeout', 'countdown', 'default-action', 'immediate-action', 'simulate-allow', 'focus-popup'
+    'numbers', 'timeout', 'countdown', 'default-action', 'immediate-action', 'simulate-allow', 'focus-popup', 'rules'
   ]);
   c();
 };

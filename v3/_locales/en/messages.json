@@ -98,7 +98,7 @@
   "options_item34": {
     "message": "Mute notifications on these hostnames:"
   },
-  "options_item35": {
+  "options_item40": {
     "message": "Focus the newly generate popup request. You can then use shortcuts or the Escape key to hide the interface"
   },
   "options_item36": {
@@ -112,6 +112,9 @@
   },
   "options_item39": {
     "message": "Misc"
+  },
+  "options_item41": {
+    "message": "Action on a new popup request"
   },
   "options_support": {
     "message": "Support Development"
@@ -142,6 +145,9 @@
   },
   "options_t_2": {
     "message": "comma-separated list of domains (e.g.: google.com, yahoo.com)"
+  },
+  "options_t_3": {
+    "message": "A JSON object that guides the extension in executing a specific action in response to a popup request, determined by its URL. Read the FAQs page for examples."
   },
   "ui_msg": {
     "message": "Popup is requested for"

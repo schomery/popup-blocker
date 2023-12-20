@@ -25,6 +25,7 @@ const config = {
   // these protocols are accepted
   'protocols': ['magnet:'],
   'silent': [],
+  'rules': {},
   'issue': true,
   'block-page-redirection': false,
   'block-page-redirection-hostnames': [],

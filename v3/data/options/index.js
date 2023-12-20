@@ -17,8 +17,9 @@ async function restore(defaults = false) {
     'simulate-allow', 'focus-popup', 'faqs', 'popup-hosts',
     'block-page-redirection', 'block-page-redirection-same-origin', 'block-page-redirection-hostnames',
     'top-hosts', 'protocols', 'silent', 'default-action',
-    'whitelist-mode', 'immediate-action'
+    'whitelist-mode', 'immediate-action', 'rules'
   ]);
+  document.getElementById('rules').value = JSON.stringify(prefs.rules, undefined, '  ');
   document.getElementById('numbers').value = prefs.numbers;
   document.getElementById('timeout').value = prefs.timeout;
   document.getElementById('countdown').value = prefs.countdown;
@@ -45,7 +46,7 @@ const prepare = str => str.split(/\s*,\s*/)
   .filter((h, i, l) => h && l.indexOf(h) === i);
 
 function save() {
-  chrome.storage.local.set({
+  const settings = {
     'numbers': Math.max(1, document.getElementById('numbers').value),
     'timeout': Math.max(1, document.getElementById('timeout').value),
     'countdown': Math.max(0, document.getElementById('countdown').value),
@@ -66,11 +67,29 @@ function save() {
     'default-action': document.getElementById('default-action').value,
     'whitelist-mode': document.getElementById('whitelist-mode').value,
     'immediate-action': document.getElementById('immediate-action').checked
-  }, () => {
+  };
+
+  let orules = '';
+  try {
+    settings.rules = JSON.parse(document.getElementById('rules').value || '{}');
+  }
+  catch (e) {
+    orules = document.getElementById('rules').value;
+    alert('Cannot parse rules: ' + e.message);
+  }
+
+  console.log(settings);
+
+  chrome.storage.local.set(settings, () => {
     const status = document.getElementById('status');
     status.textContent = chrome.i18n.getMessage('options_msg');
     restore();
-    setTimeout(() => status.textContent = '', 750);
+    setTimeout(() => {
+      status.textContent = '';
+      if (orules) {
+        document.getElementById('rules').value = orules;
+      }
+    }, 750);
   });
 }
 
