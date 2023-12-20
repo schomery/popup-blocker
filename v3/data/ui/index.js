@@ -296,13 +296,20 @@ const message = (request, sender, response) => {
     prepare(() => onPopupRequest(request));
     response(true);
   }
-  else if (request.cmd === 'allow-last-request' || request.cmd === 'deny-last-request') {
+  else if ([
+    'allow-last-request', 'deny-last-request', 'background-last-request', 'redirect-last-request'
+  ].includes(request.cmd)) {
     const value = Object.values(urls).sort((a, b) => b.timestamp - a.timestamp).shift();
     if (value) {
       const div = value.div;
-      const button = div.querySelector(
-        request.cmd === 'allow-last-request' ? '[data-cmd="popup-accepted"]' : '[data-cmd="popup-denied"]'
-      );
+      const cmd = {
+        'allow-last-request': 'popup-accepted',
+        'deny-last-request': 'popup-denied',
+        'background-last-request': 'open-tab',
+        'redirect-last-request': 'popup-redirect'
+      }[request.cmd];
+
+      const button = div.querySelector(`[data-cmd="${cmd}"]`);
       if (button) {
         button.click();
       }

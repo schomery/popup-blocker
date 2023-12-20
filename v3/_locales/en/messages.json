@@ -8,6 +8,12 @@
   "context_item3": {
     "message": "Deny the last popup request"
   },
+  "context_item4": {
+    "message": "Open the last popup request in a background tab"
+  },
+  "context_item5": {
+    "message": "Redirect the current tab to the last popup request"
+  },
   "options_item1": {
     "message": "Maximum number of popup requests for a single page"
   },

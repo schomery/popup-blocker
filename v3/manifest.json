@@ -42,6 +42,12 @@
     },
     "deny-last-request": {
       "description": "__MSG_context_item3__"
+    },
+    "background-last-request": {
+      "description": "__MSG_context_item4__"
+    },
+    "redirect-last-request": {
+      "description": "__MSG_context_item5__"
     }
   }
 }
