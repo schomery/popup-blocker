@@ -99,7 +99,7 @@
     "message": "Mute notifications on these hostnames:"
   },
   "options_item40": {
-    "message": "Focus the newly generate popup request. You can then use shortcuts or the Escape key to hide the interface"
+    "message": "Focus the newly generated popup interface. You can then use shortcuts or the Escape key to hide"
   },
   "options_item36": {
     "message": "Enable aggressive static IFrame detection"
