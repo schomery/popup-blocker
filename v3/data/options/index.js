@@ -78,8 +78,6 @@ function save() {
     alert('Cannot parse rules: ' + e.message);
   }
 
-  console.log(settings);
-
   chrome.storage.local.set(settings, () => {
     const status = document.getElementById('status');
     status.textContent = chrome.i18n.getMessage('options_msg');

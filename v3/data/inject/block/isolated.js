@@ -138,7 +138,7 @@ const policy = e => {
   if (e.target === port) {
     if (port.dataset.enabled !== 'false') {
       const request = e.detail;
-      const {block, id, href, hostname} = blocker.policy(request);
+      const {block, id, href, hostname, page} = blocker.policy(request);
       port.setAttribute('eid', id);
       port.setAttribute('block', block);
 

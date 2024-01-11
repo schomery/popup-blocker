@@ -232,19 +232,26 @@ const onPopupRequest = request => {
           if (action === 'interface') {
             continue;
           }
-          else if (match.startsWith('p:')) {
-            const [p, o] = match.slice(2).split('|||');
 
-            const pattern = new self.URLPattern(p, o || ('https://' + request.hostname));
-            if (pattern.test(request.href)) {
-              return matched(action);
+          const prefix = match.includes(':') ? match.split(':')[0].slice(0, 2) : '';
+
+          if (prefix) {
+            const dest = prefix.includes('o') ? args.get('parent') : request.href;
+
+            if (prefix.includes('p')) {
+              const [p, o] = match.slice(prefix.length + 1).split('|||');
+
+              const pattern = new self.URLPattern(p, o || ('https://' + request.hostname));
+              if (pattern.test(dest)) {
+                return matched(action);
+              }
             }
-          }
-          else if (match.startsWith('r:')) {
-            const re = new RegExp(match.slice(2));
-            console.log(re);
-            if (re.test(request.href)) {
-              return matched(action);
+            else if (prefix.includes('r')) {
+              const re = new RegExp(match.slice(prefix.length + 1));
+
+              if (re.test(dest)) {
+                return matched(action);
+              }
             }
           }
           else if (request.href === match) {
