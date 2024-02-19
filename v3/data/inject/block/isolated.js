@@ -138,7 +138,7 @@ const policy = e => {
   if (e.target === port) {
     if (port.dataset.enabled !== 'false') {
       const request = e.detail;
-      const {block, id, href, hostname, page} = blocker.policy(request);
+      const {block, id, href, hostname} = blocker.policy(request);
       port.setAttribute('eid', id);
       port.setAttribute('block', block);
 
@@ -213,6 +213,7 @@ blocker.policy = request => {
   if (type === 'element.click') {
     const a = 'closest' in target ? (target.closest('[target]') || target.closest('a')) : null;
     href = href || (a ? a.href || a.action : '');
+
     // we are blocking either if a is found or href is provided; see method 12/4
     block = Boolean(a) || href;
   }
@@ -234,6 +235,10 @@ blocker.policy = request => {
   }
   // do not block if
   if (request.defaultPrevented || (request.metaKey && request.isTrusted)) {
+    block = false;
+  }
+  // do not block A[download]
+  if (request.tag === 'A' && request.download) {
     block = false;
   }
   // fixing

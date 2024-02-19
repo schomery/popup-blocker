@@ -39,6 +39,8 @@
         type,
         href: element.action || element.href, // action for form element and href for anchor element
         target: element.target,
+        download: element.download,
+        tag: element.tagName,
         ...extra
       });
       return {
@@ -94,6 +96,7 @@
 
     blocker.onclick = e => {
       const a = e.target.closest('[target]') || e.target.closest('a');
+
       // if this is not a form or anchor element, ignore the click
       if (a && policy('element.click', a, e).block) {
         blocker.onclick.pointer.apply(e);
@@ -215,6 +218,12 @@
       /* window.open */
       w.open = new Proxy(w.open, {
         apply(target, self, args) {
+          // do not block if window is opened inside a frame
+          const name = args[1];
+          if (name && typeof name === 'string' && frames[name]) {
+            return Reflect.apply(target, self, args);
+          }
+
           const {id, block} = policy('window.open', {
             href: args.length ? args[0] : ''
           }, null, {
