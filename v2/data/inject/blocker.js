@@ -251,6 +251,10 @@ blocker.policy = request => {
   if (request.defaultPrevented || (request.metaKey && request.isTrusted)) {
     block = false;
   }
+  // do not block A[download]
+  if (request.tag === 'A' && request.download) {
+    block = false;
+  }
   // fixing
   if (block) {
     // fix relative href
