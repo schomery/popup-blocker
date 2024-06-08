@@ -1,7 +1,7 @@
 {
   "name": "Popup Blocker (strict)",
   "description": "__MSG_app_description__",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "manifest_version": 2,
   "default_locale": "en",
   "permissions": [
@@ -47,6 +47,11 @@
     },
     "deny-last-request": {
       "description": "__MSG_context_item3__"
+    }
+  },
+  "applications": {
+    "gecko": {
+       "id": "{de22fd49-c9ab-4359-b722-b3febdc3a0b0}"
     }
   }
 }

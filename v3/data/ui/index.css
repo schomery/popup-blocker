@@ -17,8 +17,6 @@ body {
 input[type=button] {
   color: var(--fg);
   border: none;
-  border-left: solid 1px var(--bd);
-  border-right: solid 1px var(--bd);
   padding: 5px;
   font-size: 11px;
   outline: none;
@@ -62,7 +60,12 @@ input[type=button][data-default=true] {
 }
 .ppblocker-div > div {
   display: grid;
-  grid-template-columns: 1fr repeat(5, min-content);
+  grid-template-columns: 1fr min-content;
+}
+.ppblocker-div > div > div {
+  display: flex;
+  gap: 1px;
+  background-color: var(--bd);
 }
 .ppblocker-div > div > input[type=button]:first-of-type {
   justify-self: start;

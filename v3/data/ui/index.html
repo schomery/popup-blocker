@@ -1,19 +1,22 @@
 <html>
-<html>
+<head>
   <link rel="stylesheet" href="index.css">
   <meta charset="UTF-8">
-</html>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body>
   <template id="entry">
     <div class="ppblocker-div" data-badge=1 data-page=true tabindex="-1">
       <p data-id="info">https://example.com</p>
       <div>
         <input type="button" value="trust" data-i18n="ui_button_trust" data-cmd="white-list" accesskey="t">
-        <input type="button" value="deny" data-i18n="ui_button_deny" data-cmd="popup-denied" accesskey="d">
-        <input type="button" value="background" data-i18n="ui_button_background" data-cmd="open-tab" accesskey="b">
-        <input type="button" value="redirect" data-i18n="ui_button_redirect" data-cmd="popup-redirect" accesskey="r">
-        <input type="button" value="allow" data-i18n="ui_button_allow" data-cmd="popup-accepted" accesskey="a">
-        <input type="button" value="close" title="Close this notification" data-cmd="popup-close">
+        <div>
+          <input type="button" class="sgyp" value="deny" data-i18n="ui_button_deny" data-cmd="popup-denied" accesskey="d">
+          <input type="button" class="sgyp" value="background" data-i18n="ui_button_background" data-cmd="open-tab" accesskey="b">
+          <input type="button" class="sgyp" value="redirect" data-i18n="ui_button_redirect" data-cmd="popup-redirect" accesskey="r">
+          <input type="button" class="sgyp" value="allow" data-i18n="ui_button_allow" data-cmd="popup-accepted" accesskey="a">
+          <input type="button" value="close" title="Close this notification" data-cmd="popup-close">
+        </div>
       </div>
     </div>
   </template>
