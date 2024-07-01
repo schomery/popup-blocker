@@ -50,6 +50,7 @@ const activate = async () => {
       }, {
         'id': 'isolated',
         'js': ['/data/inject/block/isolated.js'],
+        'css': ['/data/inject/block/isolated.css'],
         'world': 'ISOLATED',
         ...props
       }]);
@@ -104,7 +105,7 @@ chrome.storage.onChanged.addListener(ps => {
 
 chrome.runtime.onMessage.addListener((request, sender, response) => {
   if (request.cmd === 'popup-request') {
-    config.get(['silent', 'issue']).then(prefs => {
+    config.get(['silent', 'issue', 'placement']).then(prefs => {
       if (prefs.issue === false) {
         return;
       }
@@ -122,7 +123,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
             target: {
               tabId: sender.tab.id
             },
-            func: (request, tabId) => {
+            func: (request, tabId, placement) => {
               self.requests = self.requests || [];
               self.requests.push(request);
 
@@ -136,31 +137,27 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
               };
               if (!self.container) {
                 const container = self.container = document.createElement('iframe');
+                container.classList.add('pp-blocker');
                 container.style = `
-                  all: initial;
-                  z-index: 2147483649 !important;
-                  color-scheme: light !important;
-                  position: fixed !important;
-                  right: 5px !important;
-                  top: 5px !important;
-                  width: 420px !important;
-                  max-width: 80vw !important;
-                  height: 85px !important;
-                  background: transparent !important;
-                  border-radius: 0 !important;
-                  border: none !important;
+                  ${placement.includes('t') ? 'top' : 'bottom'}: 5px !important;
+                  ${placement.includes('l') ? 'left' : 'right'}: 5px !important;
+                  height: 65px !important;
                 `;
                 container.addEventListener('load', () => {
                   container.ready = true;
                   post();
                 }, {once: true});
-                container.src = chrome.runtime.getURL('/data/ui/index.html?parent=' + encodeURIComponent(location.href)) + '&tabId=' + tabId;
+                const args = new URLSearchParams(location.search);
+                args.set('tabId', tabId);
+                args.set('parent', location.href);
+                args.set('placement', placement);
+                container.src = chrome.runtime.getURL('/data/ui/index.html') + '?' + args.toString();
                 // do not attach to body to make sure the notification is visible
                 document.documentElement.append(container);
               }
               post();
             },
-            args: [request, sender.tab.id]
+            args: [request, sender.tab.id, prefs.placement]
           });
         }
       });

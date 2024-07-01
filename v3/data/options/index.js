@@ -17,7 +17,7 @@ async function restore(defaults = false) {
     'simulate-allow', 'focus-popup', 'faqs', 'popup-hosts',
     'block-page-redirection', 'block-page-redirection-same-origin', 'block-page-redirection-hostnames',
     'top-hosts', 'protocols', 'silent', 'default-action',
-    'whitelist-mode', 'immediate-action', 'rules'
+    'whitelist-mode', 'immediate-action', 'rules', 'placement'
   ]);
   document.getElementById('rules').value = JSON.stringify(prefs.rules, undefined, '  ');
   document.getElementById('numbers').value = prefs.numbers;
@@ -31,7 +31,8 @@ async function restore(defaults = false) {
   document.getElementById('faqs').checked = prefs.faqs;
   document.getElementById('block-page-redirection').checked = prefs['block-page-redirection'];
   document.getElementById('block-page-redirection-same-origin').checked = prefs['block-page-redirection-same-origin'];
-  document.getElementById('block-page-redirection-hostnames').value = prefs['block-page-redirection-hostnames'].join(', ');
+  document.getElementById('block-page-redirection-hostnames').value =
+    prefs['block-page-redirection-hostnames'].join(', ');
   document.getElementById('popup-hosts').value = prefs['popup-hosts'].join(', ');
   document.getElementById('top-hosts').value = prefs['top-hosts'].join(', ');
   document.getElementById('protocols').value = prefs.protocols.join(', ');
@@ -39,6 +40,7 @@ async function restore(defaults = false) {
   document.getElementById('default-action').value = prefs['default-action'];
   document.getElementById('whitelist-mode').value = prefs['whitelist-mode'];
   document.getElementById('immediate-action').checked = prefs['immediate-action'];
+  document.getElementById('placement').value = prefs['placement'];
 }
 
 const prepare = str => str.split(/\s*,\s*/)
@@ -66,7 +68,8 @@ function save() {
       .split(/\s*,\s*/).filter(s => s && s.endsWith(':')),
     'default-action': document.getElementById('default-action').value,
     'whitelist-mode': document.getElementById('whitelist-mode').value,
-    'immediate-action': document.getElementById('immediate-action').checked
+    'immediate-action': document.getElementById('immediate-action').checked,
+    'placement': document.getElementById('placement').value
   };
 
   let orules = '';

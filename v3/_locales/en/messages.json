@@ -116,6 +116,21 @@
   "options_item41": {
     "message": "Action on a new popup request"
   },
+  "options_item42": {
+    "message": "Popup position on page"
+  },
+  "options_item43": {
+    "message": "Top Left"
+  },
+  "options_item44": {
+    "message": "Top Right"
+  },
+  "options_item45": {
+    "message": "Bottom Left"
+  },
+  "options_item46": {
+    "message": "Bottom Right"
+  },
   "options_support": {
     "message": "Support Development"
   },

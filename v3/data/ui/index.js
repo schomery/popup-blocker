@@ -324,7 +324,7 @@ const prepare = async c => {
 
 /* resize */
 const resizeObserver = new ResizeObserver(() => {
-  const {height} = document.documentElement.getBoundingClientRect();
+  const {height} = document.body.getBoundingClientRect();
   if (height) {
     chrome.scripting.executeScript({
       target: {

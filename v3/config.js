@@ -15,6 +15,7 @@ const config = {
   'badge': true,
   'badge-color': '#6e6e6e',
   'whitelist-mode': 'popup-hosts',
+  'placement': 'tr',
   // the following hostnames can issue popup on every website
   'popup-hosts': [
     'google.com', 'bing.com', 't.co', 'twitter.com', 'disqus.com', 'login.yahoo.com',
