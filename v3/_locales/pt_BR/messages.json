@@ -8,6 +8,12 @@
   "context_item3": {
     "message": "Negar a última solicitação pop-up"
   },
+  "context_item4": {
+    "message": "Abrir último pedido de pop-up em uma aba em segundo plano"
+  },
+  "context_item5": {
+    "message": "Redirecionar aba atual ao último pedido de pop-up"
+  },
   "options_item1": {
     "message": "Número máximo de solicitações de pop-up para uma única página"
   },
@@ -92,6 +98,9 @@
   "options_item34": {
     "message": "Silenciar notificações nestes sites:"
   },
+  "options_item40": {
+    "message": "Foca a interface pop-up recém-gerada. Você pode então usar atalhos ou a tecla ESC para ocultar"
+  },
   "options_item36": {
     "message": "Habilitar detecção agressiva de IFrame estático"
   },
@@ -103,6 +112,24 @@
   },
   "options_item39": {
     "message": "Diversos"
+  },
+  "options_item41": {
+    "message": "Ação em uma nova solicitação pop-up"
+  },
+  "options_item42": {
+    "message": "Posição do pop-up na página"
+  },
+  "options_item43": {
+    "message": "Superior esquerdo"
+  },
+  "options_item44": {
+    "message": "Superior direito"
+  },
+  "options_item45": {
+    "message": "Inferior esquerdo"
+  },
+  "options_item46": {
+    "message": "Inferior direito"
   },
   "options_support": {
     "message": "Apoie o desenvolvimento"
@@ -129,43 +156,49 @@
     "message": "Página de Perguntas Frequentes"
   },
   "options_t_1": {
-    "message": "lista de nomes de servidores separados por vírgulas (ex.: www.google.com, www.yahoo.com)"
+    "message": "Lista de nomes de servidores separados por vírgulas (ex.: www.google.com, www.yahoo.com)"
   },
   "options_t_2": {
-    "message": "lista de nomes de domínios separados por vírgulas (ex.: www.google.com, www.yahoo.com)"
+    "message": "Lista de nomes de domínios separados por vírgulas (ex.: www.google.com, www.yahoo.com)"
+  },
+  "options_t_3": {
+    "message": "Um objeto JSON que orienta a extensão na execução de uma ação específica em resposta a uma solicitação pop-up, determinada por sua URL. Leia a página de perguntas frequentes para obter exemplos."
   },
   "ui_msg": {
     "message": "O pop-up foi solicitado por"
   },
   "ui_button_allow": {
-    "message": "Permitir este pop-up"
+    "message": "Permitir este popup (Alt + Shift + A ou Control + Option + A)"
   },
   "ui_button_allow_value": {
-    "message": "permitir"
+    "message": "Permitir"
   },
   "ui_button_redirect": {
-    "message": "Redirecionar página atual para o novo destino em vez de abri-la em uma nova aba ou pop-up"
+    "message": "Redirecione a página atual para o novo destino em vez de abri-la em uma nova aba ou popup (Alt + Shift + R ou Control + Option + R)"
   },
   "ui_button_redirect_value": {
-    "message": "redirecionar"
+    "message": "Redirecionar"
   },
   "ui_button_background": {
-    "message": "Abrir link em uma aba em segundo plano"
+    "message": "Abra o link em uma aba em segundo plano (Alt + Shift + B ou Control + Option + B)"
   },
   "ui_button_background_value": {
-    "message": "segundo plano"
+    "message": "Segundo plano"
   },
   "ui_button_deny": {
-    "message": "Negar abertura do pop-up ou aba"
+    "message": "Recusar a abertura do popup ou abertura de aba (Alt + Shift + D ou Control + Option + D)"
   },
   "ui_button_deny_value": {
-    "message": "negar"
+    "message": "Negar"
   },
   "ui_button_trust": {
-    "message": "Permitir que este domínio abra pop-ups"
+    "message": "Coloque este domínio na lista de permissões para abrir popups (Alt + Shift + T ou Control + Option + T)"
   },
   "ui_button_trust_value": {
-    "message": "confiar"
+    "message": "Confiar"
+  },
+  "ui_button_trust_confirm": {
+    "message": "Clique para confirmar"
   },
   "bg_msg_state_1": {
     "message": "Popup Blocker (strict) está globalmente habilitado e protege esta aba"
@@ -179,17 +212,23 @@
   "bg_msg_state_4": {
     "message": "Popup Blocker (strict) está globalmente desativado, mas protege esta aba"
   },
+  "bg_msg_reg": {
+    "message": "O registro do filtro de bloqueio falhou devido a uma regra formatada incorretamente. Use a página de opções para corrigi-lo."
+  },
   "pp_enabled_g": {
     "message": "Habilitado (Global)"
   },
   "pp_enabled_c": {
-    "message": "Habilitado (Este servidor)"
+    "message": "Ativado (Este domínio)"
   },
   "pp_silent": {
     "message": "Mostrar notificações"
   },
   "pp_ignore": {
     "message": "Executar Ação se possível"
+  },
+  "pp_redirect": {
+    "message": "Bloquear redirecionamento de página."
   },
   "pp_last_request": {
     "message": "Última solicitação"
@@ -211,5 +250,8 @@
   },
   "pp_block": {
     "message": "Bloquear"
+  },
+  "pp_health": {
+    "message": "O script em segundo plano parece não responder. Deseja tentar reiniciar a extensão?"
   }
 }

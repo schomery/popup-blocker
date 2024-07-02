@@ -323,23 +323,24 @@ const prepare = async c => {
 };
 
 /* resize */
-const resizeObserver = new ResizeObserver(() => {
-  const {height} = document.body.getBoundingClientRect();
-  if (height) {
+const resizeObserver = new ResizeObserver(entries => {
+  try {
+    const height = entries[0].borderBoxSize[0].blockSize;
     chrome.scripting.executeScript({
       target: {
         tabId
       },
       func: height => {
         if (self.container) {
-          self.container.style.height = CSS.px(height);
+          self.container.style.setProperty('--height', CSS.px(height));
         }
       },
       args: [height]
     });
   }
+  catch (e) {}
 });
-resizeObserver.observe(document.getElementById('container'));
+resizeObserver.observe(document.body);
 
 const message = (request, sender, response) => {
   // only accept requests from bg page

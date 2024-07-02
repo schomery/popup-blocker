@@ -6,6 +6,7 @@
     position: fixed !important;
     width: 420px !important;
     max-width: 80vw !important;
+    height: var(--height, 65px) !important;
     background: transparent !important;
     border-radius: 0 !important;
     border: none !important;

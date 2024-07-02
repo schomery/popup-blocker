@@ -141,7 +141,6 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
                 container.style = `
                   ${placement.includes('t') ? 'top' : 'bottom'}: 5px !important;
                   ${placement.includes('l') ? 'left' : 'right'}: 5px !important;
-                  height: 65px !important;
                 `;
                 container.addEventListener('load', () => {
                   container.ready = true;
@@ -280,7 +279,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
 /* commands */
 chrome.commands.onCommand.addListener(cmd => chrome.tabs.query({
   active: true,
-  currentWindow: true
+  lastFocusedWindow: true
 }, tabs => tabs && tabs[0] && chrome.tabs.sendMessage(tabs[0].id, {
   cmd
 })));
@@ -299,7 +298,7 @@ chrome.commands.onCommand.addListener(cmd => chrome.tabs.query({
         if (reason === 'install' || (prefs.faqs && reason === 'update')) {
           const doUpdate = (Date.now() - prefs['last-update']) / 1000 / 60 / 60 / 24 > 45;
           if (doUpdate && previousVersion !== version) {
-            tabs.query({active: true, currentWindow: true}, tbs => tabs.create({
+            tabs.query({active: true, lastFocusedWindow: true}, tbs => tabs.create({
               url: page + '?version=' + version + (previousVersion ? '&p=' + previousVersion : '') + '&type=' + reason,
               active: reason === 'install',
               ...(tbs && tbs.length && {index: tbs[0].index + 1})
