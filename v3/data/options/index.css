@@ -8,6 +8,7 @@ body {
   margin: 10px auto;
   width: min(800px, 100% - 2rem);
 }
+select,
 button,
 input[type=submit],
 input[type=button] {
@@ -22,9 +23,6 @@ textarea,
 button,
 input {
   border: var(--border);
-}
-select {
-  padding: 2px 5px;
 }
 input[type=number] {
   width: 50px;

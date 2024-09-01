@@ -1,7 +1,9 @@
-/* global config, URLPattern */
+/* global config */
 
-self.importScripts('config.js');
-self.importScripts('badge.js');
+if (typeof importScripts !== 'undefined') {
+  self.importScripts('config.js');
+  self.importScripts('badge.js');
+}
 
 /* enable or disable the blocker */
 const activate = async () => {
@@ -19,18 +21,18 @@ const activate = async () => {
       const th = [];
       for (const hostname of prefs['top-hosts']) {
         try {
-          new URLPattern({hostname});
+          await activate.test('*://' + hostname + '/*');
           th.push('*://' + hostname + '/*');
         }
         catch (e) {
-          console.warn('Cannot use ' + hostname + ' rule');
+          console.warn('Cannot use ' + hostname + ' rule. Reason: ' + e.message);
         }
         try {
-          new URLPattern({hostname: '*.' + hostname});
+          await activate.test('*://*.' + hostname + '/*');
           th.push('*://*.' + hostname + '/*');
         }
         catch (e) {
-          console.warn('Cannot use *.' + hostname + ' rule');
+          console.warn('Cannot use *.' + hostname + ' rule. Reason: ' + e.message);
         }
       }
 
@@ -94,6 +96,18 @@ const activate = async () => {
     console.error('Blocker Registration Failed', e);
   }
   activate.busy = false;
+};
+activate.test = async pattern => {
+  await chrome.scripting.registerContentScripts([{
+    'id': 'test',
+    'js': ['/data/inject/test.js'],
+    'world': 'MAIN',
+    'matches': ['*://*/*'],
+    'excludeMatches': [pattern]
+  }]);
+  await chrome.scripting.unregisterContentScripts({
+    ids: ['test']
+  }).catch(() => {});
 };
 chrome.runtime.onStartup.addListener(activate);
 chrome.runtime.onInstalled.addListener(activate);
@@ -184,6 +198,32 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
         frameId: request.frameId
       });
     }
+  }
+  // resize
+  else if (request.cmd === 'popup-resize') {
+    chrome.scripting.executeScript({
+      target: {
+        tabId: sender.tab.id
+      },
+      func: height => {
+        if (self.container) {
+          self.container.style.setProperty('--height', height + 'px');
+        }
+      },
+      args: [request.height]
+    });
+  }
+  // terminate
+  else if (request.cmd === 'popup-terminate') {
+    chrome.scripting.executeScript({
+      target: {
+        tabId: sender.tab.id
+      },
+      func: () => {
+        self.container.remove();
+        self.container = null;
+      }
+    });
   }
   else if (request.cmd === 'run-records') {
     chrome.scripting.executeScript({
@@ -288,8 +328,7 @@ chrome.commands.onCommand.addListener(cmd => chrome.tabs.query({
 {
   const {management, runtime: {onInstalled, setUninstallURL, getManifest}, storage, tabs} = chrome;
   if (navigator.webdriver !== true) {
-    const page = getManifest().homepage_url;
-    const {name, version} = getManifest();
+    const {homepage_url: page, name, version} = getManifest();
     onInstalled.addListener(({reason, previousVersion}) => {
       management.getSelf(({installType}) => installType === 'normal' && storage.local.get({
         'faqs': true,

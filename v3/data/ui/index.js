@@ -2,7 +2,6 @@
 'use strict';
 
 const args = new URLSearchParams(location.search);
-const tabId = Number(args.get('tabId'));
 let prefs = '';
 
 const entry = document.getElementById('entry');
@@ -84,14 +83,8 @@ function remove(div, url) {
   }
   // remove iframe if no more popups present
   if (Object.keys(urls).length === 0) {
-    chrome.scripting.executeScript({
-      target: {
-        tabId
-      },
-      func: () => {
-        self.container.remove();
-        self.container = null;
-      }
+    chrome.runtime.sendMessage({
+      cmd: 'popup-terminate'
     });
   }
 }
@@ -172,7 +165,7 @@ const doTimer = (div, button, countdown) => {
   }, 1000);
   button.value = label + ` (${countdown})`;
 };
-const onPopupRequest = request => {
+const onPopupRequest = async request => {
   const tag = request.href && request.href !== 'about:blank' ? request.href : request.id;
 
   // already listed
@@ -240,6 +233,13 @@ const onPopupRequest = request => {
 
             if (prefix.includes('p')) {
               const [p, o] = match.slice(prefix.length + 1).split('|||');
+
+              // Firefox
+              if (!self.URLPattern) {
+                await import('/data/polyfill/urlpattern.js').then(o => {
+                  self.URLPattern = o.URLPattern;
+                });
+              }
 
               const pattern = new self.URLPattern(p, o || ('https://' + request.hostname));
               if (pattern.test(dest)) {
@@ -326,16 +326,9 @@ const prepare = async c => {
 const resizeObserver = new ResizeObserver(entries => {
   try {
     const height = entries[0].borderBoxSize[0].blockSize;
-    chrome.scripting.executeScript({
-      target: {
-        tabId
-      },
-      func: height => {
-        if (self.container) {
-          self.container.style.setProperty('--height', CSS.px(height));
-        }
-      },
-      args: [height]
+    chrome.runtime.sendMessage({
+      cmd: 'popup-resize',
+      height
     });
   }
   catch (e) {}

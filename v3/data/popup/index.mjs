@@ -1,5 +1,11 @@
 /* global config, tld, URLPattern */
-'use strict';
+
+// Firefox
+if (!self.URLPattern) {
+  await import('/data/polyfill/urlpattern.js').then(o => {
+    self.URLPattern = o.URLPattern;
+  });
+}
 
 // links
 for (const a of [...document.querySelectorAll('[data-href]')]) {
@@ -135,13 +141,15 @@ document.getElementById('issue').onchange = e => chrome.storage.local.set({
 
 document.getElementById('test-page').onclick = () => chrome.tabs.create({
   url: 'https://webbrowsertools.com/popup-blocker/'
-});
+}, () => window.close());
 
 document.getElementById('homepage').onclick = () => chrome.tabs.create({
   url: chrome.runtime.getManifest().homepage_url
-});
+}, () => window.close());
 
-document.getElementById('options').onclick = () => chrome.runtime.openOptionsPage();
+document.getElementById('options').onclick = () => chrome.runtime.openOptionsPage(() => {
+  window.close();
+});
 
 chrome.tabs.query({
   currentWindow: true,
