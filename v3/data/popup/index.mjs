@@ -1,4 +1,4 @@
-/* global config, tld, URLPattern */
+/* global config, tldjs, URLPattern */
 
 // Firefox
 if (!self.URLPattern) {
@@ -98,7 +98,7 @@ chrome.tabs.query({
 document.getElementById('page').onchange = async e => {
   const prefs = await config.get(['top-hosts']);
 
-  const d = tld.getDomain(page.hostname) || page.hostname;
+  const d = tldjs.getDomain(page.hostname) || page.hostname;
 
   if (e.target.checked) {
     const rms = new Set();
