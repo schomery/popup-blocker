@@ -70,6 +70,12 @@ const records = {};
 
 /* page redirection; prevent the page redirection when popup opening is unsuccessful for 2 seconds */
 const redirect = {
+  prefs: {
+    'block-page-redirection': false,
+    'block-page-redirection-period': 2000,
+    'block-page-redirection-hostnames': [],
+    'block-page-redirection-same-origin': true
+  },
   timeout: null,
   beforeunload(e) {
     if (redirect.href) {
@@ -114,13 +120,7 @@ if (typeof navigation !== 'undefined' && window.top === window) {
     redirect.href = navigateEvent.destination.url;
   });
 }
-
-chrome.storage.local.get({
-  'block-page-redirection': false,
-  'block-page-redirection-period': 2000,
-  'block-page-redirection-hostnames': [],
-  'block-page-redirection-same-origin': true
-}, prefs => redirect.prefs = prefs);
+chrome.storage.local.get(redirect.prefs, prefs => Object.assign(redirect.prefs, prefs));
 
 /* recording window.open */
 const record = e => {

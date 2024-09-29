@@ -149,13 +149,15 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
                   self.requests.length = 0;
                 }
               };
-              if (!self.container) {
+              // what if there is an element with id "container" in DOM
+              if (!self.container || self.container.attached !== true) {
                 const container = self.container = document.createElement('iframe');
                 container.classList.add('pp-blocker');
                 container.style = `
                   ${placement.includes('t') ? 'top' : 'bottom'}: 5px !important;
                   ${placement.includes('l') ? 'left' : 'right'}: 5px !important;
                 `;
+                container.attached = true;
                 container.addEventListener('load', () => {
                   container.ready = true;
                   post();

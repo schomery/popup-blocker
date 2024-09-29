@@ -1,2 +1,7 @@
-tld.js
+tld.js (MD5 = 2cffb104667a9f2ba4f78999907178a3)
+
   https://cdn.jsdelivr.net/npm/tldjs@2.3.1/tld.js
+
+  Manual verification
+  npm install tldjs@2.3.1
+  md5 ./node_modules/tldjs/tld.js

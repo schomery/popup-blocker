@@ -1,7 +1,7 @@
 @layer {
   iframe.pp-blocker {
     all: initial;
-    z-index: calc(Infinity) !important;
+    z-index: calc(infinity) !important;
     color-scheme: light !important;
     position: fixed !important;
     width: 420px !important;
@@ -10,5 +10,9 @@
     background: transparent !important;
     border-radius: 0 !important;
     border: none !important;
+  }
+
+  #ppop-port {
+    display: none;
   }
 }

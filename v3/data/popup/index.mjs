@@ -1,12 +1,5 @@
 /* global config, tldjs, URLPattern */
 
-// Firefox
-if (!self.URLPattern) {
-  await import('/data/polyfill/urlpattern.js').then(o => {
-    self.URLPattern = o.URLPattern;
-  });
-}
-
 // links
 for (const a of [...document.querySelectorAll('[data-href]')]) {
   if (a.hasAttribute('href') === false) {
@@ -41,20 +34,29 @@ document.getElementById('global').onchange = e => {
 const page = {};
 
 const match = (hostname, href) => {
-  try {
-    const v = new URLPattern({hostname});
-    if (v.test(href)) {
-      return true;
+  if (typeof URLPattern !== 'undefined') {
+    try {
+      const v = new URLPattern({hostname});
+      if (v.test(href)) {
+        return true;
+      }
     }
-  }
-  catch (e) {}
-  try {
-    const v = new URLPattern({hostname: '*.' + hostname});
-    if (v.test(href)) {
-      return true;
+    catch (e) {}
+    try {
+      const v = new URLPattern({hostname: '*.' + hostname});
+      if (v.test(href)) {
+        return true;
+      }
     }
+    catch (e) {}
   }
-  catch (e) {}
+  else {
+    try {
+      const o = new URL(href);
+      return hostname === o.hostname || hostname.endsWith('.' + o.hostname);
+    }
+    catch (e) {}
+  }
 };
 
 // Start Point

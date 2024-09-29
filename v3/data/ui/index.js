@@ -1,4 +1,4 @@
-/* global config */
+/* global config, URLPattern */
 'use strict';
 
 const args = new URLSearchParams(location.search);
@@ -234,16 +234,14 @@ const onPopupRequest = async request => {
             if (prefix.includes('p')) {
               const [p, o] = match.slice(prefix.length + 1).split('|||');
 
-              // Firefox
-              if (!self.URLPattern) {
-                await import('/data/polyfill/urlpattern.js').then(o => {
-                  self.URLPattern = o.URLPattern;
-                });
+              if (typeof URLPattern !== 'undefined') {
+                const pattern = new URLPattern(p, o || ('https://' + request.hostname));
+                if (pattern.test(dest)) {
+                  return matched(action);
+                }
               }
-
-              const pattern = new self.URLPattern(p, o || ('https://' + request.hostname));
-              if (pattern.test(dest)) {
-                return matched(action);
+              else {
+                alert('"URLPattern" is not supported in this browser. Please use RegExp instead.\n\n: Rule: ' + p);
               }
             }
             else if (prefix.includes('r')) {

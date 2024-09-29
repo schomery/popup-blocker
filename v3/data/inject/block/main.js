@@ -141,7 +141,7 @@
       });
 
       /* iframe mess */
-      if (aggressive > 1) {
+      if (aggressive > 2) {
         const {HTMLIFrameElement, HTMLFrameElement} = w;
 
         const wf = Object.getOwnPropertyDescriptor(HTMLFrameElement.prototype, 'contentWindow');
@@ -154,6 +154,11 @@
               blocker.install(w);
             }
             catch (e) {}
+            Object.defineProperty(this, 'contentWindow', {
+              configurable: true,
+              enumerable: true,
+              value: w
+            });
             return w;
           }
         });
@@ -167,6 +172,11 @@
               blocker.install(w);
             }
             catch (e) {}
+            Object.defineProperty(this, 'contentWindow', {
+              configurable: true,
+              enumerable: true,
+              value: w
+            });
             return w;
           }
         });
@@ -180,6 +190,11 @@
               blocker.install(d.defaultView);
             }
             catch (e) {}
+            Object.defineProperty(this, 'contentDocument', {
+              configurable: true,
+              enumerable: true,
+              value: d
+            });
             return d;
           }
         });
@@ -193,6 +208,11 @@
               blocker.install(d.defaultView);
             }
             catch (e) {}
+            Object.defineProperty(this, 'contentDocument', {
+              configurable: true,
+              enumerable: true,
+              value: d
+            });
             return d;
           }
         });
@@ -205,7 +225,7 @@
             for (const e of m.addedNodes) {
               blocker.frame(e);
               if (e.childElementCount) {
-                [...e.querySelectorAll('iframe')].forEach(blocker.frame);
+                [...e.querySelectorAll('frame,iframe')].forEach(blocker.frame);
               }
             }
           }
