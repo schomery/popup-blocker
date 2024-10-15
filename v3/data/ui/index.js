@@ -377,3 +377,13 @@ document.addEventListener('keydown', e => {
     }
   }
 });
+
+// user styling
+{
+  const css = localStorage.getItem('user-styling');
+  if (css) {
+    const style = document.createElement('style');
+    style.textContent = css;
+    document.head.appendChild(style);
+  }
+}

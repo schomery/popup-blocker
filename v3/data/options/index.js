@@ -12,6 +12,8 @@
 });
 
 async function restore(defaults = false) {
+  document.getElementById('user-styling').value = localStorage.getItem('user-styling') || '';
+
   const prefs = defaults ? config : await config.get([
     'numbers', 'timeout', 'countdown', 'badge', 'badge-color', 'domain',
     'simulate-allow', 'focus-popup', 'faqs', 'popup-hosts',
@@ -80,6 +82,8 @@ function save() {
     orules = document.getElementById('rules').value;
     alert('Cannot parse rules: ' + e.message);
   }
+
+  localStorage.setItem('user-styling', document.getElementById('user-styling').value || '');
 
   chrome.storage.local.set(settings, () => {
     const status = document.getElementById('status');
