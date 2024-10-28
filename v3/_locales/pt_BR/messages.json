@@ -98,6 +98,9 @@
   "options_item34": {
     "message": "Silenciar notificações nestes sites:"
   },
+  "options_item35": {
+    "message": "Aplicar as seguintes regras CSS personalizadas à interface do popup:"
+  },
   "options_item40": {
     "message": "Foca a interface pop-up recém-gerada. Você pode então usar atalhos ou a tecla ESC para ocultar"
   },

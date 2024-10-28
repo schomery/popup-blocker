@@ -1,0 +1,260 @@
+{
+  "app_description": {
+    "message": "Bir siteden gelen tüm pop-up isteklerini kesinlikle engelle"
+  },
+  "context_item2": {
+    "message": "Son pop-up isteğine izin ver"
+  },
+  "context_item3": {
+    "message": "Son popup isteğini reddet"
+  },
+  "context_item4": {
+    "message": "Son popup isteğini bir arka plan sekmesinde aç"
+  },
+  "context_item5": {
+    "message": "Geçerli sekmeyi son popup isteğine yönlendir"
+  },
+  "options_item1": {
+    "message": "Tek bir sayfa için maksimum popup isteği sayısı"
+  },
+  "options_item2": {
+    "message": "Her popup'ın görüntülenmesi için zaman aşımı (saniye cinsinden)"
+  },
+  "options_item3": {
+    "message": "Aynı kaynaktan gelen popup isteklerini engelleme"
+  },
+  "options_item5": {
+    "message": "Engellenen toplam istek sayısını araç çubuğu simgesinde görüntüle"
+  },
+  "options_item6": {
+    "message": "Bu kaynakların popup'larını engelleme:"
+  },
+  "options_item7": {
+    "message": "Bu sayfalardaki hiçbir pop-up'ı engelleme:"
+  },
+  "options_item8": {
+    "message": "Bu değişikliğin etkili olması için sekmeyi yenile."
+  },
+  "options_item9": {
+    "message": "Son eylemi gerçekleştirmek için geri sayım (saniye cinsinden)"
+  },
+  "options_item10": {
+    "message": "Önceki eylemi gerçekleştirmek üzere geri sayımı devre dışı bırakmak için sıfır sayısını kullan."
+  },
+  "options_item13": {
+    "message": "Kara liste kaynakları (ters çalışma modu):"
+  },
+  "options_item15": {
+    "message": "Bir popup açıldıktan sonra 2 saniye boyunca sayfanın yeniden yönlendirilmesini önle"
+  },
+  "options_item17": {
+    "message": "Bir popup açıldığında yapılacak varsayılan eylem"
+  },
+  "options_item18": {
+    "message": "Hiçbir şey yapma"
+  },
+  "options_item19": {
+    "message": "Talebi reddet"
+  },
+  "options_item20": {
+    "message": "Arkaplanda aç"
+  },
+  "options_item21": {
+    "message": "Sayfayı yönlendir"
+  },
+  "options_item22": {
+    "message": "Rozet arka plan rengi"
+  },
+  "options_item23": {
+    "message": "Mümkünse popup bildirimini yoksay (önerilmez)"
+  },
+  "options_item25": {
+    "message": "Açıklamalar"
+  },
+  "options_item26": {
+    "message": "Güncellemelerde SSS sayfasını görüntüle"
+  },
+  "options_item27": {
+    "message": "Bu protokolleri engelleme:"
+  },
+  "options_item28": {
+    "message": "Aşağıdaki kaynaklara sayfa yönlendirmesine izin ver:"
+  },
+  "options_item29": {
+    "message": "Sayfanın aynı kaynağa yeniden yönlendirilmesine izin ver"
+  },
+  "options_item30": {
+    "message": "Tarayıcının dahili popup engelleyicisinin bu istekleri engellemesini önlemek için 'izin ver' düğmesini simüle et"
+  },
+  "options_item31": {
+    "message": "“Güven” düğmesine basıldığında:"
+  },
+  "options_item32": {
+    "message": "Pop-up kaynağını artık engelleme"
+  },
+  "options_item33": {
+    "message": "Üst düzey sayfanın herhangi bir pop-up göstermesine izin ver"
+  },
+  "options_item34": {
+    "message": "Bu host adlarındaki bildirimleri sessize al:"
+  },
+  "options_item35": {
+    "message": "Popup arayüzüne aşağıdaki özel CSS kurallarını uygula:"
+  },
+  "options_item40": {
+    "message": "Yeni oluşturulan popup arayüzüne odaklan. Daha sonra gizlemek için kısayolları veya Escape tuşunu kullan"
+  },
+  "options_item36": {
+    "message": "Agresif statik IFrame algılamayı etkinleştir"
+  },
+  "options_item37": {
+    "message": "Bu mod etkinleştirildiğinde, eklenti 'JavaScript:' src niteliklerine sahip statik IFrame'leri izlemek için bir mutasyon gözlemcisi yükler. Bu, engelleme gücünü artırır ancak performans dezavantajları vardır."
+  },
+  "options_item38": {
+    "message": "Sayfa Yönlendirme"
+  },
+  "options_item39": {
+    "message": "Diğer"
+  },
+  "options_item41": {
+    "message": "Yeni bir popup isteğinde yapılacak eylem"
+  },
+  "options_item42": {
+    "message": "Sayfadaki popup konumu"
+  },
+  "options_item43": {
+    "message": "Sol Üst"
+  },
+  "options_item44": {
+    "message": "Sağ Üst"
+  },
+  "options_item45": {
+    "message": "Sol Alt"
+  },
+  "options_item46": {
+    "message": "Sağ Alt"
+  },
+  "options_support": {
+    "message": "Geliştirme Desteği"
+  },
+  "options_import": {
+    "message": "İçe Aktarma Tercihleri"
+  },
+  "options_export": {
+    "message": "Dışa Aktarma Tercihleri"
+  },
+  "options_reset": {
+    "message": "Varsayılanlara Sıfırla"
+  },
+  "options_save": {
+    "message": "Ayarları Kaydet"
+  },
+  "options_msg": {
+    "message": "Ayarlar kaydedildi"
+  },
+  "options_review": {
+    "message": "YouTube İncelemesi"
+  },
+  "options_page": {
+    "message": "SSS Sayfası"
+  },
+  "options_t_1": {
+    "message": "virgülle ayrılmış sunucu adları listesi (örnek: www.google.com, www.yahoo.com)"
+  },
+  "options_t_2": {
+    "message": "virgülle ayrılmış alan adları listesi (örnek: google.com, yahoo.com)"
+  },
+  "options_t_3": {
+    "message": "Belirli bir URL'ye göre popup isteğine yanıt olarak bir işlemi yürütmesi için uzantıya yol gösteren bir JSON nesnesi. Örnekler için SSS sayfasını okuyun."
+  },
+  "ui_msg": {
+    "message": "Aşağıdakiler için popup istenir"
+  },
+  "ui_button_allow": {
+    "message": "Bu popup'a izin ver (Alt + Shift + A veya Control + Option + A)"
+  },
+  "ui_button_allow_value": {
+    "message": "izin ver"
+  },
+  "ui_button_redirect": {
+    "message": "Mevcut sayfayı yeni bir sekmede veya popup'ta açmak yerine yeni hedefe yönlendir (Alt + Shift + R veya Control + Option + R)"
+  },
+  "ui_button_redirect_value": {
+    "message": "yönlendir"
+  },
+  "ui_button_background": {
+    "message": "Bağlantıyı bir arka plan sekmesinde aç (Alt + Shift + B veya Control + Option + B)"
+  },
+  "ui_button_background_value": {
+    "message": "arkaplan"
+  },
+  "ui_button_deny": {
+    "message": "Popup veya sekme açılışını reddet (Alt + Shift + D veya Control + Option + D)"
+  },
+  "ui_button_deny_value": {
+    "message": "reddet"
+  },
+  "ui_button_trust": {
+    "message": "Popup'ları açmak için bu alan adını beyaz listeye al (Alt + Shift + T veya Control + Option + T)"
+  },
+  "ui_button_trust_value": {
+    "message": "güven"
+  },
+  "ui_button_trust_confirm": {
+    "message": "Onaylamak için Tıkla"
+  },
+  "bg_msg_state_1": {
+    "message": "Popup Blocker (strict) genel olarak etkinleştirilmiştir ve bu sekmeyi korur"
+  },
+  "bg_msg_state_2": {
+    "message": "Popup Blocker (strict) genel olarak etkinleştirilmiştir ancak bu sekmeyi korumaz"
+  },
+  "bg_msg_state_3": {
+    "message": "Popup Blocker (strict) genel olarak devre dışıdır ve bu sekmeyi korumaz"
+  },
+  "bg_msg_state_4": {
+    "message": "Popup Blocker (strict) genel olarak devre dışıdır ancak bu sekmeyi korur"
+  },
+  "bg_msg_reg": {
+    "message": "Yanlış biçimlendirilmiş bir kural nedeniyle engelleme filtresinin kaydedilmesi başarısız oldu. Düzeltmek için ayarlar sayfasını kullan."
+  },
+  "pp_enabled_g": {
+    "message": "Etkin (Global)"
+  },
+  "pp_enabled_c": {
+    "message": "Etkin (Bu Alan Adında)"
+  },
+  "pp_silent": {
+    "message": "Ekran Bildirimleri"
+  },
+  "pp_ignore": {
+    "message": "Mümkünse Harekete Geç"
+  },
+  "pp_redirect": {
+    "message": "Sayfa Yönlendirmesini Engelle"
+  },
+  "pp_last_request": {
+    "message": "Son İstek"
+  },
+  "pp_test": {
+    "message": "Test Engelleyici"
+  },
+  "pp_homepage": {
+    "message": "Ana sayfa"
+  },
+  "pp_options": {
+    "message": "Ayarlar"
+  },
+  "pp_shadow": {
+    "message": "Gölge Kullan"
+  },
+  "pp_allow": {
+    "message": "İzin ver"
+  },
+  "pp_block": {
+    "message": "Engelle"
+  },
+  "pp_health": {
+    "message": "Arka plan betiği yanıt vermiyor gibi görünüyor. Eklentiyi yeniden başlatmayı denemek ister misiniz?"
+  }
+}
