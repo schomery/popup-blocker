@@ -53,6 +53,9 @@
     },
     "redirect-last-request": {
       "description": "__MSG_context_item5__"
+    },
+    "focus-last-request": {
+      "description": "__MSG_context_item6__"
     }
   },
   "browser_specific_settings": {

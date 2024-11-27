@@ -14,6 +14,9 @@
   "context_item5": {
     "message": "Redirect the current tab to the last popup request"
   },
+  "context_item6": {
+    "message": "Move focus from page to the last popup request"
+  },
   "options_item1": {
     "message": "Maximum number of popup requests for a single page"
   },
