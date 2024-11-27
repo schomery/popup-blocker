@@ -1,7 +1,7 @@
 {
   "name": "Popup Blocker (strict)",
   "description": "__MSG_app_description__",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "manifest_version": 3,
   "default_locale": "en",
   "permissions": [
