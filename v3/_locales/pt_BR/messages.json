@@ -14,6 +14,9 @@
   "context_item5": {
     "message": "Redirecionar aba atual ao último pedido de pop-up"
   },
+  "context_item6": {
+    "message": "Mover foco da página para a última solicitação de pop-up"
+  },
   "options_item1": {
     "message": "Número máximo de solicitações de pop-up para uma única página"
   },

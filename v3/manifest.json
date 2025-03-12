@@ -37,11 +37,13 @@
     "open_in_tab": true
   },
   "web_accessible_resources": [{
-    "resources": ["/data/ui/index.html"],
+    "resources": ["data/ui/index.html"],
     "matches": ["*://*/*"]
   }],
   "commands": {
-    "_execute_action": {},
+    "_execute_action": {
+      "description": "Execute Action"
+    },
     "allow-last-request": {
       "description": "__MSG_context_item2__"
     },

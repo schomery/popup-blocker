@@ -22,6 +22,7 @@ select,
 textarea,
 button,
 input {
+  font-size: inherit;
   border: var(--border);
 }
 input[type=number] {
@@ -82,4 +83,10 @@ label[for="wot"] {
 .bc {
   display: flex;
   gap: 5px;
+}
+
+@supports (-webkit-hyphens: none) and (not (-moz-appearance: none)) {
+  #support {
+    display: none;
+  }
 }

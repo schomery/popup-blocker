@@ -138,26 +138,25 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
               tabId: sender.tab.id
             },
             func: (request, tabId, placement) => {
-              self.requests = self.requests || [];
-              self.requests.push(request);
+              /* global scope */
+              scope.requests.push(request);
 
               const post = () => {
-                if (self.container?.ready) {
-                  self.container.contentWindow.postMessage({
-                    requests: [...self.requests]
-                  }, self.container.src);
-                  self.requests.length = 0;
+                if (scope.container?.ready) {
+                  scope.container.contentWindow.postMessage({
+                    requests: [...scope.requests]
+                  }, chrome.runtime.getURL('*'));
+                  scope.requests.length = 0;
                 }
               };
               // what if there is an element with id "container" in DOM
-              if (!self.container || self.container.attached !== true) {
-                const container = self.container = document.createElement('iframe');
+              if (!scope.container) {
+                const container = scope.container = document.createElement('iframe');
                 container.classList.add('pp-blocker');
                 container.style = `
                   ${placement.includes('t') ? 'top' : 'bottom'}: 5px !important;
                   ${placement.includes('l') ? 'left' : 'right'}: 5px !important;
                 `;
-                container.attached = true;
                 container.addEventListener('load', () => {
                   container.ready = true;
                   post();
@@ -208,8 +207,8 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
         tabId: sender.tab.id
       },
       func: height => {
-        if (self.container) {
-          self.container.style.setProperty('--height', height + 'px');
+        if (scope.container) {
+          scope.container.style.setProperty('--height', height + 'px');
         }
       },
       args: [request.height]
@@ -222,8 +221,8 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
         tabId: sender.tab.id
       },
       func: () => {
-        self.container.remove();
-        self.container = null;
+        scope.container.remove();
+        scope.container = null;
       }
     });
   }
@@ -328,27 +327,31 @@ chrome.commands.onCommand.addListener(cmd => chrome.tabs.query({
 
 /* FAQs & Feedback */
 {
-  const {management, runtime: {onInstalled, setUninstallURL, getManifest}, storage, tabs} = chrome;
+  chrome.management = chrome.management || {
+    getSelf(c) {
+      c({installType: 'normal'});
+    }
+  };
   if (navigator.webdriver !== true) {
-    const {homepage_url: page, name, version} = getManifest();
-    onInstalled.addListener(({reason, previousVersion}) => {
-      management.getSelf(({installType}) => installType === 'normal' && storage.local.get({
+    const {homepage_url: page, name, version} = chrome.runtime.getManifest();
+    chrome.runtime.onInstalled.addListener(({reason, previousVersion}) => {
+      chrome.management.getSelf(({installType}) => installType === 'normal' && chrome.storage.local.get({
         'faqs': true,
         'last-update': 0
       }, prefs => {
         if (reason === 'install' || (prefs.faqs && reason === 'update')) {
           const doUpdate = (Date.now() - prefs['last-update']) / 1000 / 60 / 60 / 24 > 45;
           if (doUpdate && previousVersion !== version) {
-            tabs.query({active: true, lastFocusedWindow: true}, tbs => tabs.create({
+            chrome.tabs.query({active: true, lastFocusedWindow: true}, tbs => chrome.tabs.create({
               url: page + '?version=' + version + (previousVersion ? '&p=' + previousVersion : '') + '&type=' + reason,
               active: reason === 'install',
               ...(tbs && tbs.length && {index: tbs[0].index + 1})
             }));
-            storage.local.set({'last-update': Date.now()});
+            chrome.storage.local.set({'last-update': Date.now()});
           }
         }
       }));
     });
-    setUninstallURL(page + '?rd=feedback&name=' + encodeURIComponent(name) + '&version=' + version);
+    chrome.runtime.setUninstallURL(page + '?rd=feedback&name=' + encodeURIComponent(name) + '&version=' + version);
   }
 }

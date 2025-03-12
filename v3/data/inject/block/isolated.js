@@ -24,6 +24,10 @@
     https://patrickhlauke.github.io/recaptcha/
 */
 
+// we need to define global variables. Using self.scope may conflict with an element on page
+const scope = {};
+scope.requests = []; // initial requests before interface is ready
+
 /* port is used to communicate between chrome and page scripts */
 let port;
 try {

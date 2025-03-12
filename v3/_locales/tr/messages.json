@@ -14,6 +14,9 @@
   "context_item5": {
     "message": "Geçerli sekmeyi son popup isteğine yönlendir"
   },
+  "context_item6": {
+    "message": "Odağı sayfadan son popup isteğine taşı"
+  },
   "options_item1": {
     "message": "Tek bir sayfa için maksimum popup isteği sayısı"
   },
