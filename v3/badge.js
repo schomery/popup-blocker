@@ -5,12 +5,16 @@
 const icon = async () => {
   const prefs = await config.get(['enabled']);
   const path = {
-    16: 'data/icons/' + (prefs.enabled ? '' : 'disabled/') + '16.png',
-    32: 'data/icons/' + (prefs.enabled ? '' : 'disabled/') + '32.png'
+    16: 'data/icons/' + (prefs.enabled ? 'state/0/' : 'state/3/') + '16.png',
+    32: 'data/icons/' + (prefs.enabled ? 'state/0/' : 'state/3/') + '32.png'
   };
   chrome.action.setIcon({
     path
   });
+  const id = prefs.enabled ? 'bg_msg_state_0' : 'bg_msg_state_3';
+  chrome.action.setTitle({
+    title: chrome.i18n.getMessage(id)
+  })
 };
 
 /* observe preference changes */
@@ -34,6 +38,7 @@ chrome.storage.onChanged.addListener(prefs => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender) => {
+  console.log(request);
   // update badge counter
   if (request.cmd === 'popup-request') {
     const tabId = sender.tab.id;

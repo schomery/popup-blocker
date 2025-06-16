@@ -137,6 +137,12 @@
   "options_item46": {
     "message": "Bottom Right"
   },
+  "options_item47": {
+    "message": "Protection Scope"
+  },
+  "options_item48": {
+    "message": "Read documentation on how to configure extension's scope."
+  },
   "options_support": {
     "message": "Support Development"
   },
@@ -169,6 +175,9 @@
   },
   "options_t_3": {
     "message": "A JSON object that guides the extension in executing a specific action in response to a popup request, determined by its URL. Read the FAQs page for examples."
+  },
+  "options_t_4": {
+    "message": "Enter a comma-separated list of patterns to define the global scope. Only change this if you know what you're doing, as incorrect values may break the extension. Read FAQs page for more info"
   },
   "ui_msg": {
     "message": "Popup is requested for"
@@ -206,17 +215,20 @@
   "ui_button_trust_confirm": {
     "message": "Click to Confirm"
   },
+  "bg_msg_state_0": {
+    "message": "Popup Blocker is globally enabled, but not active in this tab—likely because it's an internal page, out of scope page or still loading."
+  },
   "bg_msg_state_1": {
-    "message": "Popup Blocker (strict) is globally enabled and protects this tab"
+    "message": "Popup Blocker is globally enabled and protects this tab"
   },
   "bg_msg_state_2": {
-    "message": "Popup Blocker (strict) is globally enabled but does not protect this tab"
+    "message": "Popup Blocker is globally enabled but does not protect this tab"
   },
   "bg_msg_state_3": {
-    "message": "Popup Blocker (strict) is globally disabled and does not protect this tab"
+    "message": "Popup Blocker is globally disabled and does not protect this tab"
   },
   "bg_msg_state_4": {
-    "message": "Popup Blocker (strict) is globally disabled but protects this tab"
+    "message": "Popup Blocker is globally disabled but protects this tab"
   },
   "bg_msg_reg": {
     "message": "Registering blocking filter failed due to an improperly formatted rule. Use the options page to fix it."

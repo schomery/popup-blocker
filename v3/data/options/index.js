@@ -19,7 +19,7 @@ async function restore(defaults = false) {
     'simulate-allow', 'focus-popup', 'faqs', 'popup-hosts',
     'block-page-redirection', 'block-page-redirection-same-origin', 'block-page-redirection-hostnames',
     'top-hosts', 'protocols', 'silent', 'default-action',
-    'whitelist-mode', 'immediate-action', 'rules', 'placement'
+    'whitelist-mode', 'immediate-action', 'rules', 'placement', 'scope'
   ]);
   document.getElementById('rules').value = JSON.stringify(prefs.rules, undefined, '  ');
   document.getElementById('numbers').value = prefs.numbers;
@@ -43,13 +43,39 @@ async function restore(defaults = false) {
   document.getElementById('whitelist-mode').value = prefs['whitelist-mode'];
   document.getElementById('immediate-action').checked = prefs['immediate-action'];
   document.getElementById('placement').value = prefs['placement'];
+  document.getElementById('scope').value = prefs['scope'].join(', ');
 }
 
 const prepare = str => str.split(/\s*,\s*/)
   .map(s => s.replace('http://', '').replace('https://', '').split('/')[0].trim())
   .filter((h, i, l) => h && l.indexOf(h) === i);
 
-function save() {
+async function save() {
+  const scopes = [];
+  const patterns = document.getElementById('scope').value.split(/\s*,\s*/).filter((s, i, l) => {
+    return s && l.indexOf(s) === i;
+  });
+  for (const pattern of patterns) {
+    try {
+      await chrome.scripting.registerContentScripts([{
+        'id': 'test',
+        'js': ['/data/inject/test.js'],
+        'world': 'MAIN',
+        'matches': [pattern]
+      }]);
+      scopes.push(pattern);
+    }
+    catch (e) {
+      console.error('[Invalid Pattern for Scope]', pattern, e);
+    }
+    await chrome.scripting.unregisterContentScripts({
+      ids: ['test']
+    }).catch(() => {});
+  }
+  if (scopes.length === 0) {
+    scopes.push('*://*/*');
+  }
+
   const settings = {
     'numbers': Math.max(1, document.getElementById('numbers').value),
     'timeout': Math.max(1, document.getElementById('timeout').value),
@@ -71,7 +97,8 @@ function save() {
     'default-action': document.getElementById('default-action').value,
     'whitelist-mode': document.getElementById('whitelist-mode').value,
     'immediate-action': document.getElementById('immediate-action').checked,
-    'placement': document.getElementById('placement').value
+    'placement': document.getElementById('placement').value,
+    'scope': scopes
   };
 
   let orules = '';

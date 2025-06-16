@@ -41,6 +41,13 @@ catch (e) {
 }
 
 /* preferences */
+
+if (window.top === window) {
+  chrome.runtime.sendMessage({
+    'cmd': 'state',
+    'active': true
+  });
+}
 const prefs = window.prefs = new Proxy({}, {
   set(obj, key, value) {
     obj[key] = value;

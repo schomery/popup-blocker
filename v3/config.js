@@ -34,7 +34,8 @@ const config = {
   'target': true,
   'version': null,
   'faqs': true,
-  'last-update': 0
+  'last-update': 0,
+  'scope': ['*://*/*']
 };
 
 config.get = arr => new Promise(resolve => {

@@ -12,7 +12,7 @@ const activate = async () => {
   }
   activate.busy = true;
 
-  const prefs = await config.get(['enabled', 'top-hosts']);
+  const prefs = await config.get(['enabled', 'top-hosts', 'scope']);
   try {
     await chrome.scripting.unregisterContentScripts();
 
@@ -37,12 +37,13 @@ const activate = async () => {
       }
 
       const props = {
-        'matches': ['*://*/*'],
+        'matches': prefs.scope,
         'excludeMatches': th,
         'allFrames': true,
         'matchOriginAsFallback': true,
         'runAt': 'document_start'
       };
+      console.log(props);
 
       await chrome.scripting.registerContentScripts([{
         'id': 'main',
@@ -73,7 +74,7 @@ const activate = async () => {
     await chrome.scripting.unregisterContentScripts();
 
     const props = {
-      'matches': ['*://*/*'],
+      'matches': scope,
       'allFrames': true,
       'matchOriginAsFallback': true,
       'runAt': 'document_start'
@@ -112,7 +113,7 @@ activate.test = async pattern => {
 chrome.runtime.onStartup.addListener(activate);
 chrome.runtime.onInstalled.addListener(activate);
 chrome.storage.onChanged.addListener(ps => {
-  if (ps.enabled || ps['top-hosts']) {
+  if (ps.enabled || ps['top-hosts'] || ps.scope) {
     activate();
   }
 });
