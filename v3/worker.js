@@ -43,7 +43,6 @@ const activate = async () => {
         'matchOriginAsFallback': true,
         'runAt': 'document_start'
       };
-      console.log(props);
 
       await chrome.scripting.registerContentScripts([{
         'id': 'main',
