@@ -119,7 +119,7 @@ chrome.storage.onChanged.addListener(ps => {
 
 chrome.runtime.onMessage.addListener((request, sender, response) => {
   if (request.cmd === 'popup-request') {
-    config.get(['silent', 'issue', 'placement']).then(prefs => {
+    config.get(['silent', 'issue', 'placement', 'width']).then(prefs => {
       if (prefs.issue === false) {
         return;
       }
@@ -137,7 +137,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
             target: {
               tabId: sender.tab.id
             },
-            func: (request, tabId, placement) => {
+            func: (request, tabId, prefs) => {
               /* global scope */
               scope.requests.push(request);
 
@@ -154,8 +154,10 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
                 const container = scope.container = document.createElement('iframe');
                 container.classList.add('pp-blocker');
                 container.style = `
-                  ${placement.includes('t') ? 'top' : 'bottom'}: 5px !important;
-                  ${placement.includes('l') ? 'left' : 'right'}: 5px !important;
+                  --width: ${prefs.width}px;
+
+                  ${prefs.placement.includes('t') ? 'top' : 'bottom'}: 5px !important;
+                  ${prefs.placement.includes('l') ? 'left' : 'right'}: 5px !important;
                 `;
                 container.addEventListener('load', () => {
                   container.ready = true;
@@ -164,14 +166,14 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
                 const args = new URLSearchParams(location.search);
                 args.set('tabId', tabId);
                 args.set('parent', location.href);
-                args.set('placement', placement);
+                args.set('placement', prefs.placement);
                 container.src = chrome.runtime.getURL('/data/ui/index.html') + '?' + args.toString();
                 // do not attach to body to make sure the notification is visible
                 document.documentElement.append(container);
               }
               post();
             },
-            args: [request, sender.tab.id, prefs.placement]
+            args: [request, sender.tab.id, prefs]
           });
         }
       });

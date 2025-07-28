@@ -14,7 +14,7 @@ const icon = async () => {
   const id = prefs.enabled ? 'bg_msg_state_0' : 'bg_msg_state_3';
   chrome.action.setTitle({
     title: chrome.i18n.getMessage(id)
-  })
+  });
 };
 
 /* observe preference changes */
@@ -38,7 +38,6 @@ chrome.storage.onChanged.addListener(prefs => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender) => {
-  console.log(request);
   // update badge counter
   if (request.cmd === 'popup-request') {
     const tabId = sender.tab.id;

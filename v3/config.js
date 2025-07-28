@@ -35,7 +35,8 @@ const config = {
   'version': null,
   'faqs': true,
   'last-update': 0,
-  'scope': ['*://*/*']
+  'scope': ['*://*/*'],
+  'width': 420 // popup width in px
 };
 
 config.get = arr => new Promise(resolve => {

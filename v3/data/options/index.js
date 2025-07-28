@@ -19,7 +19,7 @@ async function restore(defaults = false) {
     'simulate-allow', 'focus-popup', 'faqs', 'popup-hosts',
     'block-page-redirection', 'block-page-redirection-same-origin', 'block-page-redirection-hostnames',
     'top-hosts', 'protocols', 'silent', 'default-action',
-    'whitelist-mode', 'immediate-action', 'rules', 'placement', 'scope'
+    'whitelist-mode', 'immediate-action', 'rules', 'placement', 'scope', 'width'
   ]);
   document.getElementById('rules').value = JSON.stringify(prefs.rules, undefined, '  ');
   document.getElementById('numbers').value = prefs.numbers;
@@ -44,6 +44,7 @@ async function restore(defaults = false) {
   document.getElementById('immediate-action').checked = prefs['immediate-action'];
   document.getElementById('placement').value = prefs['placement'];
   document.getElementById('scope').value = prefs['scope'].join(', ');
+  document.getElementById('width').value = prefs['width'];
 }
 
 const prepare = str => str.split(/\s*,\s*/)
@@ -77,6 +78,7 @@ async function save() {
   }
 
   const settings = {
+    'width': Math.max(300, document.getElementById('width').value),
     'numbers': Math.max(1, document.getElementById('numbers').value),
     'timeout': Math.max(1, document.getElementById('timeout').value),
     'countdown': Math.max(0, document.getElementById('countdown').value),

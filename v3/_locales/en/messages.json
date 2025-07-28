@@ -143,6 +143,9 @@
   "options_item48": {
     "message": "Read documentation on how to configure extension's scope."
   },
+  "options_item49": {
+    "message": "Width of the popup (in pixels)"
+  },
   "options_support": {
     "message": "Support Development"
   },

@@ -4,7 +4,7 @@
     z-index: calc(infinity) !important;
     color-scheme: light !important;
     position: fixed !important;
-    width: 420px !important;
+    width: var(--width, 420px) !important;
     max-width: 80vw !important;
     height: var(--height, 65px) !important;
     background: transparent !important;
