@@ -51,7 +51,7 @@ const activate = async () => {
         ...props
       }, {
         'id': 'isolated',
-        'js': ['/data/inject/block/isolated.js'],
+        'js': ['/config.js', '/data/inject/block/isolated.js'],
         'css': ['/data/inject/block/isolated.css'],
         'world': 'ISOLATED',
         ...props
@@ -85,7 +85,7 @@ const activate = async () => {
       ...props
     }, {
       'id': 'isolated',
-      'js': ['/data/inject/block/isolated.js'],
+      'js': ['/config.js', '/data/inject/block/isolated.js'],
       'world': 'ISOLATED',
       ...props
     }]);
@@ -111,7 +111,7 @@ activate.test = async pattern => {
 };
 chrome.runtime.onStartup.addListener(activate);
 chrome.runtime.onInstalled.addListener(activate);
-chrome.storage.onChanged.addListener(ps => {
+config.changed(ps => {
   if (ps.enabled || ps['top-hosts'] || ps.scope) {
     activate();
   }
@@ -296,7 +296,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       const {hostname} = new URL(mode === 'popup-hosts' ? request.url : request.parent);
       prefs[mode].push(hostname);
       prefs[mode] = prefs[mode].filter((h, i, l) => l.indexOf(h) === i);
-      chrome.storage.local.set({
+      config.set({
         [mode]: prefs[mode]
       });
       if (mode === 'top-hosts') {

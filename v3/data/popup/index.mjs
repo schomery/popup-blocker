@@ -25,7 +25,7 @@ config.get(['enabled']).then(prefs => {
   }
 });
 document.getElementById('global').onchange = e => {
-  chrome.storage.local.set({
+  config.set({
     enabled: e.target.checked
   });
   document.getElementById('page').disabled = e.target.checked === false;
@@ -117,27 +117,27 @@ document.getElementById('page').onchange = async e => {
     prefs['top-hosts'].push(d);
     prefs['top-hosts'] = prefs['top-hosts'].filter((s, i, l) => s && l.indexOf(s) === i);
   }
-  chrome.storage.local.set(prefs, () => chrome.tabs.reload());
+  config.set(prefs).then(() => chrome.tabs.reload());
 };
 
 config.get(['immediate-action']).then(prefs => {
   document.getElementById('immediate-action').checked = prefs['immediate-action'];
 });
-document.getElementById('immediate-action').onchange = e => chrome.storage.local.set({
+document.getElementById('immediate-action').onchange = e => config.set({
   'immediate-action': e.target.checked
 });
 
 config.get(['block-page-redirection']).then(prefs => {
   document.getElementById('block-page-redirection').checked = prefs['block-page-redirection'];
 });
-document.getElementById('block-page-redirection').onchange = e => chrome.storage.local.set({
+document.getElementById('block-page-redirection').onchange = e => config.set({
   'block-page-redirection': e.target.checked
 });
 
 config.get(['issue']).then(prefs => {
   document.getElementById('issue').checked = prefs.issue;
 });
-document.getElementById('issue').onchange = e => chrome.storage.local.set({
+document.getElementById('issue').onchange = e => config.set({
   'issue': e.target.checked
 });
 

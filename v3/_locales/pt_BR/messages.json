@@ -137,6 +137,15 @@
   "options_item46": {
     "message": "Inferior direito"
   },
+  "options_item47": {
+    "message": "Escopo de proteção"
+  },
+  "options_item48": {
+    "message": "Leia a documentação sobre como configurar o escopo da extensão."
+  },
+  "options_item49": {
+    "message": "Largura do pop-up (em pixels)"
+  },
   "options_support": {
     "message": "Apoie o desenvolvimento"
   },
@@ -169,6 +178,9 @@
   },
   "options_t_3": {
     "message": "Um objeto JSON que orienta a extensão na execução de uma ação específica em resposta a uma solicitação pop-up, determinada por sua URL. Leia a página de perguntas frequentes para obter exemplos."
+  },
+  "options_t_4": {
+    "message": "Insira uma lista de padrões separados por vírgulas para definir o escopo global. Altere isso somente se souber o que está fazendo, pois valores incorretos podem danificar a extensão. Leia a página de perguntas frequentes para mais informações."
   },
   "ui_msg": {
     "message": "O pop-up foi solicitado por"
@@ -206,17 +218,20 @@
   "ui_button_trust_confirm": {
     "message": "Clique para confirmar"
   },
+  "bg_msg_state_0": {
+    "message": "O Popup Blocker está habilitado globalmente, mas não está ativo nesta aba, provavelmente porque é uma página interna, fora do escopo ou ainda está carregando."
+  },
   "bg_msg_state_1": {
-    "message": "Popup Blocker (strict) está globalmente habilitado e protege esta aba"
+    "message": "O Popup Blocker está habilitado globalmente e protege esta aba"
   },
   "bg_msg_state_2": {
-    "message": "Popup Blocker (strict) está ativado globalmente, mas não protege esta aba"
+    "message": "O Popup Blocker está ativado globalmente, mas não protege esta aba"
   },
   "bg_msg_state_3": {
-    "message": "Popup Blocker (strict) está desabilitado globalmente e não protege esta aba"
+    "message": "O Popup Blocker está desativado globalmente e não protege esta aba"
   },
   "bg_msg_state_4": {
-    "message": "Popup Blocker (strict) está globalmente desativado, mas protege esta aba"
+    "message": "O Popup Blocker está desabilitado globalmente, mas protege esta aba"
   },
   "bg_msg_reg": {
     "message": "O registro do filtro de bloqueio falhou devido a uma regra formatada incorretamente. Use a página de opções para corrigi-lo."

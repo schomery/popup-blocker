@@ -18,7 +18,7 @@ const icon = async () => {
 };
 
 /* observe preference changes */
-chrome.storage.onChanged.addListener(prefs => {
+config.changed(prefs => {
   if (prefs.badge && prefs.badge.newValue === false) {
     chrome.tabs.query({}, tabs => tabs.forEach(tab => chrome.action.setBadgeText({
       tabId: tab.id,

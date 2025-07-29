@@ -1,4 +1,4 @@
-/* global navigation */
+/* global navigation, config */
 
 /* Checks
   1.
@@ -70,7 +70,7 @@ try { // SVG documents
   port.dataset.enabled = true;
 }
 catch (e) {}
-chrome.storage.onChanged.addListener(ps => {
+config.changed(ps => {
   if (ps.enabled) {
     prefs.enabled = ps.enabled.newValue;
   }
@@ -131,7 +131,7 @@ if (typeof navigation !== 'undefined' && window.top === window) {
     redirect.href = navigateEvent.destination.url;
   });
 }
-chrome.storage.local.get(redirect.prefs, prefs => Object.assign(redirect.prefs, prefs));
+config.update(redirect.prefs);
 
 /* recording window.open */
 const record = e => {
@@ -315,8 +315,8 @@ blocker.policy.configs = {
   'protocols': ['magnet:'],
   'popup-hosts': ['google.com', 'bing.com', 't.co', 'twitter.com', 'disqus.com', 'login.yahoo.com', 'mail.google.com']
 };
-chrome.storage.local.get(blocker.policy.configs, ps => Object.assign(blocker.policy.configs, ps));
-chrome.storage.onChanged.addListener(ps => {
+config.update(blocker.policy.configs);
+config.changed(ps => {
   Object.keys(ps).filter(k => k in blocker.policy.configs).forEach(k => blocker.policy.configs[k] = ps[k].newValue);
 });
 

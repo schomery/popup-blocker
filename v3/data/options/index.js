@@ -114,7 +114,7 @@ async function save() {
 
   localStorage.setItem('user-styling', document.getElementById('user-styling').value || '');
 
-  chrome.storage.local.set(settings, () => {
+  config.set(settings).then(() => {
     const status = document.getElementById('status');
     status.textContent = chrome.i18n.getMessage('options_msg');
     restore();
@@ -138,7 +138,8 @@ document.addEventListener('click', e => {
 
 document.getElementById('reset').addEventListener('click', () => restore(true));
 document.getElementById('export').addEventListener('click', () => {
-  chrome.storage.local.get(null, prefs => {
+  // get all stored prefs
+  config.get([]).then(prefs => {
     const text = JSON.stringify(prefs, null, '\t');
     const blob = new Blob([text], {type: 'application/json'});
     const objectURL = URL.createObjectURL(blob);
@@ -172,7 +173,7 @@ document.getElementById('import').addEventListener('click', () => {
       fReader.onloadend = event => {
         fileInput.remove();
         const json = JSON.parse(event.target.result);
-        chrome.storage.local.set(json, () => chrome.runtime.reload());
+        config.set(json).then(() => chrome.runtime.reload());
       };
       fReader.readAsText(file, 'utf-8');
     }

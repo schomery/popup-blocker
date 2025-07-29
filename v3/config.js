@@ -39,10 +39,15 @@ const config = {
   'width': 420 // popup width in px
 };
 
-config.get = arr => new Promise(resolve => {
-  const ps = arr.reduce((p, c) => {
-    p[c] = config[c];
-    return p;
-  }, {});
-  chrome.storage.local.get(ps, resolve);
-});
+config.get = keys => {
+  const ps = keys.length ? {} : null;
+  for (const key of keys) {
+    ps[key] = config[key];
+  }
+  return chrome.storage.local.get(ps);
+};
+config.update = prefs => {
+  chrome.storage.local.get(prefs).then(ps => Object.assign(prefs, ps));
+};
+config.set = prefs => chrome.storage.local.set(prefs);
+config.changed = c => chrome.storage.onChanged.addListener(c);
