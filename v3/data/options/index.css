@@ -21,7 +21,8 @@ input[type=button] {
 select,
 textarea,
 button,
-input {
+input[type=number],
+input[type=text] {
   font-size: inherit;
   border: var(--border);
 }
@@ -83,6 +84,21 @@ label[for="wot"] {
 .bc {
   display: flex;
   gap: 5px;
+}
+
+.ngx {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  padding-block: 5px;
+
+  label {
+    display: flex;
+    align-items: center;
+  }
+  :last-child {
+    justify-self: end;
+  }
 }
 
 @supports (-webkit-hyphens: none) and (not (-moz-appearance: none)) {

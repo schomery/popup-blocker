@@ -146,6 +146,9 @@
   "options_item49": {
     "message": "Width of the popup (in pixels)"
   },
+  "options_sync": {
+    "message": "Sync this Preference"
+  },
   "options_support": {
     "message": "Support Development"
   },

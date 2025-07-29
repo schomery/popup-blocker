@@ -14,6 +14,15 @@
 async function restore(defaults = false) {
   document.getElementById('user-styling').value = localStorage.getItem('user-styling') || '';
 
+  // sync
+  await config.sync();
+  for (const key of config.synced) {
+    const e = document.querySelector(`input[type=checkbox][value="${key}"]`);
+    if (e) {
+      e.checked = true;
+    }
+  }
+
   const prefs = defaults ? config : await config.get([
     'numbers', 'timeout', 'countdown', 'badge', 'badge-color', 'domain',
     'simulate-allow', 'focus-popup', 'faqs', 'popup-hosts',
@@ -21,6 +30,7 @@ async function restore(defaults = false) {
     'top-hosts', 'protocols', 'silent', 'default-action',
     'whitelist-mode', 'immediate-action', 'rules', 'placement', 'scope', 'width'
   ]);
+
   document.getElementById('rules').value = JSON.stringify(prefs.rules, undefined, '  ');
   document.getElementById('numbers').value = prefs.numbers;
   document.getElementById('timeout').value = prefs.timeout;
@@ -52,6 +62,12 @@ const prepare = str => str.split(/\s*,\s*/)
   .filter((h, i, l) => h && l.indexOf(h) === i);
 
 async function save() {
+  // first update synced storage (use chrome.storage)
+  config.synced = [...document.querySelectorAll('input[type=checkbox][name=synced]:checked')].map(e => e.value);
+  await chrome.storage.local.set({
+    synced: config.synced
+  });
+
   const scopes = [];
   const patterns = document.getElementById('scope').value.split(/\s*,\s*/).filter((s, i, l) => {
     return s && l.indexOf(s) === i;

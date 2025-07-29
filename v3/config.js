@@ -39,15 +39,107 @@ const config = {
   'width': 420 // popup width in px
 };
 
-config.get = keys => {
-  const ps = keys.length ? {} : null;
-  for (const key of keys) {
-    ps[key] = config[key];
-  }
-  return chrome.storage.local.get(ps);
-};
-config.update = prefs => {
-  chrome.storage.local.get(prefs).then(ps => Object.assign(prefs, ps));
-};
-config.set = prefs => chrome.storage.local.set(prefs);
+{
+  // get the list of preferences that need to be read from chrome.sync storage
+  config.sync = async () => {
+    if ('synced' in config) {
+      return;
+    }
+    const prefs = await chrome.storage.local.get({
+      synced: []
+    });
+    config.synced = prefs.synced;
+  };
+
+  config.get = async keys => {
+    await config.sync();
+
+    if (keys.length) {
+      const ps = {};
+
+      for (const key of keys) {
+        if (config.synced.includes(key)) {
+          ps.sync = ps.sync || {};
+          ps.sync[key] = config[key];
+        }
+        else {
+          ps.local = ps.local || {};
+          ps.local[key] = config[key];
+        }
+      }
+
+      const prefs = {};
+      if ('local' in ps) {
+        const one = await chrome.storage.local.get(ps.local);
+        Object.assign(prefs, one);
+      }
+      if ('sync' in ps) {
+        const two = await chrome.storage.sync.get(ps.sync);
+        Object.assign(prefs, two);
+      }
+      return prefs;
+    }
+    // get all stored preference
+    else {
+      const one = await chrome.storage.local.get(null);
+      const two = await chrome.storage.sync.get(null);
+
+      for (const key of config.synced) {
+        one[key] = two[key] || one[key];
+      }
+
+      return one;
+    }
+  };
+  config.update = async prefs => {
+    await config.sync();
+
+    const ps = {};
+
+    for (const [key, value] of Object.entries(prefs)) {
+      if (config.synced.includes(key)) {
+        ps.sync = ps.sync || {};
+        ps.sync[key] = value;
+      }
+      else {
+        ps.local = ps.local || {};
+        ps.local[key] = value;
+      }
+    }
+    if ('local' in ps) {
+      const one = await chrome.storage.local.get(ps.local);
+      Object.assign(prefs, one);
+    }
+    if ('sync' in ps) {
+      const two = await chrome.storage.sync.get(ps.sync);
+      Object.assign(prefs, two);
+    }
+  };
+  config.set = async prefs => {
+    await config.sync();
+
+    const ps = {};
+
+    for (const [key, value] of Object.entries(prefs)) {
+      if (config.synced.includes(key)) {
+        ps.sync = ps.sync || {};
+        ps.sync[key] = value;
+      }
+      else {
+        ps.local = ps.local || {};
+        ps.local[key] = value;
+      }
+    }
+
+    if ('local' in ps) {
+      await chrome.storage.local.set(ps.local);
+    }
+    if ('sync' in ps) {
+      await chrome.storage.sync.set(ps.sync);
+    }
+
+    return;
+  };
+}
+
 config.changed = c => chrome.storage.onChanged.addListener(c);
