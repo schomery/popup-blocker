@@ -21,14 +21,16 @@ for (const a of [...document.querySelectorAll('[data-href]')]) {
 config.get(['enabled']).then(prefs => {
   document.getElementById('global').checked = prefs.enabled;
   if (prefs.enabled === false) {
-    document.getElementById('page').disabled = true;
+    document.getElementById('page').disabled =
+    document.getElementById('subs').disabled = true;
   }
 });
 document.getElementById('global').onchange = e => {
   config.set({
     enabled: e.target.checked
   });
-  document.getElementById('page').disabled = e.target.checked === false;
+  document.getElementById('page').disabled =
+  document.getElementById('subs').disabled = e.target.checked === false;
 };
 
 const page = {};
@@ -90,9 +92,11 @@ chrome.tabs.query({
           prefs['top-hosts'].some(h => match(h, page.href)) ? false : true;
       }
     }).catch(() => {
-      document.getElementById('page').disabled = true;
+      document.getElementById('page').disabled =
+      document.getElementById('subs').disabled = true;
       // force disabled
       document.getElementById('page').classList.add('disabled');
+      document.getElementById('subs').classList.add('disabled');
     });
   }
 });
@@ -100,12 +104,28 @@ chrome.tabs.query({
 document.getElementById('page').onchange = async e => {
   const prefs = await config.get(['top-hosts']);
 
-  const d = tldjs.getDomain(page.hostname) || page.hostname;
+  const rms = new Set();
+  rms.add(tldjs.getDomain(page.hostname) || page.hostname);
+
+  if (document.getElementById('subs').checked) {
+    try {
+      const r = await chrome.scripting.executeScript({
+        target: {
+          tabId: page.tabId,
+          allFrames: true
+        },
+        func: () => location.hostname
+      });
+      for (const o of r) {
+        if (o?.result) {
+          rms.add(tldjs.getDomain(o.result) || o.result);
+        }
+      }
+    }
+    catch (e) {}
+  }
 
   if (e.target.checked) {
-    const rms = new Set();
-    rms.add(d);
-
     for (const hostname of prefs['top-hosts']) {
       if (match(hostname, page.href)) {
         rms.add(hostname);
@@ -114,7 +134,9 @@ document.getElementById('page').onchange = async e => {
     prefs['top-hosts'] = prefs['top-hosts'].filter(s => rms.has(s) === false);
   }
   else {
-    prefs['top-hosts'].push(d);
+    for (const d of rms) {
+      prefs['top-hosts'].push(d);
+    }
     prefs['top-hosts'] = prefs['top-hosts'].filter((s, i, l) => s && l.indexOf(s) === i);
   }
   config.set(prefs).then(() => chrome.tabs.reload());

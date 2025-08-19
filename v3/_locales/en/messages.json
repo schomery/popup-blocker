@@ -245,6 +245,9 @@
   "pp_enabled_c": {
     "message": "Enabled (This Domain)"
   },
+  "pp_enabled_cf": {
+    "message": "Include/Exclude sub-frames"
+  },
   "pp_silent": {
     "message": "Display Notifications"
   },
