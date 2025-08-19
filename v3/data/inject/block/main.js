@@ -49,33 +49,45 @@
       };
     };
     /* simulate a window */
-    const simulate = (id, root = {}, tree = []) => new Proxy(root, { // window.location.replace
-      get(obj, key) {
-        return typeof root[key] === 'function' ? function(...args) {
-          post('record', {
-            id,
-            tree,
-            action: {
-              method: key,
-              args
-            }
-          });
-        } : simulate(id, root[key], [...tree, key]);
-      },
-      set(obj, key, value) {
-        if (value) {
-          post('record', {
-            id,
-            tree,
-            action: {
-              value,
-              prop: key
-            }
-          });
+    const simulate = (id, root = {}, tree = []) => { // window.location.replace
+      return new Proxy(root, {
+        get(obj, key, receiver) {
+          if (typeof root[key] === 'function') {
+            return function(...args) {
+              post('record', {
+                id,
+                tree,
+                action: {
+                  method: key,
+                  args
+                }
+              });
+            };
+          }
+          else if (typeof root[key] === 'object') {
+            return simulate(id, root[key], [...tree, key]);
+          }
+          else {
+            const value = obj[key];
+            console.info('[Unsupported Simulation]', key, value);
+            return value;
+          }
+        },
+        set(obj, key, value) {
+          if (value) {
+            post('record', {
+              id,
+              tree,
+              action: {
+                value,
+                prop: key
+              }
+            });
+          }
+          return true;
         }
-        return true;
-      }
-    });
+      });
+    };
     const protected = new WeakMap(); // keep reference of all protected window objects
 
     /* blocker */

@@ -146,6 +146,9 @@
   "options_item49": {
     "message": "Largura do pop-up (em pixels)"
   },
+  "options_sync": {
+    "message": "Sincronizar esta preferência"
+  },
   "options_support": {
     "message": "Apoie o desenvolvimento"
   },

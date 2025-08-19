@@ -22,6 +22,9 @@
 
   7.
     https://patrickhlauke.github.io/recaptcha/
+
+  8. simulation
+    https://rds.live/realitatea-tv/ -> scroll to player. use "Sursa 3" player
 */
 
 // we need to define global variables. Using self.scope may conflict with an element on page
