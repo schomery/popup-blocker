@@ -135,6 +135,14 @@
       HTMLAnchorElement.prototype.dispatchEvent = new Proxy(HTMLAnchorElement.prototype.dispatchEvent, {
         apply(target, self, args) {
           const ev = args[0];
+
+          // do not block on CustomEvents dispatched on "a" element that are not typed "click"
+          if (ev) {
+            if (['click', 'auxclick', 'dblclick', 'keydown'].includes(ev.type) === false) {
+              return Reflect.apply(target, self, args);
+            }
+          }
+
           const {block} = policy('dynamic.a.dispatch', self, ev);
           return block ? false : Reflect.apply(target, self, args);
         }

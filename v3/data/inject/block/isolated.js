@@ -255,6 +255,9 @@ blocker.policy = request => {
   if (request.tag === 'A' && request.download) {
     block = false;
   }
+
+  console.log(request, block);
+
   // fixing
   if (block) {
     // fix relative href
