@@ -4,11 +4,12 @@
   --bg: #fff19d;
   --bd: #ebde8f;
   --bda: #ebb28f;
+  --bt: #fffadd;
 }
 body {
   margin: 0;
   overflow: hidden;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif;
   font-size: 13px;
   background-color: transparent;
   padding: 8px 8px 0 0;
@@ -86,7 +87,6 @@ input[type=button][data-default=true] {
   border: solid 2px var(--bg);
   border-radius: 50%;
   background-color: #fc0d1b;
-  color: #000;
   color: #fff;
   width: 16px;
   height: 16px;
@@ -116,4 +116,12 @@ input[type=button][data-default=true] {
   align-items: center;
   justify-content: center;
   font-size: 80%;
+}
+
+.ppblocker-div a[data-id="info"] {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
 }

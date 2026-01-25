@@ -256,8 +256,6 @@ blocker.policy = request => {
     block = false;
   }
 
-  console.log(request, block);
-
   // fixing
   if (block) {
     // fix relative href

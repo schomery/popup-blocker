@@ -192,8 +192,9 @@ const onPopupRequest = async request => {
     div.dataset.page = page;
     div.dataset.hostname = request.hostname;
 
-    const p = clone.querySelector('[data-id=info]');
-    div.title = p.textContent = (request.href || 'about:blank');
+    const a = clone.querySelector('[data-id=info]');
+    a.onclick = e => e.preventDefault();
+    div.title = a.href = a.textContent = (request.href || 'about:blank');
     // do we have an action for this popup
 
     if (page) {
