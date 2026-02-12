@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    let seconds = 5;
+
+    function updateTimer() {
+      const timerElement = document.getElementById("timer");
+      timerElement.textContent = seconds;
+
+      if (seconds === 0) {
+        window.location.href = "https://example.com";
+      }
+
+      seconds--;
+    }
+
+    window.onload = function () {
+      updateTimer(); // initial display
+      setInterval(updateTimer, 1000);
+    };
+  </script>
+</head>
+<body>
+  <h1>Redirecting to example.com in <span id="timer">5</span> seconds...</h1>
+</body>
+</html>
+

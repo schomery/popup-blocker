@@ -13,7 +13,7 @@ for (const a of [...document.querySelectorAll('[data-href]')]) {
     e.value = chrome.i18n.getMessage(e.dataset.i18n);
   }
   else {
-    e.textContent = chrome.i18n.getMessage(e.dataset.i18n);
+    e[e.dataset.i18nv || 'textContent'] = chrome.i18n.getMessage(e.dataset.i18n);
   }
 });
 
@@ -149,12 +149,27 @@ document.getElementById('immediate-action').onchange = e => config.set({
   'immediate-action': e.target.checked
 });
 
-config.get(['block-page-redirection']).then(prefs => {
+config.get(['block-page-redirection', 'block-automated-redirection']).then(prefs => {
   document.getElementById('block-page-redirection').checked = prefs['block-page-redirection'];
+  document.getElementById('block-automated-redirection').checked = prefs['block-automated-redirection'];
 });
 document.getElementById('block-page-redirection').onchange = e => config.set({
   'block-page-redirection': e.target.checked
 });
+document.getElementById('block-automated-redirection').onchange = e => {
+  if (e.target.checked) {
+    document.getElementById('block-page-redirection').checked = true;
+    config.set({
+      'block-page-redirection': true,
+      'block-automated-redirection': true
+    });
+  }
+  else {
+    config.set({
+      'block-automated-redirection': false
+    });
+  }
+};
 
 config.get(['issue']).then(prefs => {
   document.getElementById('issue').checked = prefs.issue;

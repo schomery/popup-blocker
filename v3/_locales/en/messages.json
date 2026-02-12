@@ -146,6 +146,9 @@
   "options_item49": {
     "message": "Width of the popup (in pixels)"
   },
+  "options_item50": {
+    "message": "Block automated page redirections without user interaction"
+  },
   "options_sync": {
     "message": "Sync this Preference"
   },
@@ -280,5 +283,14 @@
   },
   "pp_health": {
     "message": "The background script seems to be unresponsive. Do you want to try restarting the extension?"
+  },
+  "pp_block_redirect": {
+    "message": "Light"
+  },
+  "pp_block_automated": {
+    "message": "Strict"
+  },
+  "pp_redirect_info": {
+    "message": "Light mode prevents redirects for 2 seconds after user interaction. Strict mode also blocks non-interactive page redirects."
   }
 }

@@ -66,6 +66,18 @@ p {
   display: grid;
   grid-gap: 5px 0;
   grid-template-columns: 1fr min-content;
+  input[type=checkbox] {
+    justify-self: end;
+  }
+  .pack {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+
+    #block-automated-redirection {
+      margin-left: 10px;
+    }
+  }
 }
 .col3 {
   display: grid;

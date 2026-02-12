@@ -26,7 +26,8 @@ async function restore(defaults = false) {
   const prefs = defaults ? config : await config.get([
     'numbers', 'timeout', 'countdown', 'badge', 'badge-color', 'domain',
     'simulate-allow', 'focus-popup', 'faqs', 'popup-hosts',
-    'block-page-redirection', 'block-page-redirection-same-origin', 'block-page-redirection-hostnames',
+    'block-page-redirection', 'block-page-redirection-same-origin',
+    'block-page-redirection-hostnames', 'block-automated-redirection',
     'top-hosts', 'protocols', 'silent', 'default-action',
     'whitelist-mode', 'immediate-action', 'rules', 'placement', 'scope', 'width'
   ]);
@@ -43,6 +44,7 @@ async function restore(defaults = false) {
   document.getElementById('faqs').checked = prefs.faqs;
   document.getElementById('block-page-redirection').checked = prefs['block-page-redirection'];
   document.getElementById('block-page-redirection-same-origin').checked = prefs['block-page-redirection-same-origin'];
+  document.getElementById('block-automated-redirection').checked = prefs['block-automated-redirection'];
   document.getElementById('block-page-redirection-hostnames').value =
     prefs['block-page-redirection-hostnames'].join(', ');
   document.getElementById('popup-hosts').value = prefs['popup-hosts'].join(', ');
@@ -106,6 +108,7 @@ async function save() {
     'faqs': document.getElementById('faqs').checked,
     'block-page-redirection': document.getElementById('block-page-redirection').checked,
     'block-page-redirection-same-origin': document.getElementById('block-page-redirection-same-origin').checked,
+    'block-automated-redirection': document.getElementById('block-automated-redirection').checked,
     'block-page-redirection-hostnames': prepare(document.getElementById('block-page-redirection-hostnames').value),
     'popup-hosts': prepare(document.getElementById('popup-hosts').value),
     'top-hosts': prepare(document.getElementById('top-hosts').value),

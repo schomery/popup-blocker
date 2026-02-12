@@ -29,6 +29,7 @@ const config = {
   'rules': {},
   'issue': true,
   'block-page-redirection': false,
+  'block-automated-redirection': false,
   'block-page-redirection-hostnames': [],
   'block-page-redirection-same-origin': true,
   'target': true,

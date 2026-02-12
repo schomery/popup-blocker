@@ -25,6 +25,9 @@
 
   8. simulation
     https://rds.live/realitatea-tv/ -> scroll to player. use "Sursa 3" player
+
+  9. Maybe popups and page redirects
+    aHR0cHM6Ly9kb2RvLXR2LmxpdmUv
 */
 
 // we need to define global variables. Using self.scope may conflict with an element on page
@@ -86,6 +89,7 @@ const records = {};
 const redirect = {
   prefs: {
     'block-page-redirection': false,
+    'block-automated-redirection': false,
     'block-page-redirection-period': 2000,
     'block-page-redirection-hostnames': [],
     'block-page-redirection-same-origin': true
@@ -118,6 +122,7 @@ const redirect = {
     if (window.top === window) {
       if (redirect.prefs && redirect.prefs['block-page-redirection']) {
         addEventListener('beforeunload', redirect.beforeunload, true);
+
         clearTimeout(redirect.timeout);
         redirect.timeout = setTimeout(redirect.release, redirect.prefs['block-page-redirection-period']);
       }
@@ -132,6 +137,13 @@ const redirect = {
 if (typeof navigation !== 'undefined' && window.top === window) {
   navigation.addEventListener('navigate', navigateEvent => {
     redirect.href = navigateEvent.destination.url;
+
+    // example aHR0cHM6Ly9kb2RvLXR2LmxpdmUv
+    if (redirect.prefs['block-automated-redirection'] === true) {
+      if (navigateEvent.userInitiated === false) { // block automated redirects
+        redirect.block();
+      }
+    }
   });
 }
 config.update(redirect.prefs);
