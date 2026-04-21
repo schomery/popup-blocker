@@ -1,0 +1,284 @@
+{
+   "app_description": {
+      "message": "Bloquea de forma estricta todas las solicitudes emergentes de cualquier sitio web"
+   },
+   "bg_msg_reg": {
+      "message": "El registro del filtro de bloqueo ha fallado debido a una regla con formato incorrecto. Utiliza la página de opciones para solucionarlo."
+   },
+   "bg_msg_state_0": {
+      "message": "El bloqueador de ventanas emergentes está habilitado globalmente, pero no está activo en esta pestaña, probablemente porque se trata de una página interna, fuera del rango o aún se está cargando."
+   },
+   "bg_msg_state_1": {
+      "message": "El bloqueador de ventanas emergentes está habilitado globalmente y protege esta pestaña"
+   },
+   "bg_msg_state_2": {
+      "message": "El bloqueador de ventanas emergentes está habilitado globalmente, pero no protege esta pestaña"
+   },
+   "bg_msg_state_3": {
+      "message": "El bloqueador de ventanas emergentes está desactivado globalmente y no protege esta pestaña"
+   },
+   "bg_msg_state_4": {
+      "message": "El bloqueador de ventanas emergentes está desactivado globalmente, pero protege esta pestaña"
+   },
+   "context_item2": {
+      "message": "Permitir la última solicitud emergente"
+   },
+   "context_item3": {
+      "message": "Rechazar la última solicitud emergente"
+   },
+   "context_item4": {
+      "message": "Abrir la última solicitud emergente en una pestaña en segundo plano"
+   },
+   "context_item5": {
+      "message": "Redirigir la pestaña actual a la última solicitud emergente"
+   },
+   "context_item6": {
+      "message": "Mover el foco de la página a la última solicitud emergente"
+   },
+   "options_export": {
+      "message": "Exportar Preferencias"
+   },
+   "options_import": {
+      "message": "Importar Preferencias"
+   },
+   "options_item1": {
+      "message": "Número máximo de solicitudes emergentes para una sola página"
+   },
+   "options_item10": {
+      "message": "Usar el número cero para desactivar la cuenta atrás y realizar la acción anterior."
+   },
+   "options_item13": {
+      "message": "Fuentes de la lista negra (modo de función inversa):"
+   },
+   "options_item15": {
+      "message": "Prevenir el redireccionamiento de la página durante 2 segundos después de solicitar una ventana emergente"
+   },
+   "options_item17": {
+      "message": "Acción predeterminada cuando se solicita una ventana emergente"
+   },
+   "options_item18": {
+      "message": "No hacer nada"
+   },
+   "options_item19": {
+      "message": "Rechazar solicitud"
+   },
+   "options_item2": {
+      "message": "Tiempo de espera para mostrar cada ventana emergente (en segundos)"
+   },
+   "options_item20": {
+      "message": "Abrir en segundo plano"
+   },
+   "options_item21": {
+      "message": "Redireccionar página"
+   },
+   "options_item22": {
+      "message": "Color de fondo del distintivo"
+   },
+   "options_item23": {
+      "message": "Ignorar las notificaciones emergentes cuando sea posible (no recomendado)"
+   },
+   "options_item25": {
+      "message": "Descripciones"
+   },
+   "options_item26": {
+      "message": "Mostrar la página de preguntas frecuentes en actualizaciones"
+   },
+   "options_item27": {
+      "message": "No bloquear estos protocolos:"
+   },
+   "options_item28": {
+      "message": "Permitir la redirección de páginas a los siguientes orígenes:"
+   },
+   "options_item29": {
+      "message": "Permitir la redirección de páginas al mismo origen"
+   },
+   "options_item3": {
+      "message": "No bloquear las solicitudes emergentes del mismo origen"
+   },
+   "options_item30": {
+      "message": "Simular el botón «Permitir» para que el bloqueador de ventanas emergentes interno de tu navegador no bloquee estas solicitudes"
+   },
+   "options_item31": {
+      "message": "Cuando se pulsa el botón \"Confiar\":"
+   },
+   "options_item32": {
+      "message": "No bloquear más el origen de la ventana emergente"
+   },
+   "options_item33": {
+      "message": "Permitir que la página de nivel superior muestre ventanas emergentes"
+   },
+   "options_item34": {
+      "message": "Silenciar notificaciones en estos nombres de host:"
+   },
+   "options_item35": {
+      "message": "Aplica las siguientes reglas CSS personalizadas a la ventana emergente:"
+   },
+   "options_item36": {
+      "message": "Habilitar la detección agresiva de IFrames estáticos"
+   },
+   "options_item37": {
+      "message": "Cuando este modo está habilitado, la extensión instala un observador de mutaciones para supervisar los IFrames estáticos con atributos src 'JavaScript:'. Esto mejora la capacidad de bloqueo, pero tiene inconvenientes en cuanto al rendimiento."
+   },
+   "options_item38": {
+      "message": "Redirección de página"
+   },
+   "options_item39": {
+      "message": "Otros"
+   },
+   "options_item40": {
+      "message": "Enfocar la ventana emergente recién generada. A continuación, puedes utilizar atajos o la tecla Escape para ocultarla"
+   },
+   "options_item41": {
+      "message": "Acción sobre una nueva solicitud emergente"
+   },
+   "options_item42": {
+      "message": "Posición de la ventana emergente en la página"
+   },
+   "options_item43": {
+      "message": "Arriba a la izquierda"
+   },
+   "options_item44": {
+      "message": "Arriba a la derecha"
+   },
+   "options_item45": {
+      "message": "Abajo a la izquierda"
+   },
+   "options_item46": {
+      "message": "Abajo a la derecha"
+   },
+   "options_item47": {
+      "message": "Alcance de la protección"
+   },
+   "options_item48": {
+      "message": "Lee la documentación sobre cómo configurar el alcance de la extensión."
+   },
+   "options_item49": {
+      "message": "Ancho de la ventana emergente (en píxeles)"
+   },
+   "options_item5": {
+      "message": "Mostrar el número total de solicitudes bloqueadas en el icono de la barra de herramientas"
+   },
+   "options_item6": {
+      "message": "No bloquear las ventanas emergentes de estos orígenes:"
+   },
+   "options_item7": {
+      "message": "No bloquear ninguna ventana emergente en estas páginas:"
+   },
+   "options_item8": {
+      "message": "Para que este cambio surta efecto, actualiza la pestaña."
+   },
+   "options_item9": {
+      "message": "Cuenta atrás para realizar la última acción (en segundos)"
+   },
+   "options_msg": {
+      "message": "Las opciones están guardadas"
+   },
+   "options_page": {
+      "message": "Página de preguntas frecuentes"
+   },
+   "options_reset": {
+      "message": "Restablecer a los valores predeterminados"
+   },
+   "options_review": {
+      "message": "Reseña de YouTube"
+   },
+   "options_save": {
+      "message": "Guardar Opciones"
+   },
+   "options_support": {
+      "message": "Apoyar el Desarrollo"
+   },
+   "options_sync": {
+      "message": "Sincronizar estas Preferencias"
+   },
+   "options_t_1": {
+      "message": "Lista de nombres de host separados por comas (ej.: www.google.com, www.yahoo.com)"
+   },
+   "options_t_2": {
+      "message": "Lista de dominios separados por comas (ej.: google.com, yahoo.com)"
+   },
+   "options_t_3": {
+      "message": "Un objeto JSON que guía a la extensión en la ejecución de una acción específica en respuesta a una solicitud emergente, determinada por su URL. Lee la página de preguntas frecuentes para ver ejemplos."
+   },
+   "options_t_4": {
+      "message": "Introduce una lista de patrones separados por comas para definir el alcance global. Solo cambia esto si sabes lo que estás haciendo, ya que unos valores incorrectos pueden dañar la extensión. Lee la página de preguntas frecuentes para obtener más información"
+   },
+   "pp_allow": {
+      "message": "Permitir"
+   },
+   "pp_block": {
+      "message": "Bloquear"
+   },
+   "pp_enabled_c": {
+      "message": "Habilitado (Este Dominio)"
+   },
+   "pp_enabled_cf": {
+      "message": "Incluir/Excluir submarcos"
+   },
+   "pp_enabled_g": {
+      "message": "Habilitado (Globalmente)"
+   },
+   "pp_health": {
+      "message": "El script en segundo plano parece no responder. ¿Deseas reiniciar la extensión?"
+   },
+   "pp_homepage": {
+      "message": "Página de inicio"
+   },
+   "pp_ignore": {
+      "message": "Ejecutar Acción cuando sea Posible"
+   },
+   "pp_last_request": {
+      "message": "Última Petición"
+   },
+   "pp_options": {
+      "message": "Opciones"
+   },
+   "pp_redirect": {
+      "message": "Bloquear Redireccionamiento de Página"
+   },
+   "pp_shadow": {
+      "message": "Usar Sombra"
+   },
+   "pp_silent": {
+      "message": "Visualizar Notificaciones"
+   },
+   "pp_test": {
+      "message": "Probar Bloqueador"
+   },
+   "ui_button_allow": {
+      "message": "Permitir esta ventana emergente (Alt + Mayús + A o Control + Opción + A)"
+   },
+   "ui_button_allow_value": {
+      "message": "permitir"
+   },
+   "ui_button_background": {
+      "message": "Abrir el enlace en una pestaña en segundo plano (Alt + Mayús + B o Control + Opción + B)"
+   },
+   "ui_button_background_value": {
+      "message": "en segundo plano"
+   },
+   "ui_button_deny": {
+      "message": "Rechazar la ventana emergente o la apertura de la pestaña (Alt + Mayús + D o Control + Opción + D)"
+   },
+   "ui_button_deny_value": {
+      "message": "denegar"
+   },
+   "ui_button_redirect": {
+      "message": "Redireccionar la página actual al nuevo destino en lugar de abrirla en una nueva pestaña o ventana emergente (Alt + Mayús + R o Control + Opción + R)"
+   },
+   "ui_button_redirect_value": {
+      "message": "redireccionar"
+   },
+   "ui_button_trust": {
+      "message": "Añadir este dominio a la lista blanca con el fin de permitir ventanas emergentes (Alt + Mayús + T o Control + Opción + T)"
+   },
+   "ui_button_trust_confirm": {
+      "message": "Haz Clic para Confirmar"
+   },
+   "ui_button_trust_value": {
+      "message": "confiar"
+   },
+   "ui_msg": {
+      "message": "Se solicita una ventana emergente para"
+   }
+}

@@ -58,7 +58,7 @@ bc1qh7juzrxrawpr65elm4qs285m5rdhnhgsn7h2jf
 
 ### Help with Translation
 
-You can now translate Popup Blocker (strict) into your language; https://www.transifex.com/github-7/popup-blocker-strict/
+You can now translate Popup Blocker (strict) into your language; https://explore.transifex.com/github-7/popup-blocker-strict/
 
 ### License
 
