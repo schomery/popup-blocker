@@ -137,6 +137,21 @@
   "options_item46": {
     "message": "Sağ Alt"
   },
+  "options_item47": {
+    "message": "Koruma Kapsamı"
+  },
+  "options_item48": {
+    "message": "Uzantının kapsamını yapılandırmak için belgelere göz atın."
+  },
+  "options_item49": {
+    "message": "Popup'ın genişliği (piksel cinsinden)"
+  },
+  "options_item50": {
+    "message": "Kullanıcı etkileşimi olmadan gerçekleşen otomatik sayfa yönlendirmelerini engelle"
+  },
+  "options_sync": {
+    "message": "Bu tercihi eşitle"
+  },
   "options_support": {
     "message": "Geliştirme Desteği"
   },
@@ -169,6 +184,9 @@
   },
   "options_t_3": {
     "message": "Belirli bir URL'ye göre popup isteğine yanıt olarak bir işlemi yürütmesi için uzantıya yol gösteren bir JSON nesnesi. Örnekler için SSS sayfasını okuyun."
+  },
+  "options_t_4": {
+    "message": "Genel kapsamı tanımlamak için virgülle ayrılmış bir desen listesi girin. Yanlış değerler uzantının çalışmasını bozabileceğinden, ne yaptığınızdan emin değilseniz bu ayarı değiştirmeyin. Daha fazla bilgi için SSS sayfasına göz atın."
   },
   "ui_msg": {
     "message": "Aşağıdakiler için popup istenir"
@@ -206,17 +224,20 @@
   "ui_button_trust_confirm": {
     "message": "Onaylamak için Tıkla"
   },
+  "bg_msg_state_0": {
+    "message": "Popup Blocker genel olarak etkin, ancak bu sekmede etkin değil. Bunun nedeni sayfanın dahili bir sayfa olması, kapsam dışında kalması veya hâlâ yükleniyor olması olabilir."
+  },
   "bg_msg_state_1": {
-    "message": "Popup Blocker (strict) genel olarak etkinleştirilmiştir ve bu sekmeyi korur"
+    "message": "Popup Blocker genel olarak etkin ve bu sekmeyi koruyor"
   },
   "bg_msg_state_2": {
-    "message": "Popup Blocker (strict) genel olarak etkinleştirilmiştir ancak bu sekmeyi korumaz"
+    "message": "Popup Blocker genel olarak etkin, ancak bu sekmeyi korumuyor"
   },
   "bg_msg_state_3": {
-    "message": "Popup Blocker (strict) genel olarak devre dışıdır ve bu sekmeyi korumaz"
+    "message": "Popup Blocker genel olarak devre dışı ve bu sekmeyi korumuyor"
   },
   "bg_msg_state_4": {
-    "message": "Popup Blocker (strict) genel olarak devre dışıdır ancak bu sekmeyi korur"
+    "message": "Popup Blocker genel olarak devre dışı, ancak bu sekmeyi koruyor."
   },
   "bg_msg_reg": {
     "message": "Yanlış biçimlendirilmiş bir kural nedeniyle engelleme filtresinin kaydedilmesi başarısız oldu. Düzeltmek için ayarlar sayfasını kullan."
@@ -226,6 +247,9 @@
   },
   "pp_enabled_c": {
     "message": "Etkin (Bu Alan Adında)"
+  },
+  "pp_enabled_cf": {
+    "message": "Alt çerçeveleri dahil et / hariç tut"
   },
   "pp_silent": {
     "message": "Ekran Bildirimleri"
@@ -259,5 +283,14 @@
   },
   "pp_health": {
     "message": "Arka plan betiği yanıt vermiyor gibi görünüyor. Eklentiyi yeniden başlatmayı denemek ister misiniz?"
+  },
+  "pp_block_redirect": {
+    "message": "Hafif"
+  },
+  "pp_block_automated": {
+    "message": "Katı"
+  },
+  "pp_redirect_info": {
+    "message": "Hafif mod, kullanıcı etkileşiminden sonra 2 saniye boyunca yönlendirmeleri engeller. Katı mod ise buna ek olarak kullanıcı etkileşimi olmadan gerçekleşen sayfa yönlendirmelerini de engeller."
   }
 }

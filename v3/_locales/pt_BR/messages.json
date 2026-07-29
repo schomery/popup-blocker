@@ -146,6 +146,9 @@
   "options_item49": {
     "message": "Largura do pop-up (em pixels)"
   },
+  "options_item50": {
+    "message": "Bloquear redirecionamentos de página automáticos sem interação do usuário"
+  },
   "options_sync": {
     "message": "Sincronizar esta preferência"
   },
@@ -280,5 +283,14 @@
   },
   "pp_health": {
     "message": "O script em segundo plano parece não responder. Deseja tentar reiniciar a extensão?"
+  },
+  "pp_block_redirect": {
+    "message": "Leve"
+  },
+  "pp_block_automated": {
+    "message": "Rigoroso"
+  },
+  "pp_redirect_info": {
+    "message": "O modo Leve impede redirecionamentos por 2 segundos após a interação do usuário. O modo Rigoroso também bloqueia redirecionamentos de página não interativos."
   }
 }
