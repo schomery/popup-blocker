@@ -215,6 +215,7 @@ const onPopupRequest = async request => {
             'redirect': 'popup-redirect',
             'close': 'popup-close'
           }[v];
+
           const target = div.querySelector(`[data-cmd="${action}"]`);
           if (target) {
             onClick({
@@ -227,8 +228,7 @@ const onPopupRequest = async request => {
             continue;
           }
 
-          const prefix = match.includes(':') ? match.split(':')[0].slice(0, 2) : '';
-
+          const prefix = ['po:', 'ro:', 'p:', 'r:'].find(p => match.startsWith(p))?.slice(0, -1) || '';
           if (prefix) {
             const dest = prefix.includes('o') ? args.get('parent') : request.href;
 
@@ -263,7 +263,9 @@ const onPopupRequest = async request => {
       }
       // only perform automatic action when there is no native request
       // to prevent the native popup blocker catch our request
-      if (prefs.countdown && request.sameContext !== true) {
+      // the countdown is meaningless when the interface is hidden
+      // ("Display Notifications" is off)
+      if (prefs.issue !== false && prefs.countdown && request.sameContext !== true) {
         if (action) {
           // to prevent internal popup blocker from rejecting the request
           if (action !== 'popup-accepted' || prefs['simulate-allow']) {
@@ -316,10 +318,18 @@ const onPopupRequest = async request => {
 /* prepare storage then run */
 const prepare = async c => {
   prefs = prefs || await config.get([
-    'numbers', 'timeout', 'countdown', 'default-action', 'immediate-action', 'simulate-allow', 'focus-popup', 'rules'
+    'issue', 'numbers', 'timeout', 'countdown', 'default-action',
+    'immediate-action', 'simulate-allow', 'focus-popup', 'rules'
   ]);
   c();
 };
+
+/* keep the visibility flag in sync; it controls the countdown behavior */
+config.changed(ps => {
+  if (ps.issue) {
+    prefs.issue = ps.issue.newValue;
+  }
+});
 
 /* resize */
 const resizeObserver = new ResizeObserver(entries => {

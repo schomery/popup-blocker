@@ -70,25 +70,43 @@ const activate = async () => {
     }
   }
   catch (e) {
-    await chrome.scripting.unregisterContentScripts();
+    // the last known blocker might be still installed
+    await chrome.scripting.unregisterContentScripts().catch(() => {});
 
     const props = {
-      'matches': scope,
       'allFrames': true,
       'matchOriginAsFallback': true,
       'runAt': 'document_start'
     };
-    await chrome.scripting.registerContentScripts([{
-      'id': 'main',
-      'js': ['/data/inject/block/main.js'],
-      'world': 'MAIN',
-      ...props
-    }, {
-      'id': 'isolated',
-      'js': ['/config.js', '/data/inject/block/isolated.js'],
-      'world': 'ISOLATED',
-      ...props
-    }]);
+    const register = async patterns => {
+      props['matches'] = patterns;
+      await chrome.scripting.registerContentScripts([{
+        'id': 'main',
+        'js': ['/data/inject/block/main.js'],
+        'world': 'MAIN',
+        ...props
+      }, {
+        'id': 'isolated',
+        'js': ['/config.js', '/data/inject/block/isolated.js'],
+        'world': 'ISOLATED',
+        ...props
+      }]);
+    };
+
+    // attempt 1: use the saved scope
+    // attempt 2 (on failure): use the default scope
+    try {
+      await register(prefs.scope);
+    }
+    catch (e2) {
+      console.warn('Registration with the saved scope failed; retrying with the default scope', e2);
+      try {
+        await register(config['scope']);
+      }
+      catch (e3) {
+        console.error('Registration with the default scope failed', e3);
+      }
+    }
 
     chrome.action.setBadgeBackgroundColor({color: '#b16464'});
     chrome.action.setBadgeText({text: 'E'});
@@ -119,14 +137,10 @@ config.changed(ps => {
 
 chrome.runtime.onMessage.addListener((request, sender, response) => {
   if (request.cmd === 'popup-request') {
-    config.get(['silent', 'issue', 'placement', 'width']).then(prefs => {
-      if (prefs.issue === false) {
-        return;
-      }
-      const {hostname} = new URL(sender.tab.url);
-      if (prefs.silent.includes(hostname)) {
-        return;
-      }
+    // "Display Notifications" only controls visibility. The request pipeline
+    // (rules, default-action, last-request shortcuts) must always run; when
+    // notifications are hidden we keep injecting the interface but invisible
+    config.get(['issue', 'placement', 'width']).then(prefs => {
       request.frameId = sender.frameId;
       chrome.tabs.sendMessage(sender.tab.id, request, response => {
         chrome.runtime.lastError;
@@ -158,6 +172,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
 
                   ${prefs.placement.includes('t') ? 'top' : 'bottom'}: 5px !important;
                   ${prefs.placement.includes('l') ? 'left' : 'right'}: 5px !important;
+                  ${prefs.issue === false ? 'display: none' : ''}
                 `;
                 container.addEventListener('load', () => {
                   container.ready = true;

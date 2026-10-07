@@ -80,6 +80,11 @@ config.changed(ps => {
   if (ps.enabled) {
     prefs.enabled = ps.enabled.newValue;
   }
+  // "Display Notifications" toggles visibility of live containers; the
+  // pipeline (rules, default-action) keeps running either way
+  if (ps.issue && scope.container) {
+    scope.container.style.display = ps.issue.newValue ? '' : 'none';
+  }
 });
 
 /* record fake window's executed commands */
