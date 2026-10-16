@@ -164,6 +164,7 @@
       if (aggressive > 2) {
         const {HTMLIFrameElement, HTMLFrameElement} = w;
 
+        const wins = new Set();
         const wf = Object.getOwnPropertyDescriptor(HTMLFrameElement.prototype, 'contentWindow');
         Object.defineProperty(HTMLFrameElement.prototype, 'contentWindow', {
           configurable: true,
@@ -171,14 +172,12 @@
           get: function() {
             const w = wf.get.call(this);
             try {
-              blocker.install(w);
+              if (wins.has(w) === false) {
+                blocker.install(w);
+                wins.add(w);
+              }
             }
             catch (e) {}
-            Object.defineProperty(this, 'contentWindow', {
-              configurable: true,
-              enumerable: true,
-              value: w
-            });
             return w;
           }
         });
@@ -189,14 +188,12 @@
           get: function() {
             const w = wif.get.call(this);
             try {
-              blocker.install(w);
+              if (wins.has(w) === false) {
+                blocker.install(w);
+                wins.add(w);
+              }
             }
             catch (e) {}
-            Object.defineProperty(this, 'contentWindow', {
-              configurable: true,
-              enumerable: true,
-              value: w
-            });
             return w;
           }
         });
@@ -207,14 +204,12 @@
           get: function() {
             const d = cf.get.call(this);
             try {
-              blocker.install(d.defaultView);
+              if (d.defaultView && wins.has(d.defaultView) === false) {
+                blocker.install(d.defaultView);
+                wins.add(d.defaultView);
+              }
             }
             catch (e) {}
-            Object.defineProperty(this, 'contentDocument', {
-              configurable: true,
-              enumerable: true,
-              value: d
-            });
             return d;
           }
         });
@@ -225,14 +220,12 @@
           get: function() {
             const d = cif.get.call(this);
             try {
-              blocker.install(d.defaultView);
+              if (d.defaultView && wins.has(d.defaultView) === false) {
+                blocker.install(d.defaultView);
+                wins.add(d.defaultView);
+              }
             }
             catch (e) {}
-            Object.defineProperty(this, 'contentDocument', {
-              configurable: true,
-              enumerable: true,
-              value: d
-            });
             return d;
           }
         });
